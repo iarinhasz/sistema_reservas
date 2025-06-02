@@ -37,7 +37,7 @@ Feature: Pagina inicial de aluno
         When o aluno acessa a pagina de agendamento da Sala 1
         And seleciona um recurso A
         And seleciona um horario que ja esta reservado
-        Then o sistema exibe uma mensagem informando que o horario esta indisponavel
+        Then o sistema exibe uma mensagem informando que o horario esta indisponivel
         And o aluno nao consegue concluir a solicitacao de reserva
 
     Scenario: Aluno realiza logout
