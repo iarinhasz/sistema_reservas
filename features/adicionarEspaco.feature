@@ -20,6 +20,13 @@ Feature: Adicionar espaços
         And o administrador é redirecionado para a página inicial
         And o botão "Lab 2" aparece na interface
 
+    Scenario: Cadastro de espaço com dados válidos
+        Given o sistema recebe uma requisição de cadastro com tipo "Laboratórios" e identificador "Lab 2"
+        And o identificador "Lab 2" ainda não está cadastrado no sistema
+        When a solicitação de cadastro é processada
+        Then o novo espaço "Lab 2" é salvo no banco de dados como tipo "Laboratórios"
+        And uma resposta de sucesso é retornada para o frontend
+
     Scenario: Administrador tenta adicionar espaço sem preencher o identificador
         Given o administrador está na página "Adicionar novo espaço"
         When seleciona o tipo "Salas"
@@ -29,35 +36,31 @@ Feature: Adicionar espaços
         And o espaço não é cadastrado
         And o administrador permanece na página "Adicionar novo espaço"
 
+    Scenario: Rejeição de cadastro com identificador vazio
+        Given o sistema recebe uma requisição de cadastro com tipo "Salas" e identificador vazio
+        When sistema verifica os dados
+        And identifica que o campo "Identificador" está vazio (NULL)
+        Then o sistema retorna uma mensagem de erro "Identificador obrigatório"
+        And nenhum espaço é salvo no banco de dados
+        And a página de cadastro continua aberta
+
+    Scenario: Rejeição de cadastro com identificador duplicado
+        Given já existe um espaço cadastrado com identificador "Lab 2"
+        And o sistema recebe uma nova requisição de cadastro com tipo "Laboratórios" e identificador "Lab 2"
+        When valida os dados
+        Then o sistema detecta que o identificador já está em uso
+        And retorna uma mensagem de erro "Identificador já cadastrado"
+        And o novo espaço não é salvo no banco de dados
+        And a página de cadastro continua aberta
+
     Scenario: Administrador cancela o cadastro de novo espaço
         Given o administrador está na página "Adicionar novo espaço"
         When clica no botão "Cancelar"
         Then retorna para a página inicial
         And nenhum novo espaço é cadastrado
 
-    Scenario: Serviço cadastra um novo espaço com dados válidos
-        Given o sistema recebe uma requisição de cadastro com:
-            | Tipo         | Identificador |
-            | Laboratórios | Lab 2         |
-        And os dados são validados
-        Then o novo espaço "Lab 2" é salvo no banco de dados
-        And uma resposta de sucesso é retornada para o frontend
-    
-    Scenario: Serviço rejeita cadastro de espaço com identificador vazio
-        Given o sistema recebe uma requisição de cadastro com:
-            | Tipo   | Identificador |
-            | Salas  | (vazio)       |
-        And os dados são validados
-        Then o sistema identifica que o identificador está vazio
-        And retorna uma mensagem de erro "Identificador obrigatório"
-        And o espaço não é salvo no banco de dados
-
-    Scenario: Serviço rejeita cadastro de espaço com identificador duplicado
-        Given já existe um espaço com identificador "Lab 2"
-        And o sistema recebe uma nova requisição de cadastro com:
-            | Tipo         | Identificador |
-            | Laboratórios | Lab 2         |
-        And os dados são validados
-        Then o sistema detecta que o identificador já está em uso
-        And retorna uma mensagem de erro "Identificador já cadastrado"
-        And o novo espaço não é salvo
+    Scenario: Cancelamento da requisição de cadastro
+        Given o sistema recebe uma solicitação de cancelamento de cadastro de espaço antes da confirmação
+        When o processo de cadastro é interrompido
+        Then nenhuma alteração é feita no banco de dados
+        And nenhuma resposta de criação é enviada
