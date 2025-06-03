@@ -21,7 +21,7 @@ Feature: Serviço de Gerenciamento de Recursos e Equipamentos
   Scenario: Tentativa de exclusão de um recurso (espaço) com reservas futuras
     Given o recurso com ID "SalaReuniao" existe no sistema
     And o recurso "SalaReuniao" possui reservas futuras ativas
-    When uma solicitação de serviço é recebida para excluir o recurso "SalaReuniao_ID"
+    When uma solicitação de serviço é recebida para excluir o recurso "SalaReuniao"
     Then a operação de exclusão deve falhar
     And uma resposta de erro "Recurso não pode ser excluído pois possui reservas futuras" deve ser retornada
 
@@ -33,8 +33,8 @@ Feature: Serviço de Gerenciamento de Recursos e Equipamentos
     And o histórico de equipamentos do "Lab1" deve registrar a adição do "EQP003"
 
   Scenario: Remoção de um equipamento de um recurso
-    Given o recurso "Lab1_ID" possui o equipamento "EQP001" (Projetor Epson X3) associado
-    When uma solicitação de serviço é recebida para remover o equipamento "EQP001_ID" do recurso "Lab1"
+    Given o recurso "Lab1" possui o equipamento "EQP001" (Projetor Epson X3) associado
+    When uma solicitação de serviço é recebida para remover o equipamento "EQP001" do recurso "Lab1"
     Then o equipamento "EQP001" deve ser desassociado do recurso "Lab1" ou marcado como "removido"
     And o histórico de equipamentos do "Lab1" deve registrar a remoção do "EQP001"
 
