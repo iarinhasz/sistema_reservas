@@ -1,24 +1,30 @@
-Feature: Gerenciar equipamentos de um ambiente
+Feature: Gerenciar equipamentos do "Lab1"
     As a Adiministrador do sistema de reservas
-    I want inserir, remover, alterar e visualizar as informações de equipamentos dispostos em um ambiente
+    I want to inserir, remover, alterar e visualizar as informações de equipamentos dispostos em um ambiente
     so that ter o gerenciamento de equipamentos para seus devidos usos
 
-    Scenario: Tetando inserir equipamentos sem os campos serem preenchidos
-        Given eu estou na página de gerenciamento de equipamentos sem os campos de inserção de equipamentos preenchidos
+    Scenario: Administrador Tenta inserir equipamentos sem os campos serem preenchidos
+        Given eu estou na página de gerenciamento de equipamentos
+        And sem os campos "Fabricante", "Modelo", "Quantidade" e "Descrição" de equipamentos preenchidos
         When eu clico no botão "Inserir"
         Then uma seguinte mensagem é exíbida "Preencha todos os campos para fazer a inserção de um equipamento".
 
-    Scenario: inserindo um equipamento no ambiente
-        Given eu estou na página de gerenciamento de equipamentos com todos os campos devidamente preenchidos
-        And eu vejo a área onde deveria ser exibida a lista de equipamentos do ambiente vázia
+    Scenario: Adiministrador inserindo um equipamento no ambiente
+        Given eu estou na página de gerenciamento de equipamentos
+        And o campo "Fabricante" está com o valor "Epson"
+        And o campo "Modelo" está com o valor "T3000"
+        And o campo "Quantidade" está com o valor "1"
+        And o campo "Descrição" está com o valor "Impressora lazer"
         When Clico o botão "Inserir"
         Then Então o equipamento aparece na listagem de equipamentos contidos no espaço
-        And uma caixa de seleção é ativada na primeira coluna a frente das informações que foram inseridas referentes ao equipamento
+        And uma caixa de seleção é ativada na primeira coluna a frente das informações que foram inseridas referente ao equipamento
 
     Scenario: clicando no botão "Excluir" sem selecionar nenhum equipamento
-        Given eu estou na página de gerenciamento de equipamentos sem selecionar nenhuma caixa de seleção ao lado de um equipamento da lista
+        Given eu estou na página de gerenciamento de equipamentos 
+        And sem selecionar nenhuma caixa de seleção ao lado de um equipamento da lista
         When eu tento clicar no botão "Excluir"
-        Then uma mensagem é exibida, "Você deve selecionar um equipamento para fazer a exclusão"
+        Then o botão de excluir se encontra desabilitado
+        And uma mensagem próxima ao ponteiro do mouse é exibida "Você deve selecionar um item da lista"
 
     Scenario: clicando no botão "Excluir" com um equipamento selecionado
         Given eu estou na página de gerenciamento de equipamentos e selecionei um equipamento da lista
@@ -28,7 +34,8 @@ Feature: Gerenciar equipamentos de um ambiente
         And após confirmar o equipamento é excluído da lista dos equipamentos
 
     Scenario: clicando no botão "Alterar" sem ter selecionado nenhum equipamento do espaço
-        Given que não há nenhum equipamento com a caixa de seleção marcada
+        Given eu estou na tela de gerencia de equipamentos
+        And que não há nenhum equipamento com a caixa de seleção marcada
         When eu clico no botão de "Alterar"
         Then uma mensagem é exíbida "Você deve selecionar um equipamento"
 
