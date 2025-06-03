@@ -2,7 +2,7 @@ Feature: Pagina inicial de aluno
 
     As aluno
     Scenario: Aluno realiza login
-        Given que o usuario "Aluno123" com a senha "senha123" esta registrado no banco de dados como um aluno.
+        Given que o usuario "Aluno123" com a senha "senha123" esta registrado no banco de dados como um aluno
         When o aluno entra o login "Aluno123" e a senha "senha123"
         And e checado que esse usuario esta registrado no banco de dados
         And e checado que esse usuario e um aluno
@@ -13,9 +13,9 @@ Feature: Pagina inicial de aluno
         | Salas cadastradas            |
 
     Scenario: Aluno acessa a pagina de aluno sem salas cadastradas
+        Given que o aluno esta logado no sistema
         And que nao ha salas cadastradas no sistema
         When o aluno acessa a pagina de aluno
-        And nao ha salas cadastradas no sistema
         Then uma mensagem e exibida informando que nao ha salas cadastradas no sistema
         And nenhuma opcao de sala e exibida na interface
     
@@ -61,7 +61,7 @@ Feature: Pagina inicial de aluno
         And esta na pagina de aluno
         When o aluno clica em "Perfil"
         Then ele e redirecionado para a tela de Perfil
-        And certas informacoes estao disponiveis como
+        And certas informacoes estao disponiveis, como
         | Foto de perfil            |
         | Nome                      |
         | Bio                       |
