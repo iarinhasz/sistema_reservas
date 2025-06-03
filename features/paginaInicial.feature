@@ -40,13 +40,13 @@ Feature: pagina inicial do administrador
     Scenario: Página inicial com solicitações de reserva pendentes
         Given estou logado como administrador
         And acesso a página inicial
-        When há uma solicitação de reserva pendente para a sala "Sala 1"
+        And há uma solicitação de reserva pendente para a sala "Sala 1"
         Then um indicador visual aparece ao lado da sala "Sala 1"
 
     Scenario: Página inicial sem pendências visuais
         Given estou logado como administrador
         And acesso a página inicial
-        When não há solicitações de cadastro ou reserva pendentes
+        And não há solicitações de cadastro ou reserva pendentes
         Then nenhum indicador visual é exibido
 
     Scenario: Administrador acessa o formulário de adição de espaço
