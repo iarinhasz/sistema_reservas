@@ -41,6 +41,14 @@ Feature: Cadastros pendentes
         And clico no botão "Buscar"
         Then apenas a solicitação de "Carla Dias" deve ser exibida na lista
 
+    Scenario: Administrador navega entre as páginas de solicitações pendentes
+        Given eu estou na página de "Aprovar Cadastro"
+        And existem 30 solicitações de cadastro pendentes
+        And o sistema exibe 10 solicitações por página
+        When eu clico no botão "Próxima Página"
+        Then verei as próximas 10 solicitações, de 11 a 20
+        And o indicador de página deve ser "Página 2 de 3"
+
     Scenario: Tentativa de rejeitar um cadastro sem informar a justificativa
         When eu tento rejeitar o cadastro de "Carla Dias" sem preencher o motivo
         Then uma mensagem de erro "O motivo da rejeição é obrigatório." deve ser exibida
