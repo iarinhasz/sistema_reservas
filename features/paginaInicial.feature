@@ -12,7 +12,7 @@ Feature: Pagina iInicial do administrador
         And preencho o campo de nome com "fulaninho"
         And preencho o campo de senha com "123fulaninh0"
         When clico no botão "Entrar"
-        Then sou redirecionado para a página inicial
+        Then sou redirecionado para a pagina inicial
         And as seguintes funcionalidades estão visíveis:
             | Solicitações de cadastro     |
             | Adicionar espaço             |
@@ -34,7 +34,7 @@ Feature: Pagina iInicial do administrador
         Given não existem solicitações de cadastro ou reservas pendentes
         When eu acesso a "Página Inicial"
         Then não há destaque em "Solicitações de cadastro"
-        And "Espaço cadastrado"
+        And "Espaço Cadastrado"
 
     Scenario: Destaque para solicitações de cadastro pendentes
         Given existem solicitações de cadastro de usuários pendentes
