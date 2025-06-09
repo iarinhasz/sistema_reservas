@@ -13,6 +13,15 @@ Feature: Cadastros pendentes
         And existe uma solicitação de cadastro pendente para "Bruno Lima" do tipo "Professor" com o e-mail "bruno.lima.prof@email.com"
         And existe uma solicitação de cadastro pendente para "Carla Dias" do tipo "Aluno" com o e-mail "carla.d@email.com"
 
+    Scenario: Administrador visualiza os detalhes de uma solicitação pendente
+        Given que eu estou na página de "Aprovar Cadastro"
+        And existe uma solicitação de cadastro pendente para "Bruno Lima"
+        When eu clico em "Detalhes" ao lado do nome de "Bruno Lima"
+        Then eu devo ser redirecionado para a página de "Detalhes da Solicitação"
+        And eu devo ver os detalhes completos: nome "Bruno Lima",
+        And tipo "Professor"
+        And e-mail "bruno.lima.prof@email.com"
+
     Scenario: Administrador aprova uma solicitação de cadastro com sucesso
         When eu aprovo o cadastro de "Ana Souza"
         Then o cadastro de "Ana Souza" será removido da lista de pendências
