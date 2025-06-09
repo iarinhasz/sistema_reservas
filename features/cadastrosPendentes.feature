@@ -34,6 +34,13 @@ Feature: Cadastros pendentes
         And uma notificação de sucesso "Usuário rejeitado com sucesso!" é exibida
         And um e-mail de rejeição com o motivo "Dados inconsistentes" deve ser enviado para "<bruno.limma.prof@gmail.com>"
 
+    Scenario: Administrador busca por uma solicitação específica
+        Given que eu estou na página de "Aprovar Cadastro"
+        And existem várias solicitações de cadastro pendentes
+        When eu preencho o campo de busca com "Carla Dias"
+        And clico no botão "Buscar"
+        Then apenas a solicitação de "Carla Dias" deve ser exibida na lista
+
     Scenario: Tentativa de rejeitar um cadastro sem informar a justificativa
         When eu tento rejeitar o cadastro de "Carla Dias" sem preencher o motivo
         Then uma mensagem de erro "O motivo da rejeição é obrigatório." deve ser exibida
