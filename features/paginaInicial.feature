@@ -34,7 +34,7 @@ Feature: Pagina iInicial do administrador
         Given não existem solicitações de cadastro ou reservas pendentes
         When eu acesso a "Página Inicial"
         Then não há destaque em "Solicitações de cadastro"
-        And "Espaço cadastrado"
+        And "Espaço Cadastrado"
 
     Scenario: Destaque para solicitações de cadastro pendentes
         Given existem solicitações de cadastro de usuários pendentes
