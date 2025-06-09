@@ -14,16 +14,16 @@ Feature: Cadastros pendentes
         And existe uma solicitação de cadastro pendente para "Carla Dias" do tipo "Aluno" com o e-mail "carla.d@email.com"
 
     Scenario: Administrador aprova uma solicitação de cadastro com sucesso
-        When eu aprovo o cadastro de "<Ana Souza>"
-        Then o cadastro de "<Ana Souza>" deve ser removido da lista de pendências
+        When eu aprovo o cadastro de "Ana Souza"
+        Then o cadastro de "Ana Souza" será removido da lista de pendências
         And uma notificação de sucesso "Usuário aprovado com sucesso!" é exibida
-        And um email de confirmação de cadastro deve ser enviado para "<ana.souza@email.com>"
+        And um email de confirmação de cadastro deve ser enviado para "ana.souza@email.com"
 
     Scenario: Administrador rejeita um cadastro com uma justificativa válida
-        When eu rejeito o cadastro de "<Bruno Lima>" com o motivo "<Dados inconsistentes>"
-        Then o cadastro de "<Bruno Lima>" deve ser removido da lista de pendências
+        When eu rejeito o cadastro de "Bruno Lima" com o motivo "Dados inconsistentes"
+        Then o cadastro de "Bruno Lima" deve ser removido da lista de pendências
         And uma notificação de sucesso "Usuário rejeitado com sucesso!" é exibida
-        And um e-mail de rejeição com o motivo "<Dados inconsistentes>" deve ser enviado para "<bruno.limma.prof@gmail.com>"
+        And um e-mail de rejeição com o motivo "Dados inconsistentes" deve ser enviado para "<bruno.limma.prof@gmail.com>"
 
     Scenario: Tentativa de rejeitar um cadastro sem informar a justificativa
         When eu tento rejeitar o cadastro de "Carla Dias" sem preencher o motivo
