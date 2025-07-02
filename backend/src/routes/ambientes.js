@@ -1,12 +1,10 @@
-// backend/src/routes/ambientes.js
+// backend/src/routes/ambientes.js (VERSÃO CORRIGIDA)
 
 const express = require('express');
-const { google } = require('googleapis');
 const router = express.Router();
 
-// A função agora recebe o pool do banco E a autenticação do Google
-module.exports = (pool, auth) => {
-  const calendar = google.calendar({ version: 'v3', auth });
+// A função agora recebe apenas o 'pool' do banco de dados
+module.exports = (pool) => {
 
   // ROTA PARA LISTAR TODOS OS AMBIENTES
   router.get('/', async (req, res) => {
@@ -19,37 +17,16 @@ module.exports = (pool, auth) => {
     }
   });
 
-  // ROTA PARA CRIAR UM NOVO AMBIENTE E SUA AGENDA NO GOOGLE
+  // ROTA PARA CRIAR UM NOVO AMBIENTE
   router.post('/', async (req, res) => {
     const { identificacao, nome, tipo } = req.body;
-
     try {
-      // 1. Insere o novo ambiente no nosso banco (ainda sem o google_calendar_id)
-      const novoAmbienteResult = await pool.query(
-        'INSERT INTO ambientes(identificacao, nome, tipo) VALUES($1, $2, $3) RETURNING *',
-        [identificacao, nome, tipo]
-      );
-      const novoAmbiente = novoAmbienteResult.rows[0];
+      const queryText = 'INSERT INTO ambientes(identificacao, nome, tipo) VALUES($1, $2, $3) RETURNING *';
+      const values = [identificacao, nome, tipo];
 
-      // 2. Cria a nova agenda no Google Calendar
-      const googleAgendaCriada = await calendar.calendars.insert({
-        requestBody: {
-          summary: `Agenda - ${nome}` // Ex: "Agenda - Laboratório de Redes"
-        }
-      });
+      const { rows } = await pool.query(queryText, values);
 
-      const googleCalendarId = googleAgendaCriada.data.id;
-
-      // 3. Atualiza nosso banco com o ID da agenda do Google
-      await pool.query(
-        'UPDATE ambientes SET google_calendar_id = $1 WHERE id = $2',
-        [googleCalendarId, novoAmbiente.id]
-      );
-
-      // 4. Retorna o ambiente completo para o frontend
-      novoAmbiente.google_calendar_id = googleCalendarId;
-      res.status(201).json(novoAmbiente);
-
+      res.status(201).json(rows[0]);
     } catch (error) {
       console.error('Erro ao criar ambiente:', error);
       if (error.code === '23505') { // Violação de unicidade
