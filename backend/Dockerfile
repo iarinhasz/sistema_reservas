@@ -1,20 +1,18 @@
-# Estágio 1: Instala as dependências de forma otimizada
+
+# Estágio 1: Instala as dependências
 FROM node:18-alpine AS dependencies
 WORKDIR /usr/src/app
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 RUN npm install
 
 # Estágio 2: Cria a imagem final de produção
 FROM node:18-alpine AS final
 WORKDIR /usr/src/app
-
-# Copia as dependências já instaladas do estágio anterior
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
-# Copia o código-fonte da sua aplicação
 COPY . .
 
-# Expõe a porta que sua API vai usar para receber conexões
+# Expõe a porta que sua API vai usar
 EXPOSE 3000
 
-# Comando padrão para iniciar o servidor
-CMD node src/server.js
+# Comando para iniciar o servidor
+CMD [ "node", "src/server.js" ]
