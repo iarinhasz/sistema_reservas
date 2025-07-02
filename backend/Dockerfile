@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando padrão para iniciar o servidor
-CMD [ "node", "server.js" ] # Troque "server.js" pelo nome do seu arquivo de entrada
+CMD node src/server.js
