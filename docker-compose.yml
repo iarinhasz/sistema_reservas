@@ -1,43 +1,33 @@
-# Versão do Docker Compose
+# docker-compose.yml
 version: '3.8'
 
-# Definição dos serviços (contêineres)
 services:
-
-  # Serviço da sua API Node.js
   api:
-    build: . # Constrói a imagem usando o Dockerfile na pasta atual
+    # MUDANÇA AQUI: Aponta para a pasta ./backend para encontrar o Dockerfile
+    build: ./backend
     container_name: api_reservas
     ports:
-      - "3000:3000" # Mapeia a porta 3000 do seu PC para a porta 3000 do contêiner
-    volumes:
-      # Monta o código local dentro do contêiner para live-reload durante o desenvolvimento
-      - .:/usr/src/app
-      # Usa um volume anônimo para não sobrescrever o node_modules de dentro do contêiner
-      - /usr/src/app/node_modules
+      - "3000:3000"
+    #volumes:
+      # MUDANÇA AQUI: Mapeia a pasta ./backend para o contêiner
+      #- ./backend:/usr/src/app
+      #- /usr/src/app/node_modules
     environment:
-      # String de conexão para o banco de dados. Note como ele usa as variáveis do serviço 'db'
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
-      - db # Diz ao Docker para esperar o contêiner do banco de dados iniciar antes de iniciar a API
+      - db
 
-  # Serviço do Banco de Dados PostgreSQL
-  db:
-    image: postgres:15-alpine # Usa a imagem oficial do PostgreSQL
+  db: # Esta parte não muda
+    image: postgres:15-alpine
     container_name: db_reservas
     environment:
-      # Define as credenciais do banco usando variáveis que virão de um arquivo .env
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      # Cria um "volume nomeado" para persistir os dados do banco.
-      # Isso garante que você não perca seus dados se o contêiner for recriado.
       - postgres_data:/var/lib/postgresql/data
     ports:
-      # Mapeia a porta do Postgres para o seu PC, para que você possa se conectar com ferramentas como DBeaver ou pgAdmin
-      - "5433:5432" # Usei a porta 5433 para não dar conflito com um possível Postgres local
+      - "5433:5432"
 
-# Declaração do volume nomeado para persistência de dados
 volumes:
   postgres_data:
