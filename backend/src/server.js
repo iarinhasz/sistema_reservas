@@ -2,7 +2,6 @@ const express = require('express');
 const { Pool } = require('pg');
 
 const ambientesRoutes = require('./routes/ambientes');
-const reservasRoutes = require('./routes/reservas'); // Supondo que você o tenha
 
 const app = express();
 const PORT = 3000;
@@ -20,7 +19,6 @@ app.get('/', (req, res) => {
 
 // Note que agora só passamos o 'pool' para as rotas
 app.use('/ambientes', ambientesRoutes(pool));
-app.use('/reservas', reservasRoutes(pool));
 
 
 app.listen(PORT, () => {
