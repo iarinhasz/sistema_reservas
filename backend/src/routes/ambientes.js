@@ -6,7 +6,7 @@ const router = express.Router();
 // A função agora recebe apenas o 'pool' do banco de dados
 module.exports = (pool) => {
 
-  // ROTA PARA LISTAR TODOS OS AMBIENTES
+  // ROTA PARA LISTAR TODOS OS AMBIENTES (continua igual)
   router.get('/', async (req, res) => {
     try {
       const { rows } = await pool.query('SELECT * FROM ambientes ORDER BY id ASC');
@@ -17,12 +17,17 @@ module.exports = (pool) => {
     }
   });
 
-  // ROTA PARA CRIAR UM NOVO AMBIENTE
+  // ROTA PARA CRIAR UM NOVO AMBIENTE (versão corrigida)
   router.post('/', async (req, res) => {
-    const { identificacao, nome, tipo } = req.body;
+    // 1. MUDANÇA AQUI: Capturamos os novos campos do corpo da requisição
+    const { identificacao, tipo, status } = req.body;
+    
     try {
-      const queryText = 'INSERT INTO ambientes(identificacao, nome, tipo) VALUES($1, $2, $3) RETURNING *';
-      const values = [identificacao, nome, tipo];
+      // 2. MUDANÇA AQUI: A query SQL agora inclui as novas colunas
+      const queryText = 'INSERT INTO ambientes(identificacao, tipo, status) VALUES($1, $2, $3) RETURNING *';
+      
+      // 3. MUDANÇA AQUI: O array de valores agora inclui todas as variáveis
+      const values = [identificacao, tipo, status];
 
       const { rows } = await pool.query(queryText, values);
 

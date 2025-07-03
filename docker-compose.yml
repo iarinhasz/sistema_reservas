@@ -17,8 +17,10 @@ services:
     depends_on:
       - db
 
-  db: # Esta parte não muda
-    image: postgres:15-alpine
+  db:
+    build:
+      context: .
+      dockerfile: ./postgres/Dockerfile
     container_name: db_reservas
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
