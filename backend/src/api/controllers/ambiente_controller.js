@@ -41,7 +41,66 @@ const create = async (req, res) => {
     res.status(500).json({ message: 'Erro interno no servidor' });
     }
 };
+
+//atualizar um ambiente
+const update = async (req, res) => {
+    try{
+    //identificar qual ambiente será atualizado (id)
+    const {id} = req.params;
+
+    //converter id p inteiro
+    const ambienteId = parseInt(id, 10);
+
+    const existingAmbiente = await pool.query('SELECT * FROM ambientes WHERE id = $1', [ambienteId]);
+    
+    const{identificacao, tipo, status} = req.body;
+
+    //id existe?
+    if (existingAmbiente.rowCount === 0) {
+        return res.status(404).json({ message: 'Ambiente não encontrado.' });
+    }
+
+    // Query SQL para atualizar o ambiente.
+    //coalesce -> mantem o valor anntigo se o novo nao for fornecido
+    const query = `UPDATE ambientes
+                    SET
+                        identificacao = COALESCE($1, identificacao),
+                        tipo = COALESCE($2, tipo),
+                        status = COALESCE($3, status)
+                    WHERE id = $4
+                    RETURNING *;`;
+                
+    const values = [
+        identificacao || null,
+        tipo || null,
+        status || null,
+        ambienteId
+    ];
+    const result = await pool.query(query, values);
+
+    //atualizado
+    res.status(200).json({
+        message: 'Ambiente atualizado com sucesso!',
+        ambiente: result.rows[0]
+    });
+
+
+    } catch(error){
+        console.error('Erro ao atualizar ambiente:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
+};
+const getById = async (req, res) => {
+    const { id } = req.params;
+
+    res.status(200).json({ message: `Buscando ambiente pelo ID ${id}` });
+};
+const delete_ = async (req, res) => {
+};
 export default {
-    listAll,
     create,
+    listAll,
+    getById,
+    update,
+    delete: delete_,
 };
