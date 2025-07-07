@@ -1,33 +1,31 @@
-# docker-compose.yml
-version: '3.8'
 
 services:
-  api:
-    # MUDANÇA AQUI: Aponta para a pasta ./backend para encontrar o Dockerfile
-    build: ./backend
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: api_reservas
     ports:
       - "3000:3000"
     volumes:
-      # MUDANÇA AQUI: Mapeia a pasta ./backend para o contêiner
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+
+      - ./backend/src:/app/src
+      - ./backend/server.js:/app/server.js
+      - ./backend/package.json:/app/package.json
+      - ./backend/package-lock.json:/app/package-lock.json
+    env_file:
+      - ./.env
     depends_on:
       - db
 
   db:
-    build:
-      context: .
-      dockerfile: ./postgres/Dockerfile
+    image: postgres:15-alpine
     container_name: db_reservas
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5433:5432"
 
