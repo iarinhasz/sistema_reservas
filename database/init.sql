@@ -49,6 +49,3 @@ INSERT INTO ambientes(identificacao, tipo, status) VALUES
 
 INSERT INTO ambientes(identificacao, tipo, status) VALUES
 ('Auditório Principal', 'Auditório', 'Disponível');
-
-INSERT INTO usuarios(cpf, nome, email, senha, tipo) VALUES 
-('22222222222', 'Professor de Teste', 'professor@teste.com', '$2a$10$vK5i/n8a4p.c5b.tY3eZ7u2l3j.oY4eZ2f.wG7g.oY6j.zH9n.zQe', 'professor');
