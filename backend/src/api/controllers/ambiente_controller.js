@@ -91,11 +91,45 @@ const update = async (req, res) => {
     }
 };
 const getById = async (req, res) => {
-    const { id } = req.params;
+    try{const { id } = req.params;
+    
+    const ambienteId = parseInt(id, 10);
+    
+    const result = await pool.query('SELECT * FROM ambientes WHERE id = $1', [ambienteId]);
 
-    res.status(200).json({ message: `Buscando ambiente pelo ID ${id}` });
+    if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Ambiente não encontrado.' });
+    }
+    
+    res.status(200).json(result.rows[0]);
+
+    } catch{
+        console.error('Erro ao buscar ambiente por ID:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 };
+
 const delete_ = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const ambienteId = parseInt(id, 10);
+
+        const result = await pool.query('DELETE FROM ambientes WHERE id = $1 RETURNING *', [ambienteId]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Ambiente não encontrado para deletar.' });
+        }
+
+        res.status(200).json({
+            message: 'Ambiente deletado com sucesso!',
+            ambienteDeletado: result.rows[0]
+        });
+    }catch{
+        console.error('Erro ao deletar ambiente:', error);
+        if (error.code === '23503') { // Código de erro do PostgreSQL para violação de chave estrangeira
+            return res.status(409).json({ message: 'Não é possível deletar este ambiente pois ele possui equipamentos ou reservas associadas.' });
+            }
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 };
 export default {
     create,
