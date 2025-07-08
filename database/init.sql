@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS equipamentos (
     marca VARCHAR(50),
     modelo VARCHAR(50),
     quantidade_total INTEGER NOT NULL CHECK (quantidade_total >= 0),
-    ambiente_id INTEGER REFERENCES ambientes(id) ON DELETE SET NULL 
+    ambiente_id INTEGER NOT NULL REFERENCES ambientes(id) ON DELETE SET NULL 
 );
 
 CREATE TABLE IF NOT EXISTS reservas (
@@ -40,3 +40,15 @@ CREATE TABLE IF NOT EXISTS reservas (
 INSERT INTO usuarios (cpf, nome, email, senha, tipo) VALUES
 ('12345678900', 'Admin Padrão', 'admin@email.com', 'senha_hash_segura', 'administrador')
 ON CONFLICT (cpf) DO NOTHING;
+
+INSERT INTO ambientes(identificacao, tipo, status) VALUES
+('Sala de Reuniões A-101', 'Sala', 'Disponível');
+
+INSERT INTO ambientes(identificacao, tipo, status) VALUES
+('Laboratório de Graduação G1', 'Laboratório', 'Disponível');
+
+INSERT INTO ambientes(identificacao, tipo, status) VALUES
+('Auditório Principal', 'Auditório', 'Disponível');
+
+INSERT INTO usuarios(cpf, nome, email, senha, tipo) VALUES 
+('22222222222', 'Professor de Teste', 'professor@teste.com', '$2a$10$vK5i/n8a4p.c5b.tY3eZ7u2l3j.oY4eZ2f.wG7g.oY6j.zH9n.zQe', 'professor');
