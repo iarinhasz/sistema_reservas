@@ -22,7 +22,7 @@ const findByCpf = async (cpf) => {
     return rows[0];
 };
 
-const findPending = async ({ search, page = 1, limit = 10 }) => {
+const findPending = async ({ search, page = 1, limit = 10 } = {}) => {
     const offset = (page - 1) * limit;
     let query = `SELECT cpf, nome, email, tipo, data_criacao FROM usuarios WHERE status = 'pendente'`;
     const queryParams = [];
@@ -32,7 +32,7 @@ const findPending = async ({ search, page = 1, limit = 10 }) => {
         query += ` AND nome ILIKE $${queryParams.length}`;
     }
 
-    query += ` ORDER BY created_at DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+    query += ` ORDER BY data_criacao DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
     queryParams.push(limit, offset);
 
     const { rows } = await pool.query(query, queryParams);

@@ -8,8 +8,8 @@ const router = Router();
 router.post('/solicitar', usuarioController.create);
 router.get('/', authMiddleware, adminMiddleware, usuarioController.listarTodos);
 router.get('/pendentes', authMiddleware, adminMiddleware, usuarioController.listarPendentes);
-router.post('/:id/aprovar', authMiddleware, adminMiddleware, usuarioController.aprovarCadastro);
-router.post('/:id/rejeitar', authMiddleware, adminMiddleware, usuarioController.rejeitarCadastro);
+router.post('/:cpf/aprovar', authMiddleware, adminMiddleware, usuarioController.aprovarCadastro);
+router.post('/:cpf/rejeitar', authMiddleware, adminMiddleware, usuarioController.rejeitarCadastro);
 
 
 export default router;

@@ -96,7 +96,7 @@ const listarTodos = async (req, res) => {
 
 const listarPendentes = async (req, res) => {
     try {
-        const usuariosPendentes = await UsuarioModel.findPending();
+        const usuariosPendentes = await UsuarioModel.findPending(req.query);
         res.status(200).json(usuariosPendentes);
     } catch (error) {
         console.error("Erro ao listar cadastros pendentes:", error);
