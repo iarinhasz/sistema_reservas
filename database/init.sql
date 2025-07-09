@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    tipo VARCHAR(20) NOT NULL, -- 'aluno', 'professor', 'administrador'
+    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('admin', 'professor', 'aluno')), -- 'aluno', 'professor', 'administrador'
+    status VARCHAR(20) DEFAULT 'pendente' NOT NULL CHECK (status IN ('pendente', 'ativo', 'rejeitado')),
     data_criacao TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
