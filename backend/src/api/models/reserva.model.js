@@ -1,9 +1,6 @@
 import pool from '../../config/database.js';
 
-/**
- * Cria uma nova solicitação de reserva.
- * O status inicial é sempre 'pendente'.
- */
+
 const create = async (reservaData) => {
     const { usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo } = reservaData;
     const query = `
@@ -16,9 +13,7 @@ const create = async (reservaData) => {
     return rows[0];
 };
 
-/**
- * Lista todas as reservas.
- */
+
 const findAll = async () => {
     const query = `
         SELECT r.*, 
@@ -34,17 +29,13 @@ const findAll = async () => {
     return rows;
 };
 
-/**
- * Busca uma reserva pelo seu ID.
- */
+
 const findById = async (id) => {
     const { rows } = await pool.query('SELECT * FROM reservas WHERE id = $1', [id]);
     return rows[0];
 };
 
-/**
- * Busca todas as reservas de um usuário específico pelo CPF.
- */
+
 const findByUser = async (cpf) => {
     const query = `
         SELECT r.*,
@@ -59,9 +50,7 @@ const findByUser = async (cpf) => {
     return rows;
 };
 
-/**
- * Atualiza o status de uma reserva (para aprovar, rejeitar, etc.).
- */
+
 const updateStatus = async (id, status) => {
     const query = 'UPDATE reservas SET status = $1 WHERE id = $2 RETURNING *';
     const { rows } = await pool.query(query, [status, id]);
