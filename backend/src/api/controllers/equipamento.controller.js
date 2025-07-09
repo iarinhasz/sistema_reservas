@@ -1,24 +1,18 @@
-import pool from '../../config/database.js';
+import EquipamentoModel from '../models/equipamento.model.js';
 
 const create = async (req, res) => {
     try {
-        const { nome, marca, modelo, quantidade_total, ambiente_id } = req.body;
+        const { nome, quantidade_total } = req.body;
 
-        if (!nome || quantidade_total === undefined) {
+        if (nome === undefined || quantidade_total === undefined) {
             return res.status(400).json({ message: "Os campos 'nome' e 'quantidade_total' são obrigatórios." });
         }
 
-        const query = `
-            INSERT INTO equipamentos (nome, marca, modelo, quantidade_total, ambiente_id)
-            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-
-        const values = [nome, marca || null, modelo || null, quantidade_total, ambiente_id];
-
-        const result = await pool.query(query, values);
+        const novoEquipamento = await EquipamentoModel.create(req.body);
 
         res.status(201).json({
             message: "Equipamento criado com sucesso!",
-            equipamento: result.rows[0]
+            equipamento: novoEquipamento
         });
 
     } catch (error) {
@@ -27,111 +21,94 @@ const create = async (req, res) => {
     }
 };
 
-const listAll = async(req, res) =>{
-    try{
-        const result = await pool.query('SELECT * FROM equipamentos ORDER BY nome');
-        res.status(200).json(result.rows);
-    } catch{
+const listAll = async (req, res) => {
+    try {
+        const equipamentos = await EquipamentoModel.findAll();
+        res.status(200).json(equipamentos);
+    } catch (error) { // Adicionado o parâmetro de erro que faltava
         console.error('Erro ao listar equipamentos:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
-}
+};
 
-const getById = async(req, res)=>{
+const getById = async (req, res) => {
     try {
         const { id } = req.params;
         const equipamentoId = parseInt(id, 10);
 
-        const result = await pool.query('SELECT * FROM equipamentos WHERE id = $1', [equipamentoId]);
+        if (isNaN(equipamentoId)) {
+            return res.status(400).json({ message: "ID inválido." });
+        }
 
-        if (result.rowCount === 0) {
+        const equipamento = await EquipamentoModel.findById(equipamentoId);
+
+        if (!equipamento) {
             return res.status(404).json({ message: 'Equipamento não encontrado.' });
         }
 
-        res.status(200).json(result.rows[0]);
+        res.status(200).json(equipamento);
     } catch (error) {
         console.error('Erro ao buscar equipamento por ID:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
-}
+};
 
-const update = async (req, res)=>{
+const update = async (req, res) => {
     try {
         const { id } = req.params;
         const equipamentoId = parseInt(id, 10);
 
-        const camposParaAtualizar = req.body;
+        if (isNaN(equipamentoId)) {
+            return res.status(400).json({ message: "ID inválido." });
+        }
 
-        if (Object.keys(camposParaAtualizar).length === 0) {
+        if (Object.keys(req.body).length === 0) {
             return res.status(400).json({ message: 'Nenhum campo fornecido para atualização.' });
         }
-        if (camposParaAtualizar.ambiente_id === null) {
-            return res.status(400).json({ message: 'O ambiente_id não pode ser definido como nulo.' });
-        }
-        const setClauses = [];
-        const values = [];
-        let paramIndex = 1;
 
-        for (const key in camposParaAtualizar) {
-            if (['nome', 'marca', 'modelo', 'quantidade_total', 'ambiente_id'].includes(key)) {
-                setClauses.push(`${key} = $${paramIndex}`);
-                values.push(camposParaAtualizar[key]);
-                paramIndex++;
-            }
-        }
-        
-        if (setClauses.length === 0) {
-            return res.status(400).json({ message: 'Nenhum campo válido fornecido para atualização.' });
-        }
-        
-        values.push(equipamentoId);
+        const equipamentoAtualizado = await EquipamentoModel.update(equipamentoId, req.body);
 
-        const query = `
-            UPDATE equipamentos
-            SET ${setClauses.join(', ')}
-            WHERE id = $${paramIndex}
-            RETURNING *;
-        `;
-
-        const result = await pool.query(query, values);
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ message: 'Equipamento não encontrado para atualizar.' });
+        if (!equipamentoAtualizado) {
+            return res.status(404).json({ message: 'Equipamento não encontrado ou nenhum campo válido foi fornecido para atualização.' });
         }
 
         res.status(200).json({
             message: 'Equipamento atualizado com sucesso!',
-            equipamento: result.rows[0]
+            equipamento: equipamentoAtualizado
         });
 
     } catch (error) {
         console.error('Erro ao atualizar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
-}
+};
 
-
-const delete_ = async (req, res) =>{
+const delete_ = async (req, res) => {
     try {
         const { id } = req.params;
         const equipamentoId = parseInt(id, 10);
 
-        const result = await pool.query('DELETE FROM equipamentos WHERE id = $1 RETURNING *', [equipamentoId]);
+        if (isNaN(equipamentoId)) {
+            return res.status(400).json({ message: "ID inválido." });
+        }
 
-        if (result.rowCount === 0) {
+        const equipamentoDeletado = await EquipamentoModel.remove(equipamentoId);
+
+        if (!equipamentoDeletado) {
             return res.status(404).json({ message: 'Equipamento não encontrado para deletar.' });
         }
 
         res.status(200).json({
             message: 'Equipamento deletado com sucesso!',
-            equipamentoDeletado: result.rows[0]
+            equipamentoDeletado: equipamentoDeletado
         });
 
     } catch (error) {
         console.error('Erro ao deletar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
-}
+};
+
 export default {
     create,
     listAll,

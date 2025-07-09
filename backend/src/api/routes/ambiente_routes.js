@@ -5,15 +5,12 @@ import authMiddleware from '../middlewares/auth.middleware.js'; // Importa o gua
 
 
 const router = Router();
+
 router.get('/', ambienteController.listAll);
 //somente adm podem criar um ambiente novo
 router.post('/', authMiddleware, adminMiddleware, ambienteController.create);
-
-// Rota para listar todos os ambientes (pode ser pública ou apenas para logados)
-router.get('/', authMiddleware, ambienteController.listAll);
-
 // Rota para buscar um ambiente específico pelo ID (pode ser pública ou apenas para logados)
-router.get('/:id', authMiddleware, ambienteController.getById);
+router.get('/:id', ambienteController.getById);
 
 // Rota para atualizar um ambiente (protegida para admins)
 router.put('/:id', authMiddleware, adminMiddleware, ambienteController.update);
