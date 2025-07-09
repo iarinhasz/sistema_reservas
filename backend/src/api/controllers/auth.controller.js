@@ -30,10 +30,15 @@ const login = async (req, res) => {
             return res.status(403).json({ message: 'Acesso negado. A sua conta não está ativa.' });
         }
 
+        if (user.status !== 'ativo') {
+            return res.status(403).json({ message: 'Acesso negado. A sua conta não está ativa.' });
+        }
+
         const payload = {
             cpf: user.cpf,
             nome: user.nome,
             tipo: user.tipo,
+            status: user.status
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
