@@ -1,9 +1,15 @@
 const adminMiddleware = (req, res, next) => {
-  // O auth.middleware já deve ter colocado os dados do usuário em req.user
-    if (req.user && req.user.tipo === 'administrador') {
-        next(); // Usuário é admin, pode prosseguir
-    } else {
-        res.status(403).json({ message: 'Acesso proibido. Rota exclusiva para administradores.' });
+
+    if (!req.user) {
+    return res.status(403).json({ message: 'Acesso proibido. Falha na autenticação.' });
+    }
+    
+    const { tipo, status } = req.user;
+
+    if (tipo === 'administrador' && status === 'ativo') {
+        next();
+        } else {
+        res.status(403).json({ message: 'Acesso proibido. Rota exclusiva para administradores ativos.' });
     }
 };
 

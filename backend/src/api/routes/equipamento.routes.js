@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import equipamentoController from '../controllers/equipamento.controller.js';
-import authMiddleware from '../middlewares/auth.middleware.js';
 import adminMiddleware from '../middlewares/admin.middleware.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
+
 
 const router = Router();
 
