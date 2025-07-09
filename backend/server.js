@@ -2,6 +2,7 @@ import express from 'express';
 import ambientesRoutes from './src/api/routes/ambiente_routes.js';
 import authRoutes from './src/api/routes/auth.routes.js';
 import equipamentoRoutes from './src/api/routes/equipamento.routes.js';
+import reservaRoutes from './src/api/routes/reserva.routes.js';
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.get('/api', (req, res) => {
 app.use('/api/ambientes', ambientesRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/equipamentos', equipamentoRoutes);
+app.use('/api/reservas', reservaRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor do backend rodando na porta ${PORT}`);

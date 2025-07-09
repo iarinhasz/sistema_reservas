@@ -1,3 +1,6 @@
+-- Habilita a extensão necessária para a constraint de exclusão de sobreposição de datas
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
 CREATE TABLE IF NOT EXISTS usuarios (
     cpf VARCHAR(11) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -25,7 +28,7 @@ CREATE TABLE IF NOT EXISTS equipamentos (
 
 CREATE TABLE IF NOT EXISTS reservas (
     id SERIAL PRIMARY KEY,
-    usuario_cpf VARCHAR(11) REFERENCES usuarios(cpf),
+    usuario_cpf VARCHAR(11) REFERENCES usuarios(cpf) ON DELETE SET NULL,
     recurso_id INTEGER NOT NULL,
     recurso_tipo VARCHAR(50) NOT NULL,
     data_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -49,3 +52,13 @@ INSERT INTO ambientes(identificacao, tipo, status) VALUES
 
 INSERT INTO ambientes(identificacao, tipo, status) VALUES
 ('Auditório Principal', 'Auditório', 'Disponível');
+
+
+INSERT INTO usuarios (cpf, nome, email, senha, tipo) VALUES
+('11122233344', 'Professor Xavier', 'professor@email.com', 'senha_professor', 'professor')
+ON CONFLICT (cpf) DO NOTHING;
+
+
+INSERT INTO usuarios (cpf, nome, email, senha, tipo) VALUES
+('55566677788', 'Jean Grey', 'aluno@email.com', 'senha_aluno', 'aluno')
+ON CONFLICT (cpf) DO NOTHING;
