@@ -17,6 +17,7 @@ services:
       - ./.env
     depends_on:
       - db
+      - mailhog
 
   db:
     build:
@@ -31,6 +32,12 @@ services:
     ports:
       - "5433:5432"
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog_reservas
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   postgres_data:

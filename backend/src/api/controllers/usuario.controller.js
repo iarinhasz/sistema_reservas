@@ -59,12 +59,12 @@ const rejeitarCadastro = async (req, res) => {
             return res.status(400).json({ message: "O motivo da rejeição é obrigatório." });
         }
 
-        const usuario = await UsuarioModel.findById(id);
+        const usuario = await UsuarioModel.findByCpf(cpf);
         if (!usuario) {
             return res.status(404).json({ message: "Solicitação de cadastro não encontrada." });
         }
 
-        await UsuarioModel.deleteById(id);
+        await UsuarioModel.deleteByCpf(cpf);
 
         await EmailService.sendRejectionEmail(usuario, justificativa);
 
