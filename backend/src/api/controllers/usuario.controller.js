@@ -23,12 +23,12 @@ const create = async (req, res) => {
 
 
         res.status(201).json({
-            message: "Usuário criado com sucesso!",
+            message: "Solicitação de cadastro recebida! Aguardando aprovação do administrador.",
             usuario: newUser
         });
 
     } catch (error) {
-        console.error("Erro ao criar usuário:", error);
+        console.error("Erro ao solicitar cadastro:", error);
         res.status(500).json({ message: "Erro interno do servidor." });
     }
 };
@@ -84,11 +84,30 @@ const rejeitarCadastro = async (req, res) => {
     }
 
 };
+const listarTodos = async (req, res) => {
+    try {
+        const usuarios = await UsuarioModel.findAll();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        console.error("Erro ao listar usuários:", error);
+        res.status(500).json({ message: "Erro interno do servidor." });
+    }
+};
 
-
+const listarPendentes = async (req, res) => {
+    try {
+        const usuariosPendentes = await UsuarioModel.findPending();
+        res.status(200).json(usuariosPendentes);
+    } catch (error) {
+        console.error("Erro ao listar cadastros pendentes:", error);
+        res.status(500).json({ message: "Erro interno do servidor." });
+    }
+};
 
 export default {
     create,
     aprovarCadastro,
-    rejeitarCadastro
+    rejeitarCadastro,
+    listarTodos,
+    listarPendentes
 };

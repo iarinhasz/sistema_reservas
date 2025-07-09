@@ -52,6 +52,11 @@ const updateStatus = async (cpf, newStatus) => {
     );
     return rows[0];
 };
+const findAll = async () => {
+    const { rows } = await pool.query("SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente' ORDER BY nome");
+    return rows;
+};
+
 
 // Função para deletar um usuário (usado na rejeição)
 const deleteByCpf = async (cpf) => {
@@ -59,12 +64,12 @@ const deleteByCpf = async (cpf) => {
     return rows[0];
 }
 
-
 export default {
     create,
     findByEmail,
     findByCpf,
     findPending,
     updateStatus,
+    findAll,
     deleteByCpf
 };
