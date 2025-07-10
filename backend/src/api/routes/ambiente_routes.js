@@ -6,19 +6,14 @@ import authMiddleware from '../middlewares/auth.middleware.js'; // Importa o gua
 
 const router = Router();
 
-// Rotas GET agora protegidas para usuários autenticados
-router.get('/', authMiddleware, ambienteController.listAll);
-router.get('/:id', authMiddleware, ambienteController.getById);
-
-// Rotas de modificação protegidas para administradores
+//rotas protegidas pelo admin:
 router.post('/', authMiddleware, adminMiddleware, ambienteController.create);
-
-// Rota para atualizar um ambiente (protegida para admins)
-router.put('/:id', authMiddleware, adminMiddleware, ambienteController.update);
-
-// Rota para deletar um ambiente (protegida para admins)
+router.patch('/:id', authMiddleware, adminMiddleware, ambienteController.update); 
 router.delete('/:id', authMiddleware, adminMiddleware, ambienteController.delete);
 
+//rotas livres
 
+router.get('/', ambienteController.listAll);
+router.get('/:id', ambienteController.getById);
 
 export default router;
