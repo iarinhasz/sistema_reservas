@@ -67,7 +67,7 @@ const aprovar = async (req, res) => {
         // Se não há conflitos, aprova a reserva principal
         const reservaAprovada = await ReservaModel.updateStatus(id, 'aprovada');
 
-        // AGORA, A LÓGICA NOVA: Rejeita automaticamente as outras conflitantes
+        //Rejeita automaticamente as outras conflitantes
         if (reservaAprovada) {
             const rejectedCount = await ReservaModel.rejectConflictsFor(reservaAprovada);
             console.log(`${rejectedCount} solicitações conflitantes foram rejeitadas automaticamente.`);
