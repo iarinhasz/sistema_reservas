@@ -22,6 +22,8 @@ app.use('/api/equipamentos', equipamentoRoutes);
 app.use('/api/reservas', reservaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 
+
+//apenas p qnd for fazer teste
 if (process.env.NODE_ENV !== 'production') {
     const testingRoutes = (await import('./src/api/routes/testing.routes.js')).default;
     app.use('/api/testing', testingRoutes);
