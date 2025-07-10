@@ -32,7 +32,7 @@ describe('AmbienteService', () => {
         jest.clearAllMocks();
     });
 
-    
+
     describe('Create', () => {
         test('deve criar um ambiente com sucesso quando os dados são válidos', async () => {
             const dadosNovoAmbiente = { tipo: 'Laboratório', identificacao: 'Lab 2' };
@@ -126,7 +126,16 @@ describe('AmbienteService', () => {
             expect(resultado.length).toBe(2);
             expect(AmbienteModel.findAll).toHaveBeenCalledTimes(1);
         });
+        test('findAll deve retornar apenas ambientes quando um filtro de tipo é aplicado', async () => {
+            const filtro = { tipo: 'sala' };
+            const listaDeSalas = [{ id: 1, identificacao: 'S1', tipo: 'sala' }];
+            AmbienteModel.findAll.mockResolvedValue(listaDeSalas);
 
+            const resultado = await AmbienteService.findAll(filtro);
+
+            expect(resultado).toEqual(listaDeSalas);
+            expect(AmbienteModel.findAll).toHaveBeenCalledWith(filtro);
+        });
         test('findById deve retornar um único ambiente', async () => {
             // Arrange
             const ambiente = { id: 1, identificacao: 'Lab 1' };

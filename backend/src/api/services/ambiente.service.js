@@ -1,5 +1,5 @@
 import AmbienteModel from '../models/ambiente.model.js';
-import ReservaModel from '../models/reserva.model.js'; 
+import ReservaModel from '../models/reserva.model.js';
 
 const AmbienteService ={
     //novo amviente c regras de negocios
@@ -41,8 +41,8 @@ const AmbienteService ={
         return AmbienteModel.update(id, dadosParaAtualizar);
     },
     
-    async findAll() {
-        return AmbienteModel.findAll();
+    async findAll(filters ={}) {
+        return AmbienteModel.findAll(filters);
     },
 
     async findById(id) {
