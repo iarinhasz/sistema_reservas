@@ -1,10 +1,10 @@
+
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    host: process.env.EMAIL_HOST || 'mailhog',
+    port: process.env.EMAIL_PORT || 1025,
     secure: false
-
 });
 
 const sendApprovalEmail = async (user) => {
@@ -12,17 +12,9 @@ const sendApprovalEmail = async (user) => {
         from: '"Sistema de Reservas" <noreply@reservas.com>',
         to: user.email,
         subject: 'Seu cadastro foi APROVADO!',
-        html: `<h1>Olá, ${user.nome}!</h1>
-               <p>Seu cadastro em nosso sistema foi aprovado com sucesso.</p>
-               <p>Você já pode fazer login e utilizar a plataforma.</p>
-               <p>Atenciosamente,<br>Equipe do Sistema de Reservas</p>`
+        html: `<h1>Olá, ${user.nome}!</h1><p>Seu cadastro foi aprovado. Você já pode fazer login.</p>`
     };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de aprovação enviado para: ${user.email}`);
-    } catch (error) {
-        console.error(`Falha ao enviar e-mail de aprovação para ${user.email}:`, error);
-    }
+    await transporter.sendMail(mailOptions);
 };
 
 const sendRejectionEmail = async (user, reason) => {
@@ -30,21 +22,52 @@ const sendRejectionEmail = async (user, reason) => {
         from: '"Sistema de Reservas" <noreply@reservas.com>',
         to: user.email,
         subject: 'Informações sobre sua solicitação de cadastro',
-        html: `<h1>Olá, ${user.nome}.</h1>
-               <p>Sua solicitação de cadastro em nosso sistema foi analisada e, infelizmente, não foi aprovada neste momento.</p>
-               <p><strong>Motivo:</strong> ${reason}</p>
-               <p>Se você acredita que isso é um erro, por favor, entre em contato.</p>
-               <p>Atenciosamente,<br>Equipe do Sistema de Reservas</p>`
+        html: `<h1>Olá, ${user.nome}.</h1><p>Sua solicitação de cadastro não foi aprovada.</p><p><strong>Motivo:</strong> ${reason}</p>`
     };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de rejeição enviado para: ${user.email}`);
-    } catch (error) {
-        console.error(`Falha ao enviar e-mail de rejeição para ${user.email}:`, error);
-    }
+    await transporter.sendMail(mailOptions);
 };
 
+
+const sendReservationRequestEmail = async (usuario, reserva) => {
+    const mailOptions = {
+        from: '"Sistema de Reservas" <noreply@reservas.com>',
+        to: usuario.email,
+        subject: 'Sua Solicitação de Reserva foi Recebida!',
+        html: `<h1>Olá, ${usuario.nome}!</h1><p>Recebemos sua solicitação para a reserva: <strong>${reserva.titulo}</strong>. Em breve você receberá uma notificação sobre o status.</p>`
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+const sendReservationStatusEmail = async (usuario, reserva) => {
+    const isApproved = reserva.status === 'aprovada';
+    const subject = isApproved ? 'Sua Reserva foi APROVADA!' : 'Sua Solicitação de Reserva foi Rejeitada';
+    const body = isApproved
+        ? `<p>Sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi aprovada.</p>`
+        : `<p>Sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi rejeitada.</p>`;
+    const mailOptions = {
+        from: '"Sistema de Reservas" <noreply@reservas.com>',
+        to: usuario.email,
+        subject: subject,
+        html: `<h1>Olá, ${usuario.nome}!</h1>${body}`
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+const sendCancellationEmail = async (usuario, reserva) => {
+    const mailOptions = {
+        from: '"Sistema de Reservas" <noreply@reservas.com>',
+        to: usuario.email,
+        subject: 'Confirmação de Cancelamento de Reserva',
+        html: `<h1>Olá, ${usuario.nome}!</h1><p>Confirmamos que sua reserva para <strong>${reserva.titulo}</strong> foi cancelada com sucesso.</p>`
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+// Exporta todas as funções
 export default {
     sendApprovalEmail,
-    sendRejectionEmail
+    sendRejectionEmail,
+    sendReservationRequestEmail,
+    sendReservationStatusEmail,
+    sendCancellationEmail,
 };
