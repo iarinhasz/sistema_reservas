@@ -5,11 +5,13 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 
 
 const router = Router();
-
+//somente admi
 router.post('/', authMiddleware, adminMiddleware, equipamentoController.create);
-router.get('/', authMiddleware, equipamentoController.listAll);
-router.get('/:id', authMiddleware, equipamentoController.getById);
 router.put('/:id', authMiddleware, adminMiddleware, equipamentoController.update);
 router.delete('/:id', authMiddleware, adminMiddleware, equipamentoController.delete);
+
+router.get('/', equipamentoController.listAll);
+router.get('/:id', equipamentoController.getById);
+
 
 export default router;
