@@ -136,4 +136,4 @@ const deixarReview = async (req, res) => {
     }
 };
 
-export default { solicitar, aprovar, rejeitar, listAll, listMine, cancelar, deixarReview };
+export default { solicitar, aprovar, rejeitar, cancelar, deixarReview };
