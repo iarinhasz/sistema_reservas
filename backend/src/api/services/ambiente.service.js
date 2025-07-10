@@ -29,6 +29,25 @@ const AmbienteService ={
 
         return AmbienteModel.remove(ambienteId);
     },
+
+    async update(id, dadosParaAtualizar) {
+        const { identificacao } = dadosParaAtualizar;
+        if (identificacao) {
+            const existente = await AmbienteModel.findByIdentificador(identificacao);
+            if (existente && existente.id !== id) {
+                throw new Error("Identificador já cadastrado em outro ambiente.");
+            }
+        }
+        return AmbienteModel.update(id, dadosParaAtualizar);
+    },
+    
+    async findAll() {
+        return AmbienteModel.findAll();
+    },
+
+    async findById(id) {
+        return AmbienteModel.findById(id);
+    }
 };
 
 export default AmbienteService;
