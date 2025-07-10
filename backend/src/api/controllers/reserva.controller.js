@@ -147,4 +147,38 @@ const listAll = async (req, res) => {
     }
 };
 
-export default { solicitar, aprovar, rejeitar, listAll, listMine, cancelar };
+const deixarReview = async (req, res) => {
+    try {
+        const { id } = req.params; 
+        const { nota, comentario } = req.body; 
+        const usuarioLogado = req.user; 
+
+        const reserva = await ReservaModel.findById(id);
+
+        if (!reserva) {
+            return res.status(404).json({ message: "Reserva não encontrada." });
+        }
+
+        if (reserva.usuario_cpf !== usuarioLogado.cpf) {
+            return res.status(403).json({ message: "Você não tem permissão para avaliar esta reserva." });
+        }
+
+        if (new Date() < new Date(reserva.data_fim)) {
+            return res.status(403).json({ message: "Ainda não é possível avaliar. A reserva só termina em " + new Date(reserva.data_fim).toLocaleString('pt-BR') });
+        }
+
+        if (reserva.nota !== null) {
+            return res.status(409).json({ message: "Esta reserva já foi avaliada e não pode ser alterada." });
+        }
+
+        const reservaComReview = await ReservaModel.addReview(id, nota, comentario);
+
+        res.status(200).json({ message: "Review enviado com sucesso!", data: reservaComReview });
+
+    } catch (error) {
+        console.error('Erro ao enviar review:', error);
+        res.status(500).json({ message: "Erro interno do servidor" });
+    }
+};
+
+export default { solicitar, aprovar, rejeitar, listAll, listMine, cancelar, deixarReview };
