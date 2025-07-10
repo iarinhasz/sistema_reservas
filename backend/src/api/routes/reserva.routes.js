@@ -21,4 +21,7 @@ router.put('/:id/rejeitar', authMiddleware, adminMiddleware, reservaController.r
 // Rota para um usuário cancelar sua própria reserva (ou um admin cancelar qualquer uma)
 router.put('/:id/cancelar', authMiddleware, reservaController.cancelar);
 
+//Rota para o usuário deixar uma review sobre uma reserva feita
+router.post('/:id/review', authMiddleware, reservaController.deixarReview);
+
 export default router;
