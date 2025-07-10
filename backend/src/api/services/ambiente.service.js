@@ -1,5 +1,5 @@
 import AmbienteModel from '../models/ambiente.model.js';
-import ReservaModel from '../models/reserva.model.js'; 
+import ReservaModel from '../models/reserva.model.js';
 
 const AmbienteService ={
     //novo amviente c regras de negocios
@@ -29,6 +29,25 @@ const AmbienteService ={
 
         return AmbienteModel.remove(ambienteId);
     },
+
+    async update(id, dadosParaAtualizar) {
+        const { identificacao } = dadosParaAtualizar;
+        if (identificacao) {
+            const existente = await AmbienteModel.findByIdentificador(identificacao);
+            if (existente && existente.id !== id) {
+                throw new Error("Identificador já cadastrado em outro ambiente.");
+            }
+        }
+        return AmbienteModel.update(id, dadosParaAtualizar);
+    },
+    
+    async findAll(filters ={}) {
+        return AmbienteModel.findAll(filters);
+    },
+
+    async findById(id) {
+        return AmbienteModel.findById(id);
+    }
 };
 
 export default AmbienteService;

@@ -2,7 +2,8 @@ import AmbienteModel from '../models/ambiente.model.js';
 
 const listAll = async (req, res) => {
     try {
-        const ambientes = await AmbienteModel.findAll();
+        const filters = req.query;
+        const ambientes = await AmbienteService.findAll(filters);
         res.status(200).json(ambientes);
     } catch (error) {
         console.error('Erro ao listar ambientes:', error);

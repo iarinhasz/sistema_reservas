@@ -5,7 +5,14 @@ import pool from '../../config/database.js';
  * @returns {Promise<Array>}
  */
 const findAll = async () => {
-    const { rows } = await pool.query('SELECT * FROM ambientes ORDER BY identificacao');
+    let query = 'SELECT * FROM ambientes';
+    const queryParams = [];
+    if (filters.tipo) {
+        queryParams.push(filters.tipo);
+        query += ` WHERE tipo = $1`;
+    }
+    query += ' ORDER BY identificacao';
+    const { rows } = await pool.query(query, queryParams);
     return rows;
 };
 
