@@ -1,75 +1,69 @@
-/**
- * Envia um e-mail confirmando o recebimento da solicitação de reserva.
- */
+
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'mailhog',
+    port: process.env.EMAIL_PORT || 1025,
+    secure: false
+});
+
+const sendApprovalEmail = async (user) => {
+    const mailOptions = {
+        from: '"Sistema de Reservas" <noreply@reservas.com>',
+        to: user.email,
+        subject: 'Seu cadastro foi APROVADO!',
+        html: `<h1>Olá, ${user.nome}!</h1><p>Seu cadastro foi aprovado. Você já pode fazer login.</p>`
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+const sendRejectionEmail = async (user, reason) => {
+    const mailOptions = {
+        from: '"Sistema de Reservas" <noreply@reservas.com>',
+        to: user.email,
+        subject: 'Informações sobre sua solicitação de cadastro',
+        html: `<h1>Olá, ${user.nome}.</h1><p>Sua solicitação de cadastro não foi aprovada.</p><p><strong>Motivo:</strong> ${reason}</p>`
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+
 const sendReservationRequestEmail = async (usuario, reserva) => {
     const mailOptions = {
         from: '"Sistema de Reservas" <noreply@reservas.com>',
         to: usuario.email,
         subject: 'Sua Solicitação de Reserva foi Recebida!',
-        html: `
-            <h1>Olá, ${usuario.nome}!</h1>
-            <p>Recebemos sua solicitação para a reserva: <strong>${reserva.titulo}</strong>.</p>
-            <p>Datas: de ${new Date(reserva.data_inicio).toLocaleString('pt-BR')} até ${new Date(reserva.data_fim).toLocaleString('pt-BR')}.</p>
-            <p>Em breve você receberá uma notificação sobre a aprovação ou rejeição.</p>
-            <p>Obrigado!</p>
-        `,
+        html: `<h1>Olá, ${usuario.nome}!</h1><p>Recebemos sua solicitação para a reserva: <strong>${reserva.titulo}</strong>. Em breve você receberá uma notificação sobre o status.</p>`
     };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de solicitação de reserva enviado para: ${usuario.email}`);
-    } catch (error) {
-        console.error(`Falha ao enviar e-mail de solicitação de reserva para ${usuario.email}:`, error);
-    }
+    await transporter.sendMail(mailOptions);
 };
 
-/**
- * Envia um e-mail informando o novo status de uma reserva (aprovada ou rejeitada).
- */
 const sendReservationStatusEmail = async (usuario, reserva) => {
     const isApproved = reserva.status === 'aprovada';
     const subject = isApproved ? 'Sua Reserva foi APROVADA!' : 'Sua Solicitação de Reserva foi Rejeitada';
     const body = isApproved
-        ? `<p>Sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi aprovada. O recurso já está garantido para você.</p>`
-        : `<p>Lamentamos informar que sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi rejeitada.</p>`;
-
+        ? `<p>Sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi aprovada.</p>`
+        : `<p>Sua solicitação para a reserva <strong>${reserva.titulo}</strong> foi rejeitada.</p>`;
     const mailOptions = {
         from: '"Sistema de Reservas" <noreply@reservas.com>',
         to: usuario.email,
         subject: subject,
-        html: `<h1>Olá, ${usuario.nome}!</h1>${body}<p>Obrigado!</p>`,
+        html: `<h1>Olá, ${usuario.nome}!</h1>${body}`
     };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de status de reserva enviado para: ${usuario.email}`);
-    } catch (error) {
-        console.error(`Falha ao enviar e-mail de status de reserva para ${usuario.email}:`, error);
-    }
+    await transporter.sendMail(mailOptions);
 };
 
-/**
- * Envia um e-mail confirmando o cancelamento de uma reserva.
- */
 const sendCancellationEmail = async (usuario, reserva) => {
     const mailOptions = {
         from: '"Sistema de Reservas" <noreply@reservas.com>',
         to: usuario.email,
         subject: 'Confirmação de Cancelamento de Reserva',
-        html: `
-            <h1>Olá, ${usuario.nome}!</h1>
-            <p>Confirmamos que sua reserva para <strong>${reserva.titulo}</strong> foi cancelada com sucesso.</p>
-            <p>Obrigado!</p>
-        `,
+        html: `<h1>Olá, ${usuario.nome}!</h1><p>Confirmamos que sua reserva para <strong>${reserva.titulo}</strong> foi cancelada com sucesso.</p>`
     };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`E-mail de cancelamento de reserva enviado para: ${usuario.email}`);
-    } catch (error) {
-        console.error(`Falha ao enviar e-mail de cancelamento de reserva para ${usuario.email}:`, error);
-    }
+    await transporter.sendMail(mailOptions);
 };
 
-
-// Exporta TODAS as funções para que possam ser usadas em outros lugares do sistema.
+// Exporta todas as funções
 export default {
     sendApprovalEmail,
     sendRejectionEmail,
