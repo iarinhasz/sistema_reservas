@@ -136,4 +136,12 @@ const deixarReview = async (req, res) => {
     }
 };
 
-export default { solicitar, aprovar, rejeitar, cancelar, deixarReview };
+const listAll = async (req, res) => {
+    res.status(501).json({ message: "Funcionalidade ainda não implementada." });
+};
+
+const listMine = async (req, res) => {
+    res.status(501).json({ message: "Funcionalidade ainda não implementada." });
+};
+
+export default { solicitar, aprovar, rejeitar, cancelar, deixarReview, listAll, listMine };
