@@ -1,6 +1,17 @@
-import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+import {Before, Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 const API_URL = "http://localhost:3000";
+
+Before(() => {
+    // Chamamos nossa rota especial de reset
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/testing/reset`
+    }).then(response => {
+        // Verificamos se a limpeza foi bem-sucedida
+        expect(response.status).to.eq(200);
+    });
+});
 
 // DICA: Mova esta definição para 'cypress/support/commands.js'
 Cypress.Commands.add('login', (email, senha) => {
