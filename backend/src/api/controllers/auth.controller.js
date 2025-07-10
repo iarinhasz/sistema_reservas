@@ -14,11 +14,13 @@ const login = async (req, res) => {
         const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
         const user = result.rows[0];
 
-        // MUDANÇA CRÍTICA AQUI:
-        // 1. Primeiro, verificamos se o usuário foi encontrado.
-        // 2. Se sim, comparamos a senha.
-        // Se qualquer uma das condições for falsa, a senha é inválida.
-        const senhaValida = user && (senha === user.senha); // Lembre-se que aqui estamos sem bcrypt
+        console.log("--- DEBUG DE LOGIN ---");
+        console.log("Senha recebida do Cypress:", `"${senha}"`);
+        console.log("Senha vinda do Banco:", `"${user.senha}"`);
+        const senhaValida = (senha === user.senha);
+        console.log("As senhas são idênticas? (===):", senhaValida);
+        console.log("----------------------");
+
 
         if (!senhaValida) {
             // Esta é a única verificação necessária. Ela cobre tanto o usuário inexistente quanto a senha incorreta.

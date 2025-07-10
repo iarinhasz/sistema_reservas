@@ -14,8 +14,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS ambientes (
     id SERIAL PRIMARY KEY,
     identificacao VARCHAR(100) NOT NULL UNIQUE,
-    nome VARCHAR(100) NOT NULL, -- Adicionei NOT NULL aqui, pois um ambiente deve ter um nome
-    tipo VARCHAR(50),
+    tipo VARCHAR(50) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'Disponível'
 );
 
@@ -44,24 +43,4 @@ CREATE TABLE IF NOT EXISTS reservas (
 -- Inserção de dados para teste (com o campo status corrigido)
 INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
 ('12345678900', 'Admin Padrão', 'admin@email.com', 'senha_segura', 'admin', 'ativo')
-ON CONFLICT (cpf) DO NOTHING;
-
-INSERT INTO ambientes(identificacao, nome, tipo, status) VALUES
-('SALA-REUNIAO-A101', 'Sala de Reuniões A-101', 'Sala', 'Disponível')
-ON CONFLICT (identificacao) DO NOTHING;
-
-INSERT INTO ambientes(identificacao, nome, tipo, status) VALUES
-('LAB-GRAD-G1', 'Laboratório de Graduação G1', 'Laboratório', 'Disponível')
-ON CONFLICT (identificacao) DO NOTHING;
-
-INSERT INTO ambientes(identificacao, nome, tipo, status) VALUES
-('AUD-PRINCIPAL', 'Auditório Principal', 'Auditório', 'Disponível')
-ON CONFLICT (identificacao) DO NOTHING;
-
-INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
-('11122233344', 'Professor Xavier', 'professor@email.com', 'senha_professor', 'professor', 'ativo')
-ON CONFLICT (cpf) DO NOTHING;
-
-INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
-('55566677788', 'Jean Grey', 'aluno@email.com', 'senha_aluno', 'aluno', 'ativo')
 ON CONFLICT (cpf) DO NOTHING;
