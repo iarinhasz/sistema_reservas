@@ -3,10 +3,10 @@ import EmailService from '../services/email.service.js';
 
 const create = async (req, res) => {
     try {
-        const {cpf, nome, email, senha } = req.body;
+        const {cpf, nome, email, senha,tipo} = req.body;
 
-        if (!cpf ||!nome || !email || !senha) {
-            return res.status(400).json({ message: "Cpf, nome, email e senha são obrigatórios." });
+        if (!cpf ||!nome || !email || !senha || !tipo){
+            return res.status(400).json({ message: "Cpf, nome, email, senha e tipo são obrigatórios"});
         }
 
         const existingUser = await UsuarioModel.findByEmail(email);
@@ -18,6 +18,7 @@ const create = async (req, res) => {
             cpf,
             nome,
             email,
+            tipo,
             senha: senha
         });
 
@@ -104,10 +105,43 @@ const listarPendentes = async (req, res) => {
     }
 };
 
+
+const editarUsuario = async (req, res) => {
+    try {
+        const { cpf } = req.params; 
+
+        const dadosParaAtualizar = req.body;
+
+        if (Object.keys(dadosParaAtualizar).length === 0) {
+            return res.status(400).json({ message: "Pelo menos um campo deve ser fornecido para a edição." });
+        }
+
+        const usuarioAtualizado = await UsuarioModel.update(cpf, dadosParaAtualizar);
+
+        if (!usuarioAtualizado) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+        
+        res.status(200).json({
+            message: "Usuário atualizado com sucesso!",
+            usuario: usuarioAtualizado
+        });
+
+    } catch (error) {
+        if (error.code === '23505') { // Código de erro de violação de unicidade do Postgres
+            return res.status(409).json({ message: 'O e-mail fornecido já está em uso por outro usuário.' });
+        }
+        console.error("Erro ao editar usuário:", error);
+        res.status(500).json({ message: "Erro interno do servidor." });
+    }
+};
+
+
 export default {
     create,
     aprovarCadastro,
     rejeitarCadastro,
     listarTodos,
-    listarPendentes
+    listarPendentes,
+    editarUsuario
 };

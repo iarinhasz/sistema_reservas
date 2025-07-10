@@ -10,6 +10,7 @@ router.get('/', authMiddleware, adminMiddleware, usuarioController.listarTodos);
 router.get('/pendentes', authMiddleware, adminMiddleware, usuarioController.listarPendentes);
 router.post('/:cpf/aprovar', authMiddleware, adminMiddleware, usuarioController.aprovarCadastro);
 router.post('/:cpf/rejeitar', authMiddleware, adminMiddleware, usuarioController.rejeitarCadastro);
+router.patch('/:cpf', authMiddleware, adminMiddleware, usuarioController.editarUsuario);
 
 
 export default router;

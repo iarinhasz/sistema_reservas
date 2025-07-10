@@ -64,6 +64,29 @@ const deleteByCpf = async (cpf) => {
     return rows[0];
 }
 
+const update = async (cpf, userData) => {
+
+    const keys = Object.keys(userData); 
+
+    const setClauses = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+
+    const values = Object.values(userData);
+
+    values.push(cpf);
+    const cpfParamIndex = values.length;
+
+    const query = `
+        UPDATE usuarios 
+        SET ${setClauses} 
+        WHERE cpf = $${cpfParamIndex} 
+        RETURNING cpf, nome, email, tipo, status;
+    `;
+
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+};
+
+
 export default {
     create,
     findByEmail,
@@ -71,5 +94,6 @@ export default {
     findPending,
     updateStatus,
     findAll,
-    deleteByCpf
+    deleteByCpf,
+    update
 };

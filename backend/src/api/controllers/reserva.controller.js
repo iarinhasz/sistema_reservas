@@ -2,7 +2,6 @@ import ReservaModel from '../models/reserva.model.js';
 
 /**
  * Um usuário (aluno ou professor) solicita uma nova reserva.
- * A lógica de permissão é aplicada aqui.
  */
 const solicitar = async (req, res) => {
     try {
