@@ -8,11 +8,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-
-      - ./backend/src:/app/src
-      - ./backend/server.js:/app/server.js
-      - ./backend/package.json:/app/package.json
-      - ./backend/package-lock.json:/app/package-lock.json
+      # Mapeia todo o diretório do backend para o diretório de trabalho no contêiner
+      - ./backend:/app
+      # Adiciona um volume anônimo para node_modules para que o mapeamento local não o sobrescreva.
+      - /app/node_modules
     env_file:
       - ./.env
     depends_on:
@@ -26,6 +25,12 @@ services:
     container_name: db_reservas
     env_file:
       - ./.env
+    
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
     volumes:
       # Mantém os dados do banco salvos entre reinicializações
       - postgres_data:/var/lib/postgresql/data
