@@ -20,6 +20,16 @@ const findById = async (id) => {
     return rows[0];
 };
 
+/**
+ * Busca um ambiente pela sua identificação (nome).
+ * @param {string} identificacao
+ * @returns {Promise<Object|null>}
+ */
+const findByIdentificador = async (identificacao) => {
+    const { rows } = await pool.query('SELECT * FROM ambientes WHERE identificacao = $1', [identificacao]);
+    return rows[0];
+};
+
 
 /**
  * Cria um novo ambiente no banco de dados.
@@ -70,6 +80,7 @@ const remove = async (id) => {
 export default {
     findAll,
     findById,
+    findByIdentificador,
     create,
     update,
     remove,

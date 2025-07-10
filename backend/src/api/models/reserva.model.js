@@ -71,7 +71,22 @@ const rejectConflictsFor = async (approvedReservation) => {
     const { rowCount } = await pool.query(query, [recurso_id, recurso_tipo, id, data_inicio, data_fim]);
     return rowCount; // Retorna o número de reservas que foram rejeitadas
 };
-
+/**
+ * Busca por reservas futuras para um recurso específico (ambiente ou equipamento).
+ * @param {object} resourceInfo - { recurso_id, recurso_tipo }
+ * @returns {Promise<Array>}
+ */
+const findFutureByResourceId = async ({ recurso_id, recurso_tipo }) => {
+    const query = `
+        SELECT * FROM reservas 
+        WHERE recurso_id = $1 
+        AND recurso_tipo = $2 
+        AND data_inicio > NOW() 
+        AND status = 'aprovada';
+    `;
+    const { rows } = await pool.query(query, [recurso_id, recurso_tipo]);
+    return rows;
+};
 
 export default {
     create,
@@ -80,4 +95,5 @@ export default {
     findByUser,
     updateStatus,
     rejectConflictsFor,
+    findFutureByResourceId
 };
