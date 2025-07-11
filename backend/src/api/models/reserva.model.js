@@ -88,6 +88,18 @@ const findFutureByResourceId = async ({ recurso_id, recurso_tipo }) => {
     return rows;
 };
 
+const addReview = async (id, nota, comentario) => {
+    const query = `
+        UPDATE reservas 
+        SET nota = $1, comentario = $2 
+        WHERE id = $3 
+        RETURNING *;
+    `;
+    const values = [nota, comentario, id];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+};
+
 export default {
     create,
     findAll,
@@ -95,5 +107,6 @@ export default {
     findByUser,
     updateStatus,
     rejectConflictsFor,
-    findFutureByResourceId
+    findFutureByResourceId,
+    addReview
 };
