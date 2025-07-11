@@ -23,14 +23,13 @@ const AmbienteService = {
     // Exclusão com verificação de reservas futuras
     async delete(ambienteId) {
         const reservasFuturas = await ReservaModel.findFutureByResourceId({
-        recurso_id: ambienteId,
-        recurso_tipo: 'ambiente'
+            recurso_id: ambienteId,
+            recurso_tipo: 'ambiente'
         });
 
         if (reservasFuturas && reservasFuturas.length > 0) {
-        throw new Error("Não é possível excluir um espaço com reservas futuras");
+            throw new Error("Não é possível excluir um espaço com reservas futuras");
         }
-
         return AmbienteModel.remove(ambienteId);
     },
 

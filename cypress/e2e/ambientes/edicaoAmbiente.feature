@@ -19,3 +19,9 @@ Feature: Edicao de Ambiente
         When eu envio uma requisição DELETE para remover o ambiente de teste
         Then a resposta deve ter o status 200
         And o corpo da resposta deve conter a mensagem "Ambiente deletado com sucesso!"
+
+    Scenario: Falha ao tentar remover um ambiente com reservas futuras
+        Given um ambiente com uma reserva futura é criado
+        When eu envio uma requisição DELETE para remover o ambiente de teste
+        Then a resposta deve ter o status 409
+        And o corpo da resposta deve conter a mensagem "Não é possível excluir um espaço com reservas futuras"
