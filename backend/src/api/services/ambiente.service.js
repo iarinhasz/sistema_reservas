@@ -22,14 +22,24 @@ const AmbienteService = {
 
     // Exclusão com verificação de reservas futuras
     async delete(ambienteId) {
-        const reservasFuturas = await ReservaModel.findFutureByResourceId({
+        console.log(`\n--- AMBIENTE SERVICE: Iniciando deleção do ambiente ID: ${ambienteId} ---`);
+
+        const params = {
             recurso_id: ambienteId,
             recurso_tipo: 'ambiente'
-        });
+        };
+        console.log('--- AMBIENTE SERVICE: Buscando reservas futuras com os parâmetros:', params);
 
+        const reservasFuturas = await ReservaModel.findFutureByResourceId(params);
+
+        console.log('--- AMBIENTE SERVICE: Resultado da busca por reservas futuras:', reservasFuturas);
+        
         if (reservasFuturas && reservasFuturas.length > 0) {
+            console.log('--- AMBIENTE SERVICE: CONFLITO! Encontrou reservas. Lançando erro.');
             throw new Error("Não é possível excluir um espaço com reservas futuras");
         }
+
+        console.log('--- AMBIENTE SERVICE: Nenhuma reserva encontrada. Prosseguindo para a deleção.');
         return AmbienteModel.remove(ambienteId);
     },
 

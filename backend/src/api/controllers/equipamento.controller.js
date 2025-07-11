@@ -1,21 +1,18 @@
-import EquipamentoModel from '../models/equipamento.model.js';
+// src/api/controllers/equipamento.controller.js
+
+import EquipamentoService from '../services/equipamento.service.js';
 
 const create = async (req, res) => {
     try {
-        const { nome, quantidade_total } = req.body;
-
-        if (nome === undefined || quantidade_total === undefined) {
-            return res.status(400).json({ message: "Os campos 'nome' e 'quantidade_total' são obrigatórios." });
-        }
-
-        const novoEquipamento = await EquipamentoModel.create(req.body);
-
+        const novoEquipamento = await EquipamentoService.create(req.body);
         res.status(201).json({
             message: "Equipamento criado com sucesso!",
             equipamento: novoEquipamento
         });
-
     } catch (error) {
+        if (error.message.includes("obrigatórios")) {
+            return res.status(400).json({ message: error.message });
+        }
         console.error('Erro ao criar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -23,9 +20,9 @@ const create = async (req, res) => {
 
 const listAll = async (req, res) => {
     try {
-        const equipamentos = await EquipamentoModel.findAll();
+        const equipamentos = await EquipamentoService.findAll();
         res.status(200).json(equipamentos);
-    } catch (error) { // Adicionado o parâmetro de erro que faltava
+    } catch (error) {
         console.error('Erro ao listar equipamentos:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -34,20 +31,12 @@ const listAll = async (req, res) => {
 const getById = async (req, res) => {
     try {
         const { id } = req.params;
-        const equipamentoId = parseInt(id, 10);
-
-        if (isNaN(equipamentoId)) {
-            return res.status(400).json({ message: "ID inválido." });
-        }
-
-        const equipamento = await EquipamentoModel.findById(equipamentoId);
-
-        if (!equipamento) {
-            return res.status(404).json({ message: 'Equipamento não encontrado.' });
-        }
-
+        const equipamento = await EquipamentoService.findById(parseInt(id, 10));
         res.status(200).json(equipamento);
     } catch (error) {
+        if (error.message.includes("não encontrado")) {
+            return res.status(404).json({ message: error.message });
+        }
         console.error('Erro ao buscar equipamento por ID:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -56,28 +45,18 @@ const getById = async (req, res) => {
 const update = async (req, res) => {
     try {
         const { id } = req.params;
-        const equipamentoId = parseInt(id, 10);
-
-        if (isNaN(equipamentoId)) {
-            return res.status(400).json({ message: "ID inválido." });
-        }
-
-        if (Object.keys(req.body).length === 0) {
-            return res.status(400).json({ message: 'Nenhum campo fornecido para atualização.' });
-        }
-
-        const equipamentoAtualizado = await EquipamentoModel.update(equipamentoId, req.body);
-
-        if (!equipamentoAtualizado) {
-            return res.status(404).json({ message: 'Equipamento não encontrado ou nenhum campo válido foi fornecido para atualização.' });
-        }
-
+        const equipamentoAtualizado = await EquipamentoService.update(parseInt(id, 10), req.body);
         res.status(200).json({
             message: 'Equipamento atualizado com sucesso!',
             equipamento: equipamentoAtualizado
         });
-
     } catch (error) {
+        if (error.message.includes("não encontrado")) {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message.includes("Nenhum campo fornecido")) {
+            return res.status(400).json({ message: error.message });
+        }
         console.error('Erro ao atualizar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -86,33 +65,21 @@ const update = async (req, res) => {
 const delete_ = async (req, res) => {
     try {
         const { id } = req.params;
-        const equipamentoId = parseInt(id, 10);
-
-        if (isNaN(equipamentoId)) {
-            return res.status(400).json({ message: "ID inválido." });
-        }
-
-        const equipamentoDeletado = await EquipamentoModel.remove(equipamentoId);
-
-        if (!equipamentoDeletado) {
-            return res.status(404).json({ message: 'Equipamento não encontrado para deletar.' });
-        }
-
+        const equipamentoDeletado = await EquipamentoService.remove(parseInt(id, 10));
         res.status(200).json({
             message: 'Equipamento deletado com sucesso!',
             equipamentoDeletado: equipamentoDeletado
         });
-
     } catch (error) {
+        if (error.message.includes("não encontrado")) {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message.includes("reservas futuras")) {
+            return res.status(409).json({ message: error.message });
+        }
         console.error('Erro ao deletar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
 };
 
-export default {
-    create,
-    listAll,
-    getById,
-    update,
-    delete: delete_
-};
+export default { create, listAll, getById, update, delete: delete_ };
