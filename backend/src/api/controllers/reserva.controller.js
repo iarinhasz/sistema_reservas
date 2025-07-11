@@ -126,7 +126,7 @@ const deixarReview = async (req, res) => {
             return res.status(403).json({ message: "Ainda não é possível avaliar. A reserva só termina em " + new Date(reserva.data_fim).toLocaleString('pt-BR') });
         }
 
-        if (reserva.nota !== null) {
+        if (reserva.nota) { 
             return res.status(409).json({ message: "Esta reserva já foi avaliada e não pode ser alterada." });
         }
 
