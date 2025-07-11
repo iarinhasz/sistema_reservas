@@ -236,17 +236,17 @@ When('eu envio uma requisição PATCH sem fornecer ID', () => {
     }).as('apiResponse');
 });
 
-When('eu envio uma requisição PATCH para um equipamento inexistente', () => {
+When('eu envio uma requisição PATCH para {string} com novos dados', (apiUrl) => {
     const authToken = Cypress.env('authToken');
+
     cy.request({
         method: 'PATCH',
-        url: `${API_URL}/api/equipamentos/99999`,
+        url: `http://localhost:3000${apiUrl}`,
         headers: { 'Authorization': `Bearer ${authToken}` },
-        body: { nome: "Alteração Inválida" },
+        body: { nome: "Tentativa de Edição Inválida" },
         failOnStatusCode: false
     }).as('apiResponse');
 });
-
 
 When('eu envio uma requisição GET para listar os equipamentos do ambiente de teste', () => {
     const authToken = Cypress.env('authToken');

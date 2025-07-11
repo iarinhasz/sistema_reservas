@@ -40,7 +40,7 @@ Feature: API para Gerenciar Equipamentos
     Scenario: Tentar editar um equipamento que não existe
         When eu envio uma requisição PATCH para "/api/equipamentos/9999" com novos dados
         Then a resposta da requisição deve ter o status 404
-        And o corpo da resposta deve conter a mensagem "Equipamento não encontrado"
+        And o corpo da resposta deve conter a mensagem "Equipamento não encontrado ou nenhum campo válido foi fornecido."
 
     Scenario: Remover um equipamento de um ambiente
         Given um equipamento com nome "Cadeira Quebrada" é criado no ambiente de teste
