@@ -1,6 +1,6 @@
 // cypress/e2e/equipamentos/gerenciar_equipamentos.js
 
-import { Given, When, Then, Before } from "@badeball/cypress-cucumber-preprocessor";
+import { Before, Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 const API_URL = "http://localhost:3000";
 
@@ -37,6 +37,24 @@ Given('um equipamento com nome {string} é criado no ambiente de teste', (nome) 
         body: {
             nome: nome,
             quantidade_total: 1,
+            ambiente_id: ambienteId
+        }
+    }).then(response => {
+        expect(response.status).to.eq(201);
+        Cypress.env('equipamentoId', response.body.equipamento.id);
+    });
+});
+
+Given('um equipamento com nome {string} e quantidade {string} é criado no ambiente de teste', (nome, quantidade) => {
+    const authToken = Cypress.env('authToken');
+    const ambienteId = Cypress.env('ambienteId');
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/equipamentos`,
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        body: {
+            nome: nome,
+            quantidade_total: parseInt(quantidade, 10),
             ambiente_id: ambienteId
         }
     }).then(response => {
@@ -111,6 +129,23 @@ When('eu envio uma requisição POST para {string} para adicionar o equipamento 
     }).as('apiResponse');
 });
 
+When('eu envio uma requisição POST para {string} com o corpo faltando um campo obrigatório', (apiUrl) => {
+    const authToken = Cypress.env('authToken');
+    const ambienteId = Cypress.env('ambienteId');
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/equipamentos`,
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        body: {
+            nome: "Equipamento Sem Quantidade",
+            ambiente_id: ambienteId
+            // O campo 'quantidade_total' está faltando de propósito
+            },
+        failOnStatusCode: false
+    }).as('apiResponse');
+});
+
+
 When('eu envio uma requisição PATCH para o equipamento de teste com os novos dados:', (dataTable) => {
     const novosDados = dataTable.hashes()[0];
     const authToken = Cypress.env('authToken');
@@ -145,4 +180,8 @@ Then('o corpo da resposta deve conter o equipamento com o nome {string}', (nome)
 
 Then('o corpo da resposta deve conter a mensagem {string}', (mensagem) => {
     cy.get('@apiResponse').its('body.message').should('eq', mensagem);
+});
+
+Then('a resposta da requisição de equipamento deve ter o status {int}', (statusCode) => {
+    cy.get('@apiResponse').its('status').should('eq', statusCode);
 });
