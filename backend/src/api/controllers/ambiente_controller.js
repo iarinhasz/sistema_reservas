@@ -7,7 +7,7 @@ const listAll = async (req, res) => {
         const ambientes = await AmbienteService.findAll(filters);
         res.status(200).json(ambientes);
     } catch (error) {
-        console.error('Erro ao listar ambientes:', error);
+        console.error('Erro ao listar ambientes:', error.message ,error.stack);
         res.status(500).json({ message: 'Erro interno no servidor' });
     }
 };
@@ -30,7 +30,6 @@ const create = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
-        // A sua rota usa 'cpf', mas para ambiente o ideal é 'id'. Estou usando 'id' como no seu código original.
         const { id } = req.params; 
         const ambiente = await AmbienteService.findById(parseInt(id, 10));
         res.status(200).json(ambiente);

@@ -17,6 +17,18 @@ Feature: API para Gerenciar Equipamentos
         Then a resposta da requisição de equipamento deve ter o status 400
         And o corpo da resposta deve conter a mensagem "Os campos 'nome' e 'quantidade_total' são obrigatórios."
 
+    Scenario: Tentar criar um equipamento com nome duplicado no mesmo ambiente
+        Given um equipamento com nome "Projetor Epson" é criado no ambiente de teste
+        When eu envio uma requisição POST com o mesmo nome
+        Then a resposta da requisição deve ter o status 409
+        And o corpo da resposta deve conter a mensagem "Já existe um equipamento com esse nome neste ambiente"
+        
+    Scenario: Listar equipamentos de um ambiente específico
+        Given o ambiente "Lab-Central" tem 2 equipamentos cadastrados
+        When eu envio uma requisição GET para listar os equipamentos do ambiente de teste
+        Then a resposta da requisição deve ter o status 200
+        And a resposta deve conter uma lista com 2 equipamentos
+
     Scenario: Alterar os dados de um equipamento existente
         Given um equipamento com nome "Mouse Velho" é criado no ambiente de teste
         When eu envio uma requisição PATCH para o equipamento de teste com os novos dados:
@@ -25,11 +37,22 @@ Feature: API para Gerenciar Equipamentos
         Then a resposta da requisição deve ter o status 200
         And o corpo da resposta deve conter o equipamento com o nome "Mouse Novo"
 
+    Scenario: Tentar editar um equipamento que não existe
+        When eu envio uma requisição PATCH para "/api/equipamentos/9999" com novos dados
+        Then a resposta da requisição deve ter o status 404
+        And o corpo da resposta deve conter a mensagem "Equipamento não encontrado"
+
     Scenario: Remover um equipamento de um ambiente
         Given um equipamento com nome "Cadeira Quebrada" é criado no ambiente de teste
         When eu envio uma requisição DELETE para remover o equipamento de teste
         Then a resposta da requisição deve ter o status 200
         And o corpo da resposta deve conter a mensagem "Equipamento deletado com sucesso!"
+
+    Scenario: Tentar deletar um equipamento inexistente
+        When eu envio uma requisição DELETE para "/api/equipamentos/9999"
+        Then a resposta da requisição deve ter o status 404
+        And o corpo da resposta deve conter a mensagem "Equipamento não encontrado"
+
 
     Scenario: Falha ao tentar remover um equipamento com uma reserva futura
         Given um equipamento com uma reserva futura é criado

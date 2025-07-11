@@ -13,6 +13,9 @@ const create = async (req, res) => {
         if (error.message.includes("obrigatórios")) {
             return res.status(400).json({ message: error.message });
         }
+        if (error.message.includes("Já existe um equipamento")) {
+            return res.status(409).json({ message: error.message });
+        }
         console.error('Erro ao criar equipamento:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -20,7 +23,9 @@ const create = async (req, res) => {
 
 const listAll = async (req, res) => {
     try {
-        const equipamentos = await EquipamentoService.findAll();
+        const filters = req.query;
+
+        const equipamentos = await EquipamentoService.findAll(filters);
         res.status(200).json(equipamentos);
     } catch (error) {
         console.error('Erro ao listar equipamentos:', error);

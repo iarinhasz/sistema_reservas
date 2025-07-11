@@ -7,11 +7,23 @@ const EquipamentoService = {
      * Valida e cria um novo equipamento.
      */
     async create(dadosEquipamento) {
-        const { nome, quantidade_total } = dadosEquipamento;
+        const { nome, quantidade_total, ambiente_id} = dadosEquipamento;
+        console.log('[DEBUG create] dadosEquipamento:', dadosEquipamento);
 
         if (nome === undefined || quantidade_total === undefined) {
             throw new Error("Os campos 'nome' e 'quantidade_total' são obrigatórios.");
         }
+        console.log('[DEBUG create] checando duplicidade para:', { nome, ambiente_id });
+
+        const existente = await EquipamentoModel.findByNomeEAmbiente(nome, ambiente_id);
+
+        console.log('[DEBUG create] existente encontrado:', existente);
+
+        if (existente) {
+            // Lança erro que será tratado no controller
+            throw new Error("Já existe um equipamento com esse nome neste ambiente");
+        }
+
         return EquipamentoModel.create(dadosEquipamento);
     },
 

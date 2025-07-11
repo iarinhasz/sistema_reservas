@@ -4,7 +4,7 @@ import pool from '../../config/database.js';
  * Busca todos os ambientes no banco de dados.
  * @returns {Promise<Array>}
  */
-const findAll = async () => {
+const findAll = async (filters = {}) => {
     let query = 'SELECT * FROM ambientes';
     const queryParams = [];
     if (filters.tipo) {

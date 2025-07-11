@@ -20,11 +20,22 @@ const create = async (equipamentoData) => {
 /**
  * Lista todos os equipamentos.
  */
-const findAll = async () => {
-    const { rows } = await pool.query('SELECT * FROM equipamentos ORDER BY nome');
+const findAll = async (filters = {}) => {
+    let query = 'SELECT * FROM equipamentos';
+    const values = [];
+    
+    // Se um filtro de ambiente_id foi passado...
+    if (filters.ambiente_id) {
+        // adicionamos a cláusula WHERE na nossa query
+        query += ' WHERE ambiente_id = $1';
+        values.push(filters.ambiente_id);
+    }
+    
+    query += ' ORDER BY nome';
+    
+    const { rows } = await pool.query(query, values);
     return rows;
 };
-
 /**
  * Busca um equipamento pelo seu ID.
  */
@@ -76,10 +87,21 @@ const remove = async (id) => {
     return rows[0];
 };
 
+const findByNomeEAmbiente = async (nome, ambiente_id) => {
+    const { rows } = await pool.query(
+        'SELECT * FROM equipamentos WHERE nome = $1 AND ambiente_id = $2',
+        [nome, ambiente_id]
+    );
+    console.log('[DEBUG model.findByNomeEAmbiente] rows:', rows);
+
+    return rows[0]; // retorna o equipamento se existir ou undefined
+};
+
 export default {
     create,
     findAll,
     findById,
     update,
-    remove
+    remove,
+    findByNomeEAmbiente,
 };
