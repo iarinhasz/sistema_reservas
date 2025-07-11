@@ -110,6 +110,10 @@ const deixarReview = async (req, res) => {
 
         const reserva = await ReservaModel.findById(id);
 
+        // --- LINHA DE DEBUG: Adicione esta linha para "espiar" os dados ---
+        console.log('--- DADOS DA RESERVA ANTES DE VALIDAR ---', reserva);
+        // --------------------------------------------------------------------
+
         if (!reserva) {
             return res.status(404).json({ message: "Reserva não encontrada." });
         }
