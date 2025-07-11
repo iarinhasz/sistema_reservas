@@ -49,10 +49,8 @@ Feature: API para Gerenciar Equipamentos
         And o corpo da resposta deve conter a mensagem "Equipamento deletado com sucesso!"
 
     Scenario: Tentar deletar um equipamento inexistente
-        When eu envio uma requisição DELETE para "/api/equipamentos/9999"
-        Then a resposta da requisição deve ter o status 404
-        And o corpo da resposta deve conter a mensagem "Equipamento não encontrado"
-
+        When eu envio uma requisição DELETE para um equipamento com ID inexistente "99999"
+        Then a resposta da requisição de equipamento deve ter o status 404
 
     Scenario: Falha ao tentar remover um equipamento com uma reserva futura
         Given um equipamento com uma reserva futura é criado

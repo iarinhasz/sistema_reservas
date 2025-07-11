@@ -76,7 +76,13 @@ const delete_ = async (req, res) => {
             equipamentoDeletado: equipamentoDeletado
         });
     } catch (error) {
-        if (error.message.includes("não encontrado")) {
+        console.log("--- ERRO CAPTURADO NO CONTROLLER ---");
+        console.log("Tipo do Erro:", typeof error);
+        console.log("O objeto de erro completo:", error);
+        console.log("A mensagem do erro (error.message):", error.message);
+        console.log("-------------------------------------");
+
+        if (error.message.includes("não encontrado para deletar")) {
             return res.status(404).json({ message: error.message });
         }
         if (error.message.includes("reservas futuras")) {

@@ -120,35 +120,40 @@ Given('um equipamento com uma reserva futura é criado', () => {
 Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, numEquipamentos) => {
     const authToken = Cypress.env('authToken');
 
+    // 1. Tenta criar o ambiente. Se já existir, não tem problema por causa do 'failOnStatusCode'.
     cy.request({
         method: 'POST',
         url: `${API_URL}/api/ambientes`,
         headers: { 'Authorization': `Bearer ${authToken}` },
         body: { identificacao: nomeAmbiente, tipo: 'Laboratório' },
-        failOnStatusCode: false // Não falha se o ambiente já existir
+        failOnStatusCode: false
     }).then(ambienteResponse => {
-        // Se o ambiente foi criado agora, pegamos o ID dele
-        if (ambienteResponse.status === 201) {
-            return cy.wrap(ambienteResponse.body.ambiente.id);
-        }
-        // Se ele já existia (409), precisamos buscar o ID dele
+        // Se a criação funcionou (201) ou o ambiente já existia (409),
+        // nós precisamos do ID dele. Vamos buscá-lo na lista geral.
         return cy.request({
             method: 'GET',
             url: `${API_URL}/api/ambientes`,
             headers: { 'Authorization': `Bearer ${authToken}` }
         }).then(getResp => {
+            // CORREÇÃO: Buscamos diretamente em getResp.body, que é o array.
             const ambiente = getResp.body.find(a => a.identificacao === nomeAmbiente);
-            if (!ambiente) throw new Error(`Ambiente de teste '${nomeAmbiente}' não foi encontrado.`);
+            
+            if (!ambiente) {
+                throw new Error(`Ambiente de teste '${nomeAmbiente}' não foi encontrado após a tentativa de criação/busca.`);
+            }
+            // Retornamos o ID para o próximo .then()
             return cy.wrap(ambiente.id);
         });
     }).then(ambienteId => {
+        // 2. SOMENTE DEPOIS de ter o ID do ambiente, criamos os equipamentos dentro dele.
+        // Isso evita erros de sincronia.
         for (let i = 1; i <= numEquipamentos; i++) {
             cy.request({
                 method: 'POST',
                 url: `${API_URL}/api/equipamentos`,
                 headers: { 'Authorization': `Bearer ${authToken}` },
                 body: {
-                    nome: `Equipamento de Teste ${i}`,
+                    nome: `Equipamento de Teste ${i} no ${nomeAmbiente}`,
                     quantidade_total: 1,
                     ambiente_id: ambienteId
                 }
@@ -272,13 +277,23 @@ When('eu envio uma requisição GET para obter o histórico do equipamento de te
 });
 
 
-When('eu envio uma requisição DELETE com um ID inexistente', () => {
+When('eu envio uma requisição DELETE para {string}', (equipamentoId) => {
     const authToken = Cypress.env('authToken');
     cy.request({
         method: 'DELETE',
-        url: `${API_URL}/api/equipamentos/99999`, // ID inválido
+        url: `http://localhost:3000/api/equipamentos/${equipamentoId}`,
         headers: { 'Authorization': `Bearer ${authToken}` },
         failOnStatusCode: false
+    }).as('apiResponse');
+});
+
+When('eu envio uma requisição DELETE para um equipamento com ID inexistente {string}', (equipamentoId) => {
+    const authToken = Cypress.env('authToken');
+    cy.request({
+        method: 'DELETE',
+        url: `http://localhost:3000/api/equipamentos/${equipamentoId}`,
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        failOnStatusCode: false // Essencial para o teste não falhar com o erro 404
     }).as('apiResponse');
 });
 
@@ -302,7 +317,15 @@ Then('o corpo da resposta deve conter o equipamento com o nome {string}', (nome)
 });
 
 Then('o corpo da resposta deve conter a mensagem {string}', (mensagem) => {
-    cy.get('@apiResponse').its('body.message').should('eq', mensagem);
+    cy.get('@apiResponse').then((response) => {
+        // --- LOG DE DEPURAÇÃO NO CYPRESS ---
+        console.log('API Response Status:', response.status);
+        console.log('API Response Body:', response.body);
+        // ------------------------------------
+
+        // A verificação original
+        expect(response.body.message).to.equal(mensagem);
+    });
 });
 
 Then('a resposta deve conter uma lista com {int} equipamentos', (quantidade) => {
