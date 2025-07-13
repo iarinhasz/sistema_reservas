@@ -22,5 +22,3 @@ Given("sou um administrador logado no sistema", () => {
 Given('o sistema está rodando', () => {
   cy.log('Sistema está rodando — setup inicial.');
 });
-
-// Você pode adicionar outros passos comuns aqui no futuro

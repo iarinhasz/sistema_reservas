@@ -1,7 +1,18 @@
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-import '../common/common_steps'; // <- IMPORTAÇÃO ESSENCIAL
+import { Before, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import '../common/common_steps'; 
 
 const API_URL = 'http://localhost:3000';
+
+Before(() => {
+    // Chamamos nossa rota especial de reset
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/testing/reset`
+    }).then(response => {
+        // Verificamos se a limpeza foi bem-sucedida
+        expect(response.status).to.eq(200);
+    });
+});
 
 When('envio uma solicitação de cadastro com nome {string}, cpf {string}, email {string}, senha {string}, tipo {string}', 
   (nome, cpf, email, senha, tipo) => {
