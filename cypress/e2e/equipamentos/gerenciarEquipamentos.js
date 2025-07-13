@@ -120,7 +120,6 @@ Given('um equipamento com uma reserva futura é criado', () => {
 Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, numEquipamentos) => {
     const authToken = Cypress.env('authToken');
 
-    // 1. Tenta criar o ambiente. Se já existir, não tem problema por causa do 'failOnStatusCode'.
     cy.request({
         method: 'POST',
         url: `${API_URL}/api/ambientes`,
@@ -128,14 +127,12 @@ Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, n
         body: { identificacao: nomeAmbiente, tipo: 'Laboratório' },
         failOnStatusCode: false
     }).then(ambienteResponse => {
-        // Se a criação funcionou (201) ou o ambiente já existia (409),
-        // nós precisamos do ID dele. Vamos buscá-lo na lista geral.
+
         return cy.request({
             method: 'GET',
             url: `${API_URL}/api/ambientes`,
             headers: { 'Authorization': `Bearer ${authToken}` }
         }).then(getResp => {
-            // CORREÇÃO: Buscamos diretamente em getResp.body, que é o array.
             const ambiente = getResp.body.find(a => a.identificacao === nomeAmbiente);
             
             if (!ambiente) {
@@ -145,8 +142,6 @@ Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, n
             return cy.wrap(ambiente.id);
         });
     }).then(ambienteId => {
-        // 2. SOMENTE DEPOIS de ter o ID do ambiente, criamos os equipamentos dentro dele.
-        // Isso evita erros de sincronia.
         for (let i = 1; i <= numEquipamentos; i++) {
             cy.request({
                 method: 'POST',
@@ -188,7 +183,6 @@ When('eu envio uma requisição POST para {string} com o corpo faltando um campo
         body: {
             nome: "Equipamento Sem Quantidade",
             ambiente_id: ambienteId
-            // O campo 'quantidade_total' está faltando de propósito
             },
         failOnStatusCode: false
     }).as('apiResponse');
@@ -318,12 +312,6 @@ Then('o corpo da resposta deve conter o equipamento com o nome {string}', (nome)
 
 Then('o corpo da resposta deve conter a mensagem {string}', (mensagem) => {
     cy.get('@apiResponse').then((response) => {
-        // --- LOG DE DEPURAÇÃO NO CYPRESS ---
-        console.log('API Response Status:', response.status);
-        console.log('API Response Body:', response.body);
-        // ------------------------------------
-
-        // A verificação original
         expect(response.body.message).to.equal(mensagem);
     });
 });
