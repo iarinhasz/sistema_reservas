@@ -13,7 +13,6 @@ Before(() => {
     });
 });
 
-// DICA: Mova esta definição para 'cypress/support/commands.js'
 Cypress.Commands.add('login', (email, senha) => {
     cy.request({
         method: 'POST',
@@ -25,10 +24,9 @@ Cypress.Commands.add('login', (email, senha) => {
     });
 });
 
-// --- PASSOS DE PREPARAÇÃO (GIVEN) ---
 
 Given('eu estou autenticado como um administrador', () => {
-    cy.login('admin@email.com', 'senha_segura'); // Use as credenciais corretas
+    cy.login('admin@email.com', 'senha_segura'); 
 });
 
 Given('um ambiente com o identificador {string} já existe', (identificador) => {
@@ -46,7 +44,6 @@ Given('um ambiente com o identificador {string} já existe', (identificador) => 
 });
 
 
-// --- PASSO DE AÇÃO (WHEN) - ÚNICO E REUTILIZÁVEL ---
 
 When('eu envio uma requisição POST para {string} com o corpo:', (apiUrl, dataTable) => {
     // Pega a primeira linha da tabela da feature e transforma em um objeto
@@ -63,7 +60,6 @@ When('eu envio uma requisição POST para {string} com o corpo:', (apiUrl, dataT
 });
 
 
-// --- PASSOS DE VERIFICAÇÃO (THEN) ---
 
 Then('a resposta deve ter o status {int}', (statusCode) => {
     cy.get('@apiResponse').its('status').should('eq', statusCode);
