@@ -81,7 +81,6 @@ Given('um ambiente com uma reserva futura é criado', () => {
             const reservaId = reservaResponse.body.data.id;
             
             // 3. APROVAMOS a reserva para que o status mude para 'aprovada'
-            // Este é o passo que faltava!
             cy.request({
                 method: 'PUT',
                 url: `http://localhost:3000/api/reservas/${reservaId}/aprovar`,
