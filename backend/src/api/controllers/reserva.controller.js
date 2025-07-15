@@ -12,7 +12,10 @@ const solicitar = async (req, res) => {
         if (solicitante) {
             await EmailService.sendReservationRequestEmail(solicitante, novaReserva);
         }
-
+        res.status(201).json({
+            message: "Solicitação de reserva enviada com sucesso. Aguardando aprovação.",
+            data: novaReserva
+        });
     } catch (error) {
         console.error('Erro ao solicitar reserva:', error.message);
 

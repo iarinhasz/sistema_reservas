@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS reservas (
     nota INTEGER,
     comentario TEXT,
     data_criacao TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT chk_recurso_tipo CHECK (recurso_tipo IN ('ambiente', 'equipamento'))
+    CONSTRAINT chk_recurso_tipo CHECK (recurso_tipo IN ('ambiente', 'equipamento')),
     CONSTRAINT chk_nota_range CHECK (nota IS NULL OR (nota >= 1 AND nota <= 5))
 
 );
