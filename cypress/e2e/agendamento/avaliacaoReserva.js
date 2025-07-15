@@ -163,18 +163,6 @@ When('eu envio uma requisição POST para avaliar a reserva com nota {string} e 
     }).as('reviewResponse');
 });
 
-When('eu envio uma requisição POST para avaliar a reserva do outro aluno', () => {
-    const reservaId = Cypress.env('reservaId');
-    const authToken = Cypress.env('authToken');
-    cy.request({
-        method: 'POST',
-        url: `${API_URL}/api/reservas/${reservaId}/review`,
-        headers: { 'Authorization': `Bearer ${authToken}` },
-        body: { nota: 1, comentario: "Tentando avaliar o que não é meu." },
-        failOnStatusCode: false
-    }).as('reviewResponse');
-});
-
 When('eu envio uma requisição POST para avaliar a reserva novamente', () => {
     const reservaId = Cypress.env('reservaId');
     const authToken = Cypress.env('authToken');

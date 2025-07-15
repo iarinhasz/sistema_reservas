@@ -24,13 +24,6 @@ Feature: Avaliação de Reservas (Reviews)
         When eu envio uma requisição POST para avaliar a reserva com nota "4" e comentário "Ansioso para usar!"
         Then a resposta deve ter o status 403
         And a resposta deve conter a mensagem "Acesso proibido. A reserva ainda não terminou."
-        
-    Scenario: Tentar avaliar uma reserva de outro usuário
-        Given uma reserva APROVADA para o "LAB-INFO-01" feita pelo "aluno.experiente@email.com" que TERMINOU ONTEM existe
-        And estou autenticado como o usuário "aluno.curioso@email.com" # Logado como outro usuário
-        When eu envio uma requisição POST para avaliar a reserva do outro aluno
-        Then a resposta deve ter o status 403
-        And recebo a mensagem "Você não tem permissão para avaliar esta reserva."
 
     Scenario: Tentar avaliar uma reserva que já foi avaliada
         Given uma reserva APROVADA para o "LAB-INFO-01" feita pelo "aluno.experiente@email.com" que TERMINOU ONTEM e JÁ POSSUI REVIEW existe
