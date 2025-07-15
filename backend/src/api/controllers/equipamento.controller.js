@@ -24,6 +24,8 @@ const create = async (req, res) => {
 const listAll = async (req, res) => {
     try {
         const filters = req.query;
+        
+        console.log("Filtros recebidos no controller:", filters);
 
         const equipamentos = await EquipamentoService.findAll(filters);
         res.status(200).json(equipamentos);
