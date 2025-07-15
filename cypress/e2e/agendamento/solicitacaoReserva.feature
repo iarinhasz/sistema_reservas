@@ -49,3 +49,11 @@ Feature: Gerenciamento de Reservas
             | 1          | equipamento  | Reunião Inválida | 2025-08-10T14:00:00-03:00 | 2025-08-10T13:00:00-03:00 |
         Then a resposta deve ter o status 400
         And o corpo da resposta deve conter a propriedade "message" com o valor "A data de fim deve ser posterior à data de início."
+
+    Scenario: Usuário tenta criar reserva para data passada
+        Given estou autenticado como o usuário "aluno@email.com"
+        When eu envio uma requisição POST para "/api/reservas" com os dados:
+            | recurso_id | recurso_tipo | titulo                 | data_inicio               | data_fim                  |
+            | 1          | equipamento  | Reunião no passado     | 2024-07-15T10:00:00-03:00 | 2024-07-15T11:00:00-03:00 |
+        Then a resposta deve ter o status 400
+        And o corpo da resposta deve conter a propriedade "message" com o valor "Não é possível criar reservas para datas passadas."
