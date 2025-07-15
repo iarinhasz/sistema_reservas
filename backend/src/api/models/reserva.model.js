@@ -100,6 +100,29 @@ const addReview = async (id, nota, comentario) => {
     return rows[0];
 };
 
+const checkAvailability = async ({ recurso_id, recurso_tipo, data_inicio, data_fim }) => {
+    const query = `
+        SELECT COUNT(*)
+        FROM reservas
+        WHERE
+            recurso_id = $1 AND
+            recurso_tipo = $2 AND
+            status = 'aprovada' AND
+            data_inicio < $4 AND
+            data_fim > $3;
+    `;
+    const values = [recurso_id, recurso_tipo, data_inicio, data_fim];
+
+    try {
+        const result = await pool.query(query, values);
+        const conflictExists = parseInt(result.rows[0].count, 10) > 0;
+        return conflictExists;
+    } catch (error) {
+        console.error("Erro ao verificar disponibilidade de reserva:", error);
+        throw error;
+    }
+};
+
 export default {
     create,
     findAll,
@@ -108,5 +131,6 @@ export default {
     updateStatus,
     rejectConflictsFor,
     findFutureByResourceId,
-    addReview
+    addReview,
+    checkAvailability
 };
