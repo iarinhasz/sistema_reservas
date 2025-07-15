@@ -1,4 +1,3 @@
-
 import ReservaModel from '../models/reserva.model.js';
 
 const ReservaService = {
@@ -11,6 +10,30 @@ const ReservaService = {
    */
   solicitar: async (dadosSolicitacao, dadosUsuario) => {
     const { recurso_id, recurso_tipo, data_inicio, data_fim, titulo } = dadosSolicitacao;
+
+    const inicio = new Date(data_inicio);
+    const fim = new Date(data_fim);
+
+    // Verificar se as datas são válidas após a conversão
+    if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
+        throw new Error("Formato de data inválido. Use o formato ISO 8601 (ex: 'AAAA-MM-DDTHH:mm:ss-03:00').");
+    }
+
+    // Validação se data_fim deve ser posterior a data_inicio
+    if (fim <= inicio) {
+        throw new Error("A data de fim deve ser posterior à data de início.");
+    }
+
+    const agora = new Date();
+    agora.setSeconds(0, 0); 
+    agora.setMilliseconds(0);
+    inicio.setSeconds(0, 0); 
+    inicio.setMilliseconds(0);
+
+    // Verificar se data de inicio e depois de agora
+    if (inicio < agora) {
+        throw new Error("Não é possível criar reservas para datas passadas.");
+    }
 
     // Regra de Negócio: Permissão de usuário
     if (dadosUsuario.tipo === 'aluno' && recurso_tipo !== 'equipamento') {
