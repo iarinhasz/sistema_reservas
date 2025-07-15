@@ -7,28 +7,39 @@ const solicitar = async (req, res) => {
         const dadosReserva = req.body;
         const usuarioLogado = req.user;
 
-        const novaReserva = await ReservaModel.create({
-            ...dadosReserva,
-            usuario_cpf: usuarioLogado.cpf,
-        });
+        if (usuarioLogado.tipo === 'admin') {
+            const novaReserva = await ReservaModel.create({
+                ...dadosReserva,
+                usuario_cpf: usuarioLogado.cpf,
+                status: 'aprovada', 
+            });
 
-        const solicitante = await UsuarioModel.findByCpf(usuarioLogado.cpf);
-        if (solicitante) {
             
-            await EmailService.sendReservationRequestEmail(solicitante, novaReserva);
+            await ReservaModel.rejectConflictsFor(novaReserva);
+
+            res.status(201).json({ message: "Reserva criada e aprovada com sucesso.", data: novaReserva });
+
+        } else {
+            const novaReserva = await ReservaModel.create({
+                ...dadosReserva,
+                usuario_cpf: usuarioLogado.cpf,
+                
+            });
+            const solicitante = await UsuarioModel.findByCpf(usuarioLogado.cpf);
+            if (solicitante) {
+                await EmailService.sendReservationRequestEmail(solicitante, novaReserva);
+            }
+            
+            res.status(201).json({ message: "Solicitação de reserva enviada com sucesso. Aguardando aprovação.", data: novaReserva });
         }
-        
-        res.status(201).json({ message: "Solicitação de reserva enviada com sucesso. Aguardando aprovação.", data: novaReserva });
 
     } catch (error) {        
-        console.error('Erro ao solicitar reserva:', error);
+        console.error('Erro ao criar/solicitar reserva:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
     }
 };
 
-/**
- * Um administrador aprova uma reserva.
- */
+
 const aprovar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -102,7 +113,26 @@ const cancelar = async (req, res) => {
 };
 
 
-const listAll = async (req, res) => { /* ... seu código ... */ };
-const listMine = async (req, res) => { /* ... seu código ... */ };
+const listAll = async (req, res) => {
+    try {
+        const todasAsReservas = await ReservaModel.findAll();
+        res.status(200).json({ data: todasAsReservas });
+    } catch (error) {
+        console.error('Erro ao listar todas as reservas:', error);
+        res.status(500).json({ message: "Erro interno do servidor" });
+    }
+};
+
+
+const listMine = async (req, res) => {
+    try {
+        const { cpf } = req.user;
+        const minhasReservas = await ReservaModel.findByUser(cpf);
+        res.status(200).json({ data: minhasReservas });
+    } catch (error) {
+        console.error('Erro ao listar as reservas do usuário:', error);
+        res.status(500).json({ message: "Erro interno do servidor" });
+    }
+};
 
 export default { solicitar, aprovar, rejeitar, listAll, listMine, cancelar };

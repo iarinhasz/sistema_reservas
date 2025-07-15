@@ -2,7 +2,6 @@ import { Before, Given, Then, When } from "@badeball/cypress-cucumber-preprocess
 
 const API_URL = "http://localhost:3000";
 
-// A função Before permanece a mesma
 Before(() => {
     cy.request({ method: 'POST', url: `${API_URL}/api/testing/reset` })
     .then(() => {
@@ -29,7 +28,7 @@ Before(() => {
     });
 });
 
-// Novo step para criar ambientes adicionais se necessário
+// criar ambientes adicionais se necessário
 Given('um ambiente com identificação {string} e nome {string} existe', (identificacao, nome) => {
     const authToken = Cypress.env('authToken');
     cy.request({
@@ -65,7 +64,7 @@ Given('um equipamento do tipo {string} com nome {string} existe', (tipo, nome) =
 
 // Novo step para criar uma reserva pré-existente para os cenários de gerenciamento
 Given('uma reserva pendente com o título {string} foi criada pelo usuário {string}', (titulo, email) => {
-    // A CORREÇÃO: Adicionar "return" para garantir que o Cypress espere a conclusão.
+   
     return cy.login(email, 'senha_segura').then(() => {
         const userAuthToken = Cypress.env('authToken');
         const requestBody = {
@@ -94,8 +93,6 @@ Given('estou autenticado como o usuário {string}', (email) => {
     cy.login(email, 'senha_segura');
 });
 
-
-
 When('eu envio uma requisição POST para {string} com os dados:', (path, dataTable) => {
     const authToken = Cypress.env('authToken');
     const requestBody = dataTable.hashes()[0];
@@ -110,24 +107,40 @@ When('eu envio uma requisição POST para {string} com os dados:', (path, dataTa
     }).as('apiResponse');
 });
 
-// Novo step para ações de PATCH (aprovar/rejeitar)
-When('eu envio uma requisição {word} para {string}', (method, path) => {
+// Step para requisições GET (para listagens)
+When('eu envio uma requisição GET para {string}', (path) => {
     const authToken = Cypress.env('authToken');
-    // Substitui o placeholder do ID da reserva pelo ID salvo
-    const finalPath = path.replace('{reservaId}', Cypress.env('reservaId'));
 
     cy.request({
-        method: method,
+        method: 'GET',
+        url: `${API_URL}${path}`,
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        failOnStatusCode: false
+    }).as('apiResponse');
+});
+
+// Step para requisições PUT (usado para aprovar, rejeitar, etc.)
+When('eu envio uma requisição PUT para {string}', (path) => {
+    const authToken = Cypress.env('authToken');
+    const reservaId = Cypress.env('reservaId');
+
+    // Substitui o ID na URL (ex: /1/) pelo ID salvo dinamicamente
+    const finalPath = path.replace(/\/(\d+)\//, `/${reservaId}/`);
+
+    cy.request({
+        method: 'PUT',
         url: `${API_URL}${finalPath}`,
         headers: { 'Authorization': `Bearer ${authToken}` },
         failOnStatusCode: false
     }).as('apiResponse');
 });
 
-// Novo step para ação de DELETE (cancelar)
 When('eu envio uma requisição DELETE para {string}', (path) => {
     const authToken = Cypress.env('authToken');
-    const finalPath = path.replace('{reservaId}', Cypress.env('reservaId'));
+    const reservaId = Cypress.env('reservaId');
+    
+    // Substitui o ID na URL (ex: /1/) pelo ID salvo dinamicamente
+    const finalPath = path.replace(/\/(\d+)\//, `/${reservaId}/`);
     
     cy.request({
         method: 'DELETE',
@@ -144,4 +157,19 @@ Then('a resposta deve ter o status {int}', (statusCode) => {
 
 Then('o corpo da resposta deve conter a propriedade {string} com o valor {string}', (propriedade, valor) => {
     cy.get('@apiResponse').its('body.data').should('have.property', propriedade, valor);
+});
+
+Then('o corpo da resposta deve ser uma lista contendo {int} itens', (count) => {
+    cy.get('@apiResponse').its('body.data').should('be.an', 'array').and('have.length', count);
+});
+
+Then('o corpo da resposta deve ser uma lista contendo pelo menos {int} itens', (count) => {
+    cy.get('@apiResponse').its('body.data').should('be.an', 'array').its('length').should('be.gte', count);
+});
+
+Then('a lista na resposta deve conter um item com a propriedade {string} e valor {string}', (propriedade, valor) => {
+    cy.get('@apiResponse').its('body.data').then(lista => {
+        const itemEncontrado = lista.some(item => item[propriedade] === valor);
+        expect(itemEncontrado).to.be.true;
+    });
 });
