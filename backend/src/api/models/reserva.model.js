@@ -2,13 +2,14 @@ import pool from '../../config/database.js';
 
 
 const create = async (reservaData) => {
-    const { usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo } = reservaData;
+    const { usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo, status = 'pendente' } = reservaData;
+    
     const query = `
-        INSERT INTO reservas (usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO reservas (usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;
     `;
-    const values = [usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo];
+    const values = [usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo, status];
     const { rows } = await pool.query(query, values);
     return rows[0];
 };

@@ -12,8 +12,6 @@ const solicitar = async (req, res) => {
         if (solicitante) {
             await EmailService.sendReservationRequestEmail(solicitante, novaReserva);
         }
-        
-        res.status(201).json({ message: "Solicitação de reserva enviada com sucesso. Aguardando aprovação.", data: novaReserva });
 
     } catch (error) {
         console.error('Erro ao solicitar reserva:', error.message);
@@ -28,9 +26,7 @@ const solicitar = async (req, res) => {
     }
 };
 
-/**
- * Um administrador aprova uma reserva.
- */
+
 const aprovar = async (req, res) => {
     try {
         const { id } = req.params;
@@ -134,6 +130,7 @@ const listAll = async (req, res) => {
         res.status(500).json({ message: "Erro interno do servidor" });
     }
 };
+
 
 const listMine = async (req, res) => {
     try {
