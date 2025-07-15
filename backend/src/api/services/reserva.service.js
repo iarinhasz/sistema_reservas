@@ -10,23 +10,33 @@ const ReservaService = {
    * @throws {Error}
    */
   solicitar: async (dadosSolicitacao, dadosUsuario) => {
-    const { recurso_id, recurso_tipo, data_inicio, data_fim, titulo } = dadosSolicitacao;
+    
+    if (dadosUsuario.tipo === 'admin') {
+      const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
+      const hasConflict = await ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
+      if (hasConflict) {
+        throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
+      }
+      const novaReserva = await ReservaModel.create({ 
+        ...dadosSolicitacao, 
+        usuario_cpf: dadosUsuario.cpf,
+        status: 'aprovada'
+      });
+      await ReservaModel.rejectConflictsFor(novaReserva);
+      return novaReserva;
+    }
 
-    // Regra de Negócio: Permissão de usuário
+    // Professor Aluno
+    const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
+
     if (dadosUsuario.tipo === 'aluno' && recurso_tipo !== 'equipamento') {
       throw new Error("Acesso proibido. Alunos podem reservar apenas equipamentos.");
     }
-    if (dadosUsuario.tipo === 'professor' && recurso_tipo !== 'ambiente') {
-        throw new Error("Acesso proibido. Professores podem reservar apenas ambientes.");
-    }
-
-    // Regra de Negócio: Verificar disponibilidade
     const hasConflict = await ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
     if (hasConflict) {
       throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
     }
 
-    // Se tudo estiver ok, cria a solicitação
     const novaReserva = await ReservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
     return novaReserva;
   },
@@ -119,7 +129,7 @@ const ReservaService = {
    * Lista as reservas de um usuário específico.
    */
   listMine: async (usuarioCpf, queryParams) => {
-    return ReservaModel.findByUserCpf(usuarioCpf, queryParams);
+    return ReservaModel.findByUser(usuarioCpf, queryParams);
   }
 
 };

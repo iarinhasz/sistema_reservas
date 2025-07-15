@@ -5,6 +5,7 @@ import ReservaService from '../services/reserva.service.js';
 
 
 const solicitar = async (req, res) => {
+     console.log(`[RESERVA CONTROLLER] A requisição chegou na função solicitar.`);
     try {
         const novaReserva = await ReservaService.solicitar(req.body, req.user);
 
@@ -127,7 +128,9 @@ const deixarReview = async (req, res) => {
 const listAll = async (req, res) => {
     try {
         const todasAsReservas = await ReservaService.listAll(req.query);
-        res.status(200).json(todasAsReservas);
+        
+        res.status(200).json({ data: todasAsReservas });
+
     } catch (error) {
         console.error('Erro ao listar todas as reservas:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
@@ -138,7 +141,7 @@ const listAll = async (req, res) => {
 const listMine = async (req, res) => {
     try {
         const minhasReservas = await ReservaService.listMine(req.user.cpf, req.query);
-        res.status(200).json(minhasReservas);
+        res.status(200).json({data: minhasReservas});
     } catch (error) {
         console.error('Erro ao listar minhas reservas:', error);
         res.status(500).json({ message: "Erro interno do servidor" });
