@@ -23,8 +23,27 @@ Before(() => {
                 capacidade: 30,
                 tipo: 'Laboratório'
             }
-        }).its('status').should('eq', 201);
+        }).then(response => {
+        Cypress.env('ambienteId', response.body.ambiente.id);
     });
+    });
+});
+
+Given('um equipamento do tipo {string} com nome {string} existe', (tipo, nome) => {
+    const authToken = Cypress.env('authToken');
+    const ambienteId = Cypress.env('ambienteId');
+
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/equipamentos`,
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        body: {
+            nome: nome,
+            tipo: tipo,
+            quantidade_total: 5,
+            ambiente_id: ambienteId
+        }
+    }).its('status').should('eq', 201);
 });
 
 Given('estou autenticado como o usuário {string}', (email) => {
@@ -44,7 +63,7 @@ When('eu envio uma requisição POST para {string} com os dados:', (path, dataTa
         failOnStatusCode: false
     }).as('apiResponse');
 });
-
+4
 Then('a resposta deve ter o status {int}', (statusCode) => {
     cy.get('@apiResponse').its('status').should('eq', statusCode);
 });
