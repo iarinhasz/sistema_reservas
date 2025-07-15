@@ -32,6 +32,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
 
     volumes:
+
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
       # Mantém os dados do banco salvos entre reinicializações
       - postgres_data:/var/lib/postgresql/data
     ports:
