@@ -23,3 +23,14 @@ Feature: Gerenciamento de Reservas
         | 1          | equipamento  | Apresentação de TCC     | 2025-08-10T14:00:00-03:00 | 2025-08-10T16:00:00-03:00 |
         Then a resposta deve ter o status 201
         And o corpo da resposta deve conter a propriedade "status" com o valor "pendente"
+
+    Scenario: Professor tenta solicitar reserva em horário ocupado
+        Given estou autenticado como o usuário "professor@email.com"
+        And uma reserva do "ambiente" com id "1" existe no período "2025-11-15T09:00:00-03:00" a "2025-11-15T11:00:00-03:00"
+        When eu envio uma requisição POST para "/api/reservas" com os dados:
+            | recurso_id | recurso_tipo | titulo                  | data_inicio               | data_fim                  |
+            | 1          | ambiente     | Reunião de Departamento | 2025-11-15T10:00:00-03:00 | 2025-11-15T12:00:00-03:00 |
+        Then a resposta deve ter o status 409
+        And o corpo da resposta deve conter a propriedade "message" com o valor "Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado."
+
+    
