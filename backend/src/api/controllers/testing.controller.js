@@ -35,4 +35,25 @@ const resetDatabase = async (req, res) => {
     }
 };
 
-export default { resetDatabase };
+const createActiveUser = async (req, res) => {
+    try {
+        // Pega os dados enviados pelo teste do Cypress
+        const { cpf, nome, email, senha, tipo } = req.body;
+        
+        // Insere o usuário diretamente com status 'ativo'
+        const query = `
+            INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) 
+            VALUES ($1, $2, $3, $4, $5, 'ativo');
+        `;
+        await pool.query(query, [cpf, nome, email, senha, tipo]);
+        
+        res.status(201).json({ message: `Usuário ativo ${email} criado com sucesso.` });
+    } catch (error) {
+        console.error('Falha ao criar usuário ativo de teste:', error);
+        res.status(500).json({ message: 'Falha ao criar usuário ativo de teste.' });
+    }
+};
+
+
+
+export default { resetDatabase, createActiveUser };

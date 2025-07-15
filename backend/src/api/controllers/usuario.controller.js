@@ -1,5 +1,6 @@
 import UsuarioModel from '../models/usuario.model.js';
 import EmailService from '../services/email.service.js';
+import UsuarioService from '../services/usuario.service.js';
 
 const create = async (req, res) => {
     try {
@@ -9,13 +10,19 @@ const create = async (req, res) => {
             return res.status(400).json({ message: "Cpf, nome, email, senha e tipo são obrigatórios"});
         }
 
+        const cpfApenasNumeros = cpf.replace(/\D/g, '');
+
+        if (cpfApenasNumeros.length !== 11) {
+            return res.status(400).json({ message: "O CPF informado é inválido." });
+        }
+
         const existingUser = await UsuarioModel.findByEmail(email);
         if (existingUser) {
             return res.status(409).json({ message: "Este email já está em uso." }); // 409 Conflict
         }
 
         const newUser = await UsuarioModel.create({
-            cpf,
+            cpf: cpfApenasNumeros,
             nome,
             email,
             tipo,
@@ -53,38 +60,20 @@ const aprovarCadastro = async (req, res) => {
 const rejeitarCadastro = async (req, res) => {
     try {
         const { cpf } = req.params;
-        
         const { justificativa } = req.body;
 
-        if (!justificativa) {
-            return res.status(400).json({ message: "O motivo da rejeição é obrigatório." });
-        }
+        await UsuarioService.rejeitarCadastro(cpf, justificativa);
 
-        const usuario = await UsuarioModel.findByCpf(cpf);
-        if (!usuario) {
-            return res.status(404).json({ message: "Solicitação de cadastro não encontrada." });
-        }
-
-        await UsuarioModel.deleteByCpf(cpf);
-
-        await EmailService.sendRejectionEmail(usuario, justificativa);
-
-        res.status(200).json({ message: "Usuário rejeitado com sucesso!" });
-        
-        if (!usuarioRejeitado) {
-            return res.status(404).json({ message: "Usuário não encontrado." });
-        }
-        
-        // 2. CHAMA O SERVIÇO PARA ENVIAR O E-MAIL
-        await EmailService.sendRejectionEmail(usuarioRejeitado);
         res.status(200).json({ message: "Usuário rejeitado com sucesso!" });
 
     } catch (error) {
-        console.error("Erro ao rejeitar usuário:", error);
-        res.status(500).json({ message: "Erro ao rejeitar usuário." });
-    }
 
+        console.error("Erro ao rejeitar usuário:", error);
+        
+        res.status(400).json({ message: error.message });
+    }
 };
+
 const listarTodos = async (req, res) => {
     try {
         const usuarios = await UsuarioModel.findAll();

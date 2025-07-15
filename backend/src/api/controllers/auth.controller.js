@@ -1,4 +1,3 @@
-// backend/src/api/controllers/auth.controller.js (VERSÃO CORRIGIDA)
 
 import jwt from 'jsonwebtoken';
 import pool from '../../config/database.js';
@@ -13,7 +12,10 @@ const login = async (req, res) => {
         
         const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
         const user = result.rows[0];
-
+        
+        if (!user) {
+            return res.status(401).json({ message: 'Email ou senha inválidos.' });
+        }
         console.log("--- DEBUG DE LOGIN ---");
         console.log("Senha recebida do Cypress:", `"${senha}"`);
         console.log("Senha vinda do Banco:", `"${user.senha}"`);
@@ -57,5 +59,4 @@ const login = async (req, res) => {
     }
 };
 
-// Não se esqueça de adicionar a função de 'register' se ela também estiver neste arquivo
 export default { login };

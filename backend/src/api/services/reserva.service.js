@@ -61,6 +61,67 @@ const ReservaService = {
 
     return reservaAprovada;
   },
+  rejeitar: async (reservaId) => {
+    const reserva = await ReservaModel.findById(reservaId);
+    if (!reserva) {
+      throw new Error("Reserva não encontrada.");
+    }
+    return ReservaModel.updateStatus(reservaId, 'rejeitada');
+  },
+
+  /**
+   * Cancela uma reserva. Verifica se o usuário tem permissão.
+   */
+  cancelar: async (reservaId, usuarioLogado) => {
+    const reserva = await ReservaModel.findById(reservaId);
+    if (!reserva) {
+      throw new Error("Reserva não encontrada.");
+    }
+
+    if (reserva.usuario_cpf !== usuarioLogado.cpf && usuarioLogado.tipo !== 'admin') {
+      throw new Error("Acesso proibido. Você não tem permissão para cancelar esta reserva.");
+    }
+    
+    return ReservaModel.updateStatus(reservaId, 'cancelada');
+  },
+
+  /**
+   * Adiciona uma avaliação (review) a uma reserva.
+   */
+  deixarReview: async (reservaId, dadosReview, usuarioLogado) => {
+    const { nota, comentario } = dadosReview;
+    const reserva = await ReservaModel.findById(reservaId);
+
+    if (!reserva) {
+      throw new Error("Reserva não encontrada.");
+    }
+    if (reserva.usuario_cpf !== usuarioLogado.cpf) {
+      throw new Error("Acesso proibido. Você não tem permissão para avaliar esta reserva.");
+    }
+    if (new Date() < new Date(reserva.data_fim)) {
+      throw new Error("Acesso proibido. A reserva ainda não terminou.");
+    }
+    if (reserva.nota) {
+      throw new Error("Conflito. Esta reserva já foi avaliada.");
+    }
+
+    return ReservaModel.addReview(reservaId, nota, comentario);
+  },
+
+  /**
+   * Lista todas as reservas (para admins).
+   */
+  listAll: async (queryParams) => {
+    return ReservaModel.findAll(queryParams);
+  },
+
+  /**
+   * Lista as reservas de um usuário específico.
+   */
+  listMine: async (usuarioCpf, queryParams) => {
+    return ReservaModel.findByUserCpf(usuarioCpf, queryParams);
+  }
+
 };
 
 export default ReservaService;
