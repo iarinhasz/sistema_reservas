@@ -68,6 +68,7 @@ const update = async (id, ambienteData) => {
         WHERE id = $4
         RETURNING *;`;
     const values = [identificacao, tipo, status, id];
+    
     const { rows } = await pool.query(query, values);
     return rows[0];
 };

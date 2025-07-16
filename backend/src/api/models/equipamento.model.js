@@ -92,9 +92,8 @@ const findByNomeEAmbiente = async (nome, ambiente_id) => {
         'SELECT * FROM equipamentos WHERE nome = $1 AND ambiente_id = $2',
         [nome, ambiente_id]
     );
-    console.log('[DEBUG model.findByNomeEAmbiente] rows:', rows);
 
-    return rows[0]; // retorna o equipamento se existir ou undefined
+    return rows[0];
 };
 
 export default {
