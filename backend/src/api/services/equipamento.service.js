@@ -1,6 +1,7 @@
 
 import EquipamentoModel from '../models/equipamento.model.js';
 import ReservaModel from '../models/reserva.model.js';
+import AmbienteModel from '../models/ambiente.model.js';
 
 const EquipamentoService = {
     /**
@@ -8,16 +9,17 @@ const EquipamentoService = {
      */
     async create(dadosEquipamento) {
         const { nome, quantidade_total, ambiente_id} = dadosEquipamento;
-        console.log('[DEBUG create] dadosEquipamento:', dadosEquipamento);
 
-        if (nome === undefined || quantidade_total === undefined) {
+        if (nome === undefined || quantidade_total === undefined || ambiente_id === undefined) {
             throw new Error("Os campos 'nome' e 'quantidade_total' são obrigatórios.");
         }
-        console.log('[DEBUG create] checando duplicidade para:', { nome, ambiente_id });
+
+        const ambienteExistente = await AmbienteModel.findById(ambiente_id);
+        if (!ambienteExistente) {
+            throw new Error("O ambiente especificado não foi encontrado.");
+        }
 
         const existente = await EquipamentoModel.findByNomeEAmbiente(nome, ambiente_id);
-
-        console.log('[DEBUG create] existente encontrado:', existente);
 
         if (existente) {
             // Lança erro que será tratado no controller

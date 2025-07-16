@@ -22,6 +22,15 @@ const AmbienteService = {
 
     // Exclusão com verificação de reservas futuras
     async delete(ambienteId) {
+        
+        const ambienteParaDeletar = await AmbienteModel.findById(ambienteId);
+
+        if (!ambienteParaDeletar) {
+            // Se não existir, lança o erro "não encontrado" imediatamente.
+            throw new Error("Ambiente não encontrado para deletar.");
+        }
+
+        
         console.log(`\n--- AMBIENTE SERVICE: Iniciando deleção do ambiente ID: ${ambienteId} ---`);
 
         const params = {
@@ -45,14 +54,22 @@ const AmbienteService = {
 
     // Atualização com verificação de duplicidade
     async update(id, dadosParaAtualizar) {
+
+        const ambienteParaAtualizar = await AmbienteModel.findById(id);
+
+        if (!ambienteParaAtualizar) {
+            // Se não existir, lança o erro "não encontrado" imediatamente.
+            throw new Error("Ambiente não encontrado.");
+        }
+
         const { identificacao } = dadosParaAtualizar;
 
         if (identificacao) {
-        const existente = await AmbienteModel.findByIdentificador(identificacao);
-        if (existente && existente.id !== id) {
-            throw new Error("Identificador já cadastrado em outro ambiente.");
-        }
-        }
+            const existente = await AmbienteModel.findByIdentificador(identificacao);
+            if (existente && existente.id !== id) {
+                throw new Error("Identificador já cadastrado em outro ambiente.");
+            }
+            }
 
         return AmbienteModel.update(id, dadosParaAtualizar);
     },
@@ -62,7 +79,11 @@ const AmbienteService = {
     },
 
     async findById(id) {
-        return AmbienteModel.findById(id);
+        const ambiente = await AmbienteModel.findById(id);
+        if (!ambiente) {
+            throw new Error('Ambiente não encontrado.');
+        }
+    return ambiente;
     }
 };
 
