@@ -1,23 +1,54 @@
 // cypress/e2e/common/common_steps.js
+import { Given } from '@badeball/cypress-cucumber-preprocessor';
 
-//import { Given } from "cypress-cucumber-preprocessor/steps"; // Instalações Linux 
-import { Given } from '@badeball/cypress-cucumber-preprocessor'; // Só roda no sistema MacOS (Felipe Manoel - lipmanoel)
+const API_URL = 'http://localhost:3000';
 
-
-Given("sou um administrador logado no sistema", () => {
-  // Por enquanto, vamos apenas registrar no log para ver o teste passar.
-  // No futuro, aqui entraria a lógica de login real.
-  cy.log("Executando o passo de login do administrador...");
-
-
-
-  // Exemplo de como seria a implementação real no futuro:
-  // cy.visit('/login');
-  // cy.get('input[name="email"]').type('admin@email.com');
-  // cy.get('input[name="password"]').type('senhaForte');
-  // cy.get('button[type="submit"]').click();
-  // cy.url().should('include', '/dashboard');
+Given('sou um administrador logado no sistema', () => {
+  cy.request({
+    method: 'POST',
+    url: `${API_URL}/api/auth/login`,
+    body: {
+      email: 'admin@email.com',
+      senha: 'senha_segura'
+    }
+  }).then(response => {
+    expect(response.status).to.eq(200);
+    cy.wrap(response.body.token).as('authToken');
+    cy.log('Administrador logado e token armazenado.');
+  });
 });
+
+Given('estou logado como professor', () => {
+  cy.request({
+    method: 'POST',
+    url: 'http://localhost:3000/api/auth/login',
+    body: {
+      email: 'professor@email.com',
+      senha: 'senha_segura'
+    }
+  }).then(response => {
+    expect(response.status).to.eq(200);
+    cy.wrap(response.body.token).as('authToken');
+    cy.log('Professor logado e token armazenado.');
+  });
+});
+
+Given('eu estou autenticado como um aluno', () => {
+  cy.request({
+    method: 'POST',
+    url: 'http://localhost:3000/api/auth/login',
+    body: {
+      email: 'aluno@email.com',
+      senha: 'senha_segura'
+    }
+  }).then(response => {
+    expect(response.status).to.eq(200);
+    cy.wrap(response.body.token).as('authToken');
+    cy.log('Aluno logado e token armazenado.');
+  });
+});
+
+
 
 Given('o sistema está rodando', () => {
   cy.log('Sistema está rodando — setup inicial.');

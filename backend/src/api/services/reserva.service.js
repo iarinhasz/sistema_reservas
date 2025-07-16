@@ -1,4 +1,3 @@
-
 import ReservaModel from '../models/reserva.model.js';
 
 const ReservaService = {
@@ -10,23 +9,56 @@ const ReservaService = {
    * @throws {Error}
    */
   solicitar: async (dadosSolicitacao, dadosUsuario) => {
-    const { recurso_id, recurso_tipo, data_inicio, data_fim, titulo } = dadosSolicitacao;
+    
+    if (dadosUsuario.tipo === 'admin') {
+      const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
+      const hasConflict = await ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
+      if (hasConflict) {
+        throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
+      }
+      const novaReserva = await ReservaModel.create({ 
+        ...dadosSolicitacao, 
+        usuario_cpf: dadosUsuario.cpf,
+        status: 'aprovada'
+      });
+      await ReservaModel.rejectConflictsFor(novaReserva);
+      return novaReserva;
+    }
 
-    // Regra de Negócio: Permissão de usuário
+    // Professor Aluno
+    const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
+
+    const inicio = new Date(data_inicio);
+    const fim = new Date(data_fim);
+  
+    // Verificar se as datas são válidas após a conversão
+    if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
+        throw new Error("Formato de data inválido. Use o formato ISO 8601 (ex: 'AAAA-MM-DDTHH:mm:ss-03:00').");
+    }
+
+    // Validação se data_fim deve ser posterior a data_inicio
+    if (fim <= inicio) {
+        throw new Error("A data de fim deve ser posterior à data de início.");
+    }
+
+    const agora = new Date();
+    agora.setSeconds(0, 0); 
+    agora.setMilliseconds(0);
+    inicio.setSeconds(0, 0); 
+    inicio.setMilliseconds(0);
+
+    // Verificar se data de inicio e depois de agora
+    if (inicio < agora) {
+        throw new Error("Não é possível criar reservas para datas passadas.");
+    }
     if (dadosUsuario.tipo === 'aluno' && recurso_tipo !== 'equipamento') {
       throw new Error("Acesso proibido. Alunos podem reservar apenas equipamentos.");
     }
-    if (dadosUsuario.tipo === 'professor' && recurso_tipo !== 'ambiente') {
-        throw new Error("Acesso proibido. Professores podem reservar apenas ambientes.");
-    }
-
-    // Regra de Negócio: Verificar disponibilidade
     const hasConflict = await ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
     if (hasConflict) {
       throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
     }
 
-    // Se tudo estiver ok, cria a solicitação
     const novaReserva = await ReservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
     return novaReserva;
   },
@@ -119,7 +151,7 @@ const ReservaService = {
    * Lista as reservas de um usuário específico.
    */
   listMine: async (usuarioCpf, queryParams) => {
-    return ReservaModel.findByUserCpf(usuarioCpf, queryParams);
+    return ReservaModel.findByUser(usuarioCpf, queryParams);
   }
 
 };

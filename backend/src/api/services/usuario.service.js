@@ -21,7 +21,7 @@ const UsuarioService = {
         if (!justificativa) {
             throw new Error("O motivo da rejeição é obrigatório.");
         }
-
+        
         const usuario = await UsuarioModel.findByCpf(cpf);
         if (!usuario) {
             throw new Error("Usuário não encontrado.");

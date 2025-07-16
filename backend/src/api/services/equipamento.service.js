@@ -66,8 +66,8 @@ const EquipamentoService = {
     /**
      * Funções simples que apenas repassam a chamada para o Model.
      */
-    async findAll() {
-        return EquipamentoModel.findAll();
+    async findAll(filters = {}) {
+        return EquipamentoModel.findAll(filters);
     },
 
     async findById(id) {

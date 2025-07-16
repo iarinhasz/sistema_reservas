@@ -26,11 +26,11 @@ Feature: Avaliação de Reservas (Reviews)
         And a resposta deve conter a mensagem "Acesso proibido. A reserva ainda não terminou."
 
     Scenario: Tentar avaliar uma reserva que já foi avaliada
-        Given uma reserva APROVADA para o "LAB-INFO-01" feita pelo "aluno.experiente@email.com" que TERMINOU ONTEM e JÁ POSSUI REVIEW existe
+        Given uma reserva APROVADA para o equipamento "Projetor da Sala 1" feita pelo "aluno.experiente@email.com" que TERMINOU ONTEM e JÁ POSSUI REVIEW existe
         And estou autenticado como o usuário "aluno.experiente@email.com"
         When eu envio uma requisição POST para avaliar a reserva novamente
         Then a resposta deve ter o status 409
-        And recebo a mensagem "Esta reserva já foi avaliada e não pode ser alterada."
+        And recebo a mensagem "Conflito. Esta reserva já foi avaliada."
 
     Scenario: Tentar avaliar uma reserva com ID inexistente
         Given estou autenticado como o usuário "aluno.experiente@email.com"
