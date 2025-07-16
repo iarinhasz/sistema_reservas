@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded; // Adiciona os dados do usuário (payload) ao objeto da requisição
         
-        console.log(`[AUTH MIDDLEWARE] Rota: ${req.method} ${req.originalUrl} - Usuário: ${req.user.email} (${req.user.tipo})`);
+        //console.log(`[AUTH MIDDLEWARE] Rota: ${req.method} ${req.originalUrl} - Usuário: ${req.user.email} (${req.user.tipo})`);
         
         next(); // Se o token for válido, continua para a próxima etapa
     } catch (error) {

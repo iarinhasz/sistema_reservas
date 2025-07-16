@@ -1,4 +1,3 @@
-
 import { Before, Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 const API_URL = "http://localhost:3000";

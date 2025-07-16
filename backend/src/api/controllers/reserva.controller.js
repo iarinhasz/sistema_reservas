@@ -1,4 +1,3 @@
-import ReservaModel from '../models/reserva.model.js';
 import UsuarioModel from '../models/usuario.model.js';
 import EmailService from '../services/email.service.js';
 import ReservaService from '../services/reserva.service.js';
@@ -19,10 +18,6 @@ const solicitar = async (req, res) => {
         });
     } catch (error) {
         console.error('Erro ao solicitar reserva:', error.message);
-
-        if (error.message.includes("data de fim") || error.message.includes("data inválido") || error.message.includes("datas passadas")) {
-            return res.status(400).json({ message: error.message });
-        }
 
         if (error.message.includes("Acesso proibido")) {
             return res.status(403).json({ message: error.message });

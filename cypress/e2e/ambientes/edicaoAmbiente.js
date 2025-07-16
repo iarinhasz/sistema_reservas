@@ -48,6 +48,7 @@ When('eu envio uma requisição PATCH para o ambiente de teste com os novos dado
     }).as('apiResponse');
 });
 
+
 Given('um ambiente com uma reserva futura é criado', () => {
     const authToken = Cypress.env('authToken');
 
@@ -58,17 +59,18 @@ Given('um ambiente com uma reserva futura é criado', () => {
         body: { identificacao: 'Sala-Com-Reserva-Aprovada', tipo: 'Sala' }
     }).then(ambienteResponse => {
         const ambienteId = ambienteResponse.body.ambiente.id;
-        Cypress.env('ambienteDeTesteId', ambienteId); 
+        Cypress.env('ambienteDeTesteId', ambienteId);
 
         const dataInicio = new Date();
-        dataInicio.setDate(dataInicio.getDate() + 5); 
+        dataInicio.setDate(dataInicio.getDate() + 5);
 
         const dataFim = new Date(dataInicio);
-        dataFim.setHours(dataFim.getHours() + 2); 
+        dataFim.setHours(dataFim.getHours() + 2);
 
+        // 2. Criamos a reserva, que já será APROVADA por ser feita por um admin
         cy.request({
             method: 'POST',
-            url: `http://localhost:3000/api/reservas`, // Endpoint de solicitar reserva
+            url: `http://localhost:3000/api/reservas`,
             headers: { 'Authorization': `Bearer ${authToken}` },
             body: {
                 recurso_id: ambienteId,
@@ -77,19 +79,9 @@ Given('um ambiente com uma reserva futura é criado', () => {
                 data_inicio: dataInicio.toISOString(),
                 data_fim: dataFim.toISOString()
             }
-        }).then(reservaResponse => {
-            const reservaId = reservaResponse.body.data.id;
-            
-            // 3. APROVAMOS a reserva para que o status mude para 'aprovada'
-            cy.request({
-                method: 'PUT',
-                url: `http://localhost:3000/api/reservas/${reservaId}/aprovar`,
-                headers: { 'Authorization': `Bearer ${authToken}` }
-            }).its('status').should('eq', 200);
-        });
+        }).its('status').should('eq', 201); 
     });
 });
-
 
 
 When('eu envio uma requisição DELETE para remover o ambiente de teste', () => {

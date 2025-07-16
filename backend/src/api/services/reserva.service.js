@@ -30,7 +30,7 @@ const ReservaService = {
 
     const inicio = new Date(data_inicio);
     const fim = new Date(data_fim);
-
+  
     // Verificar se as datas são válidas após a conversão
     if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
         throw new Error("Formato de data inválido. Use o formato ISO 8601 (ex: 'AAAA-MM-DDTHH:mm:ss-03:00').");
