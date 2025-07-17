@@ -60,14 +60,14 @@ const createReserva = async (req, res) => {
         const {
             recurso_id,
             recurso_tipo,
-            usuario_email, // Recebemos o email para facilitar o teste
+            usuario_email,
             titulo,
             data_inicio,
             data_fim,
             status,
-            com_review, // Booleano para indicar se criamos um review junto
-            nota_review = 3, // Valor padrão
-            comentario_review = "Review de teste." // Valor padrão
+            com_review,
+            nota_review = 3,
+            comentario_review = "Review de teste."
         } = req.body;
 
         // 2. Busca o CPF do usuário a partir do email fornecido
@@ -77,7 +77,7 @@ const createReserva = async (req, res) => {
         }
         const usuario_cpf = userResult.rows[0].cpf;
 
-        // 3. Insere a reserva no banco de dados usando os dados recebidos
+        // 3. Insere a reserva no banco de dados
         const reservaQuery = `
             INSERT INTO reservas (recurso_id, recurso_tipo, usuario_cpf, titulo, data_inicio, data_fim, status)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -88,13 +88,16 @@ const createReserva = async (req, res) => {
         ]);
         const novaReserva = reservaResult.rows[0];
 
-        // 4. Se o teste pedir, cria também um review associado
+        // 4. Se o teste pedir, atualiza a reserva recém-criada com o review
         if (com_review) {
             const reviewQuery = `
-                INSERT INTO reviews (reserva_id, nota, comentario)
-                VALUES ($1, $2, $3);
+                UPDATE reservas 
+                SET nota = $1, comentario = $2 
+                WHERE id = $3;
             `;
-            await pool.query(reviewQuery, [novaReserva.id, nota_review, comentario_review]);
+            await pool.query(reviewQuery, [nota_review, comentario_review, novaReserva.id]);
+            novaReserva.nota = nota_review;
+            novaReserva.comentario = comentario_review;
         }
 
         // 5. Retorna a reserva criada para o Cypress
@@ -105,9 +108,5 @@ const createReserva = async (req, res) => {
         res.status(500).json({ message: 'Falha ao criar reserva de teste.' });
     }
 };
-
-
-
-
 
 export default { resetDatabase, createActiveUser, createReserva};
