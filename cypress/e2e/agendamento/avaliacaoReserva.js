@@ -14,31 +14,23 @@ const criarAprovarReserva = (recursoTipo, recursoId, emailUsuario, estadoReserva
         dataFim.setDate(dataFim.getDate() + 1);
     }
 
-    const dadosReserva = {
+    const dadosReservaTeste = {
         recurso_id: recursoId,
         recurso_tipo: recursoTipo,
+        usuario_email: emailUsuario, 
         titulo: `Reserva de Teste - ${estadoReserva}`,
         data_inicio: dataInicio.toISOString(),
-        data_fim: dataFim.toISOString()
+        data_fim: dataFim.toISOString(),
+        status: 'aprovada', 
+        com_review: estadoReserva.includes("JÁ POSSUI REVIEW") 
     };
 
-    return cy.login(emailUsuario, 'senha_segura').then(() => {
-        return cy.request({
-            method: 'POST',
-            url: `${API_URL}/api/reservas`,
-            headers: { 'Authorization': `Bearer ${Cypress.env('authToken')}` },
-            body: dadosReserva
-        }).then(reservaResponse => {
-            const reservaId = reservaResponse.body.data.id;
-            Cypress.env('reservaId', reservaId);
-            return cy.login('admin@email.com', 'senha_segura').then(() => {
-                return cy.request({
-                    method: 'PUT',
-                    url: `${API_URL}/api/reservas/${reservaId}/aprovar`,
-                    headers: { 'Authorization': `Bearer ${Cypress.env('authToken')}` }
-                });
-            });
-        });
+    return cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/testing/createReserva`, 
+        body: dadosReservaTeste
+    }).then(response => {
+        Cypress.env('reservaId', response.body.reserva.id);
     });
 };
 
@@ -125,6 +117,7 @@ When('eu envio uma requisição POST para avaliar a reserva com nota {string} e 
 });
 
 When('eu envio uma requisição POST para avaliar a reserva novamente', () => {
+    cy.log('--- DIAGNÓSTICO: O passo com failOnStatusCode:false está sendo executado ---');
     cy.request({
         method: 'POST',
         url: `${API_URL}/api/reservas/${Cypress.env('reservaId')}/review`,
