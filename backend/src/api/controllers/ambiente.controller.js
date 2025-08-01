@@ -1,12 +1,14 @@
-// src/api/controllers/ambiente.controller.js
-import ambienteService from '../services/ambiente.service.js';
-
 class AmbienteController{
 
-    async listAll(req, res){
+    constructor(ambienteService) {
+        this.ambienteService = ambienteService;
+        //this.reservaModel = reservaModel;
+    }
+
+    listAll = async(req, res)=>{
         try {
             const filters = req.query;
-            const ambientes = await ambienteService.findAll(filters);
+            const ambientes = await this.ambienteService.findAll(filters);
             res.status(200).json(ambientes);
         } catch (error) {
             console.error('Erro ao listar ambientes:', error.message ,error.stack);
@@ -14,9 +16,9 @@ class AmbienteController{
         }
     }
 
-    async create(req, res){
+    create = async (req, res)=>{
         try {
-            const novoAmbiente = await ambienteService.create(req.body);
+            const novoAmbiente = await this.ambienteService.create(req.body);
             res.status(201).json({ message: "Ambiente criado com sucesso!", ambiente: novoAmbiente });
         } catch (error) {
             if (error.message === "Identificador já cadastrado") {
@@ -30,10 +32,10 @@ class AmbienteController{
         }
     }
 
-    async getById(req, res){
+    getById = async(req, res) =>{
         try {
-            const { id } = req.params; 
-            const ambiente = await ambienteService.findById(parseInt(id, 10));
+            const { id } = req.params;
+            const ambiente = await this.ambienteService.findById(parseInt(id, 10));
             res.status(200).json(ambiente);
         } catch (error) {
             if (error.message === 'Ambiente não encontrado.') {
@@ -44,10 +46,10 @@ class AmbienteController{
         }
     }
 
-    async update(req, res){
+    update=async(req, res)=>{
         try {
             const { id } = req.params;
-            const ambienteAtualizado = await ambienteService.update(parseInt(id, 10), req.body);
+            const ambienteAtualizado = await this.ambienteService.update(parseInt(id, 10), req.body);
             res.status(200).json({
                 message: 'Ambiente atualizado com sucesso!',
                 ambiente: ambienteAtualizado
@@ -64,10 +66,10 @@ class AmbienteController{
         }
     }
 
-    async delete(req, res){
+    delete = async (req, res)=>{
         try {
             const { id } = req.params;
-            const ambienteDeletado = await ambienteService.delete(parseInt(id, 10));
+            const ambienteDeletado = await this.ambienteService.delete(parseInt(id, 10));
             res.status(200).json({
                 message: 'Ambiente deletado com sucesso!',
                 ambienteDeletado: ambienteDeletado
@@ -85,4 +87,4 @@ class AmbienteController{
     }
 }
 
-export default new AmbienteController();
+export default AmbienteController;

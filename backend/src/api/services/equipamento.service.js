@@ -2,7 +2,7 @@ class EquipamentoService {
     constructor() {
         // As instâncias dos models agora são propriedades da classe
         this.equipamentoModel = new EquipamentoModel(pool);
-        this.reservaModel = new ReservaModel(pool);
+        //this.reservaModel = new ReservaModel(pool);
         this.ambienteModel = new AmbienteModel(pool);
     }
 
@@ -46,7 +46,7 @@ class EquipamentoService {
 
     /**
      * Deleta um equipamento após verificar se não há reservas futuras.
-     */
+    */
     async remove(id) {
         const reservasFuturas = await this.reservaModel.findFutureByResourceId({
             recurso_id: id,
@@ -63,7 +63,6 @@ class EquipamentoService {
         }
         return equipamentoDeletado;
     }
-
     /**
      * Funções simples que apenas repassam a chamada para o Model.
      */
