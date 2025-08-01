@@ -9,10 +9,12 @@ import UsuarioModel from './api/models/usuario.model.js';
 import AmbienteService from './api/services/ambiente.service.js';
 import EmailService from './api/services/email.service.js';
 import UsuarioService from './api/services/usuario.service.js';
+import EquipamentoService from './api/services/equipamento.service.js';
 
 // Controllersgit
 import AmbienteController from './api/controllers/ambiente.controller.js';
 import UsuarioController from './api/controllers/usuario.controller.js';
+import EquipamentoController from './api/controllers/equipamento.controller.js';
 
 
 import pool from './config/database.js';
@@ -29,15 +31,19 @@ const reservaModel = new ReservaModel(pool);
 const emailService = new EmailService();
 const usuarioService = new UsuarioService(usuarioModel, emailService);
 const ambienteService = new AmbienteService(ambienteModel, reservaModel);
+const equipamentoService = new EquipamentoService(equipamentoModel, reservaModel, ambienteModel);
 
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
-export const usuarioController = new UsuarioController(usuarioService);
+const usuarioController = new UsuarioController(usuarioService);
 const ambienteController = new AmbienteController(ambienteService);
+const equipamentoController = new EquipamentoController(equipamentoService);
 
 // ... exporte os outros controllers instanciados
 
 // No final, você exporta apenas as instâncias dos controllers,
 // que serão usadas pelas rotas.
 export {
-    ambienteController
+    usuarioController,
+    ambienteController,
+    equipamentoController
 };

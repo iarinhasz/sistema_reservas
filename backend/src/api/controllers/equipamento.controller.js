@@ -1,8 +1,6 @@
-import EquipamentoService from '../services/equipamento.service.js';
-
 class EquipamentoController {
-    constructor() {
-        this.equipamentoService = new EquipamentoService();
+    constructor(equipamentoService) {
+        this.equipamentoService = equipamentoService;
     }
     async create(req, res) {
         try {

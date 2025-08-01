@@ -1,8 +1,3 @@
-import pool from '../../config/database.js';
-import EquipamentoModel from '../models/equipamento.model.js';
-import ReservaModel from '../models/reserva.model.js';
-import AmbienteModel from '../models/ambiente.model.js';
-
 class EquipamentoService {
     constructor() {
         // As instâncias dos models agora são propriedades da classe
