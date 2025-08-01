@@ -18,7 +18,7 @@ import UsuarioController from './api/controllers/usuario.controller.js';
 import pool from './config/database.js';
 
 
-// == CAMADA DE MODELOS == (sem dependências)
+// == CAMADA DE MODELOS == (sem dependências) hsdghfsdhfjsk
 const usuarioModel = UsuarioModel; 
 const ambienteModel = new AmbienteModel(pool);
 const equipamentoModel = new EquipamentoModel(pool);
