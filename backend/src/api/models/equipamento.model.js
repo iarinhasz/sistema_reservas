@@ -1,106 +1,115 @@
-
-import pool from '../../config/database.js';
-
-/**
- * Cria um novo equipamento no banco de dados.
- */
-const create = async (equipamentoData) => {
-    const { nome, marca, modelo, quantidade_total, ambiente_id } = equipamentoData;
-    
-    const query = `
-        INSERT INTO equipamentos (nome, marca, modelo, quantidade_total, ambiente_id)
-        VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-    
-    const values = [nome, marca || null, modelo || null, quantidade_total, ambiente_id];
-    
-    const { rows } = await pool.query(query, values);
-    return rows[0];
-};
-
-/**
- * Lista todos os equipamentos.
- */
-const findAll = async (filters = {}) => {
-    let query = 'SELECT * FROM equipamentos';
-    const values = [];
-    
-    // Se um filtro de ambiente_id foi passado...
-    if (filters.ambiente_id) {
-        // adicionamos a cláusula WHERE na nossa query
-        query += ' WHERE ambiente_id = $1';
-        values.push(filters.ambiente_id);
+class EquipamentoModel {
+    /**
+     * @param {object} pool - O pool de conexões do PostgreSQL.
+     */
+    constructor(pool) {
+        this.pool = pool;
     }
-    
-    query += ' ORDER BY nome';
-    
-    const { rows } = await pool.query(query, values);
-    return rows;
-};
-/**
- * Busca um equipamento pelo seu ID.
- */
-const findById = async (id) => {
-    const { rows } = await pool.query('SELECT * FROM equipamentos WHERE id = $1', [id]);
-    return rows[0];
-};
 
-/**
- * Atualiza um equipamento com base nos dados fornecidos.
- * Constrói a query dinamicamente.
- */
-const update = async (id, dataToUpdate) => {
-    const setClauses = [];
-    const values = [];
-    let paramIndex = 1;
+    /**
+     * @param {object} equipamentoData - { nome, marca, modelo, quantidade_total, ambiente_id }
+     * @returns {Promise<object>} O equipamento criado.
+     */
+    async create(equipamentoData) {
+        const { nome, marca, modelo, quantidade_total, ambiente_id } = equipamentoData;
+        const query = `
+            INSERT INTO equipamentos (nome, marca, modelo, quantidade_total, ambiente_id)
+            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+        const values = [nome, marca || null, modelo || null, quantidade_total, ambiente_id];
+        
+        const { rows } = await this.pool.query(query, values);
+        return rows[0];
+    }
 
-    for (const key in dataToUpdate) {
-        if (['nome', 'marca', 'modelo', 'quantidade_total', 'ambiente_id'].includes(key)) {
-            setClauses.push(`${key} = $${paramIndex}`);
-            values.push(dataToUpdate[key]);
-            paramIndex++;
+    /**
+     * Lista todos os equipamentos, com possibilidade de filtro.
+     * @param {object} filters - Filtros como { ambiente_id }
+     * @returns {Promise<Array>} Uma lista de equipamentos.
+     */
+    async findAll(filters = {}) {
+        let query = 'SELECT * FROM equipamentos';
+        const values = [];
+        
+        if (filters.ambiente_id) {
+            query += ' WHERE ambiente_id = $1';
+            values.push(filters.ambiente_id);
         }
+        
+        query += ' ORDER BY nome';
+        
+        const { rows } = await this.pool.query(query, values);
+        return rows;
     }
 
-    // Se nenhum campo válido foi passado, não há o que atualizar.
-    if (setClauses.length === 0) {
-        return null; // Retorna nulo para o controller saber que nada foi feito.
+    /**
+     * Busca um equipamento pelo seu ID.
+     * @param {number} id - O ID do equipamento.
+     * @returns {Promise<object|undefined>} O equipamento encontrado ou undefined.
+     */
+    async findById(id) {
+        const { rows } = await this.pool.query('SELECT * FROM equipamentos WHERE id = $1', [id]);
+        return rows[0];
     }
-    
-    values.push(id);
 
-    const query = `
-        UPDATE equipamentos
-        SET ${setClauses.join(', ')}
-        WHERE id = $${paramIndex}
-        RETURNING *;
-    `;
+    /**
+     * Busca um equipamento pelo nome e ID do ambiente.
+     * @param {string} nome 
+     * @param {number} ambiente_id 
+     * @returns {Promise<object|undefined>} O equipamento encontrado ou undefined.
+     */
+    async findByNomeEAmbiente(nome, ambiente_id) {
+        const { rows } = await this.pool.query(
+            'SELECT * FROM equipamentos WHERE nome = $1 AND ambiente_id = $2',
+            [nome, ambiente_id]
+        );
+        return rows[0];
+    }
 
-    const { rows } = await pool.query(query, values);
-    return rows[0];
-};
+    /**
+     * Atualiza um equipamento com base nos dados fornecidos.
+     * @param {number} id - O ID do equipamento a ser atualizado.
+     * @param {object} dataToUpdate - Os dados a serem atualizados.
+     * @returns {Promise<object|null>} O equipamento atualizado ou null se nada foi alterado.
+     */
+    async update(id, dataToUpdate) {
+        const setClauses = [];
+        const values = [];
+        let paramIndex = 1;
 
-/**
- * Deleta um equipamento pelo seu ID.
- */
-const remove = async (id) => {
-    const { rows } = await pool.query('DELETE FROM equipamentos WHERE id = $1 RETURNING *', [id]);
-    return rows[0];
-};
+        for (const key in dataToUpdate) {
+            if (['nome', 'marca', 'modelo', 'quantidade_total', 'ambiente_id'].includes(key)) {
+                setClauses.push(`${key} = $${paramIndex}`);
+                values.push(dataToUpdate[key]);
+                paramIndex++;
+            }
+        }
 
-const findByNomeEAmbiente = async (nome, ambiente_id) => {
-    const { rows } = await pool.query(
-        'SELECT * FROM equipamentos WHERE nome = $1 AND ambiente_id = $2',
-        [nome, ambiente_id]
-    );
+        if (setClauses.length === 0) {
+            return null;
+        }
+        
+        values.push(id);
 
-    return rows[0];
-};
+        const query = `
+            UPDATE equipamentos
+            SET ${setClauses.join(', ')}
+            WHERE id = $${paramIndex}
+            RETURNING *;
+        `;
 
-export default {
-    create,
-    findAll,
-    findById,
-    update,
-    remove,
-    findByNomeEAmbiente,
-};
+        const { rows } = await this.pool.query(query, values);
+        return rows[0];
+    }
+
+    /**
+     * Deleta um equipamento pelo seu ID.
+     * @param {number} id - O ID do equipamento a ser deletado.
+     * @returns {Promise<object|undefined>} O equipamento que foi deletado.
+     */
+    async remove(id) {
+        const { rows } = await this.pool.query('DELETE FROM equipamentos WHERE id = $1 RETURNING *', [id]);
+        return rows[0];
+    }
+}
+
+export default EquipamentoModel;
