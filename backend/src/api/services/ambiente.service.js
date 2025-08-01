@@ -1,29 +1,33 @@
+import pool from '../../config/database.js';
 import AmbienteModel from '../models/ambiente.model.js';
 import ReservaModel from '../models/reserva.model.js';
 
-const AmbienteService = {
+const ambienteModel = new AmbienteModel(pool); 
+
+
+class AmbienteService {
     async create({ tipo, identificacao }) {
         if (!identificacao || identificacao.trim() === '') {
         throw new Error("Identificador obrigatório");
         }
 
-        const existente = await AmbienteModel.findByIdentificador(identificacao);
+        const existente = await ambienteModel.findByIdentificador(identificacao);
         if (existente) {
         throw new Error("Identificador já cadastrado");
         }
 
-        const novoAmbiente = await AmbienteModel.create({
+        const novoAmbiente = await ambienteModel.create({
         identificacao,
         tipo
         });
 
         return novoAmbiente;
-    },
+    }
 
     // Exclusão com verificação de reservas futuras
     async delete(ambienteId) {
         
-        const ambienteParaDeletar = await AmbienteModel.findById(ambienteId);
+        const ambienteParaDeletar = await ambienteModel.findById(ambienteId);
 
         if (!ambienteParaDeletar) {
             // Se não existir, lança o erro "não encontrado" imediatamente.
@@ -49,13 +53,13 @@ const AmbienteService = {
         }
 
         console.log('--- AMBIENTE SERVICE: Nenhuma reserva encontrada. Prosseguindo para a deleção.');
-        return AmbienteModel.remove(ambienteId);
-    },
+        return ambienteModel.remove(ambienteId);
+    }
 
     // Atualização com verificação de duplicidade
     async update(id, dadosParaAtualizar) {
 
-        const ambienteParaAtualizar = await AmbienteModel.findById(id);
+        const ambienteParaAtualizar = await ambienteModel.findById(id);
 
         if (!ambienteParaAtualizar) {
             // Se não existir, lança o erro "não encontrado" imediatamente.
@@ -65,21 +69,21 @@ const AmbienteService = {
         const { identificacao } = dadosParaAtualizar;
 
         if (identificacao) {
-            const existente = await AmbienteModel.findByIdentificador(identificacao);
+            const existente = await ambienteModel.findByIdentificador(identificacao);
             if (existente && existente.id !== id) {
                 throw new Error("Identificador já cadastrado em outro ambiente.");
             }
             }
 
-        return AmbienteModel.update(id, dadosParaAtualizar);
-    },
+        return ambienteModel.update(id, dadosParaAtualizar);
+    }
 
     async findAll(filters = {}) {
-        return AmbienteModel.findAll(filters);
-    },
+        return ambienteModel.findAll(filters);
+    }
 
     async findById(id) {
-        const ambiente = await AmbienteModel.findById(id);
+        const ambiente = await ambienteModel.findById(id);
         if (!ambiente) {
             throw new Error('Ambiente não encontrado.');
         }
@@ -87,4 +91,4 @@ const AmbienteService = {
     }
 };
 
-export default AmbienteService;
+export default new AmbienteService();
