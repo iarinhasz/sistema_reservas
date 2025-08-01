@@ -1,7 +1,5 @@
 import { Router } from 'express';
-import ambienteController from '../controllers/ambiente_controller.js';
-import adminMiddleware from '../middlewares/admin.middleware.js'; // Importa o segundo guardião
-import authMiddleware from '../middlewares/auth.middleware.js'; // Importa o guardião
+import { ambienteController } from '../../container.js';
 
 
 const router = Router();

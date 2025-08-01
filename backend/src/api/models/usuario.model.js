@@ -1,5 +1,3 @@
-import pool from '../../config/database.js';
-
 export default class UsuarioModel {
     static async create(userData) {
         const {cpf, nome, email, senha, tipo } = userData;

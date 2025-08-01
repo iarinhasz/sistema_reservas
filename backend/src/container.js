@@ -1,25 +1,43 @@
 
+//modelos
+import AmbienteModel from './api/models/ambiente.model.js';
+import EquipamentoModel from './api/models/equipamento.model.js';
+import ReservaModel from './api/models/reserva.model.js';
 import UsuarioModel from './api/models/usuario.model.js';
-import EmailService from './api/services/email.service.js'; // Supondo que também virou classe
+
+// Serviços
+import AmbienteService from './api/services/ambiente.service.js';
+import EmailService from './api/services/email.service.js';
 import UsuarioService from './api/services/usuario.service.js';
+
+// Controllersgit
+import AmbienteController from './api/controllers/ambiente.controller.js';
 import UsuarioController from './api/controllers/usuario.controller.js';
 
-// ... importe as outras classes de ambiente, equipamento, reserva ...
 
-// 2. Monta o quebra-cabeça (de baixo para cima)
+import pool from './config/database.js';
+
 
 // == CAMADA DE MODELOS == (sem dependências)
-const usuarioModel = UsuarioModel; // Como usamos 'static', não precisa de 'new'
+const usuarioModel = UsuarioModel; 
+const ambienteModel = new AmbienteModel(pool);
+const equipamentoModel = new EquipamentoModel(pool);
+const reservaModel = new ReservaModel(pool);
 // ... outros models
 
 // == CAMADA DE SERVIÇOS == (dependem dos models)
 const emailService = new EmailService();
 const usuarioService = new UsuarioService(usuarioModel, emailService);
-// ... outros serviços
+const ambienteService = new AmbienteService(ambienteModel, reservaModel);
 
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
 export const usuarioController = new UsuarioController(usuarioService);
+const ambienteController = new AmbienteController(ambienteService);
+
 // ... exporte os outros controllers instanciados
 
 // No final, você exporta apenas as instâncias dos controllers,
 // que serão usadas pelas rotas.
+export {
+    ambienteController
+};
