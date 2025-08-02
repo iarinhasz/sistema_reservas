@@ -1,12 +1,12 @@
 export default class UsuarioModel {
     static async create(userData) {
-        const {cpf, nome, email, senha, tipo } = userData;
+        const {cpf, nome, email, senhaHash, tipo } = userData;
         const query = `
             INSERT INTO usuarios (cpf, nome, email, senha, tipo)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING cpf, nome, email, tipo, data_criacao;
         `;
-        const values = [cpf, nome, email, senha, tipo || 'usuario'];
+        const values = [cpf, nome, email, senhaHash, tipo || 'usuario'];
         const { rows } = await pool.query(query, values);
         return rows[0];
     }
