@@ -1,10 +1,8 @@
-import EquipamentoService from '../services/equipamento.service.js';
-
 class EquipamentoController {
-    constructor() {
-        this.equipamentoService = new EquipamentoService();
+    constructor(equipamentoService) {
+        this.equipamentoService = equipamentoService;
     }
-    async create(req, res) {
+    create = async(req, res) => {
         try {
             const novoEquipamento = await this.equipamentoService.create(req.body);
             res.status(201).json({
@@ -19,7 +17,7 @@ class EquipamentoController {
         }
     }
 
-    async listAll(req, res) {
+    listAll = async(req, res) => {
         try {
             const filtros = req.query;
             const equipamentos = await this.equipamentoService.findAll(filtros);
@@ -29,7 +27,7 @@ class EquipamentoController {
         }
     }
 
-    async getById(req, res) {
+    getById = async(req, res) => {
         try {
             const { id } = req.params;
             const equipamento = await this.equipamentoService.findById(parseInt(id, 10));
@@ -42,7 +40,7 @@ class EquipamentoController {
         }
     }
 
-    async update(req, res) {
+    update = async(req, res) => {
         try {
             const { id } = req.params;
             const equipamentoAtualizado = await this.equipamentoService.update(parseInt(id, 10), req.body);
@@ -58,7 +56,7 @@ class EquipamentoController {
         }
     }
 
-    async delete_(req, res) {
+    delete_ = async(req, res) => {
         try {
             const { id } = req.params;
             const equipamentoDeletado = await this.equipamentoService.remove(parseInt(id, 10));
