@@ -25,9 +25,10 @@ export default class UsuarioService {
         }
 
         // 2. Validação de regras de negócio (evitar duplicidade)
-        if (await this.usuarioModel.findByCpf(cpf)) {
+        if (await this.usuarioModel.findByCpf(cpfApenasNumeros)) {
             throw new Error("Este CPF já está cadastrado.");
         }
+        
         if (await this.usuarioModel.findByEmail(email)) {
             throw new Error("Este email já está em uso.");
         }
@@ -38,7 +39,7 @@ export default class UsuarioService {
 
         // 4. Delega a criação para a camada de dados
         const novoUsuario = await this.usuarioModel.create({
-            cpf,
+            cpf: cpfApenasNumeros,
             nome,
             email,
             senhaHash,
