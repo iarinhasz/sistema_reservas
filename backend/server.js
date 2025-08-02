@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import ambientesRoutes from './src/api/routes/ambiente_routes.js';
 import authRoutes from './src/api/routes/auth.routes.js';
 import equipamentoRoutes from './src/api/routes/equipamento.routes.js';
@@ -9,6 +10,7 @@ import usuarioRoutes from './src/api/routes/usuario.routes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors()); 
 app.use(express.json());
 
 // Rota principal da API
