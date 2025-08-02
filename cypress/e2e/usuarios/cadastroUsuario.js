@@ -18,7 +18,7 @@ When('envio uma solicitação de cadastro com nome {string}, cpf {string}, email
     (nome, cpf, email, senha, tipo) => {
     cy.request({
         method: 'POST',
-        url: `${API_URL}/api/usuarios/solicitar`,
+        url: `${API_URL}/api/usuarios/`,
         body: { nome, cpf, email, senha, tipo },
         failOnStatusCode: false
     }).as('apiResponse');

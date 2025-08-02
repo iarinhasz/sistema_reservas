@@ -1,4 +1,8 @@
 export default class UsuarioModel {
+    constructor(pool){
+        this.pool = pool;
+    }
+
     static async create(userData) {
         const {cpf, nome, email, senhaHash, tipo } = userData;
         const query = `
@@ -7,17 +11,17 @@ export default class UsuarioModel {
             RETURNING cpf, nome, email, tipo, data_criacao;
         `;
         const values = [cpf, nome, email, senhaHash, tipo || 'usuario'];
-        const { rows } = await pool.query(query, values);
+        const { rows } = await this.pool.query(query, values);
         return rows[0];
     }
 
     static async findByEmail(email) {
-        const { rows } = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+        const { rows } = await this.pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
         return rows[0];
     }
 
     static async findByCpf(cpf) {
-        const { rows } = await pool.query('SELECT * FROM usuarios WHERE cpf = $1', [cpf]);
+        const { rows } = await this.pool.query('SELECT * FROM usuarios WHERE cpf = $1', [cpf]);
         return rows[0];
     }
 
@@ -34,10 +38,10 @@ export default class UsuarioModel {
         query += ` ORDER BY data_criacao DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
         queryParams.push(limit, offset);
 
-        const { rows } = await pool.query(query, queryParams);
+        const { rows } = await this.pool.query(query, queryParams);
     
         // Query para contagem total para paginação
-        const countResult = await pool.query("SELECT COUNT(*) FROM usuarios WHERE status = 'pendente'");
+        const countResult = await this.pool.query("SELECT COUNT(*) FROM usuarios WHERE status = 'pendente'");
         const totalItems = parseInt(countResult.rows[0].count, 10);
 
     return { usuarios: rows, totalItems, totalPages: Math.ceil(totalItems / limit), currentPage: page };
@@ -53,13 +57,13 @@ export default class UsuarioModel {
     }
 
     static async findAll () {
-    const { rows } = await pool.query("SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente' ORDER BY nome");
+    const { rows } = await this.pool.query("SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente' ORDER BY nome");
     return rows;
     }
 
     // Função para deletar um usuário (usado na rejeição)
     static async deleteByCpf (cpf) {
-        const { rows } = await pool.query("DELETE FROM usuarios WHERE cpf = $1 RETURNING *", [cpf]);
+        const { rows } = await this.pool.query("DELETE FROM usuarios WHERE cpf = $1 RETURNING *", [cpf]);
         return rows[0];
     }
 
@@ -81,7 +85,7 @@ export default class UsuarioModel {
             RETURNING cpf, nome, email, tipo, status;
         `;
 
-        const { rows } = await pool.query(query, values);
+        const { rows } = await this.pool.query(query, values);
         return rows[0];
     }
 
