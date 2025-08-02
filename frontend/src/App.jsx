@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage'; 
 import Login from './pages/Login';
 // Crie esses outros componentes depois
 // import Dashboard from './pages/Dashboard'; 
@@ -9,8 +10,9 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
-                {/* <Route path="/solicitar-cadastro" element={<SolicitarCadastro />} /> */}
+                {/*<Route path="/solicitar-cadastro" element={<SolicitarCadastro />} />*/}
                 {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                 {/* Adicione outras rotas aqui */}
             </Routes>
