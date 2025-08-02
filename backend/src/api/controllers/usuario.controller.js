@@ -21,6 +21,9 @@ export default class UsuarioController {
             if (error.message.includes("já está") || error.message.includes("em uso")) {
                 return res.status(409).json({ message: error.message });
             }
+            if (error.message.includes("inválido")) {
+                return res.status(400).json({ message: error.message });
+            }
             
             res.status(500).json({ message: "Ocorreu um erro interno no servidor." });
         }
