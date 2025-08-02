@@ -3,7 +3,7 @@ export default class UsuarioModel {
         this.pool = pool;
     }
 
-    static async create(userData) {
+    async create(userData) {
         const {cpf, nome, email, senhaHash, tipo } = userData;
         const query = `
             INSERT INTO usuarios (cpf, nome, email, senha, tipo)
@@ -15,17 +15,17 @@ export default class UsuarioModel {
         return rows[0];
     }
 
-    static async findByEmail(email) {
+    async findByEmail(email) {
         const { rows } = await this.pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
         return rows[0];
     }
 
-    static async findByCpf(cpf) {
+    async findByCpf(cpf) {
         const { rows } = await this.pool.query('SELECT * FROM usuarios WHERE cpf = $1', [cpf]);
         return rows[0];
     }
 
-    static async findPending ({ search, page = 1, limit = 10 } = {}) {
+    async findPending ({ search, page = 1, limit = 10 } = {}) {
         const offset = (page - 1) * limit;
         let query = `SELECT cpf, nome, email, tipo, data_criacao FROM usuarios WHERE status = 'pendente'`;
         const queryParams = [];
@@ -48,7 +48,7 @@ export default class UsuarioModel {
     }
 
     // Função para mudar o status de um usuário
-    static async updateStatus (cpf, newStatus) {
+    async updateStatus (cpf, newStatus) {
         const { rows } = await pool.query(
             "UPDATE usuarios SET status = $1 WHERE cpf = $2 RETURNING *",
             [newStatus, cpf]
@@ -56,18 +56,18 @@ export default class UsuarioModel {
     return rows[0];
     }
 
-    static async findAll () {
+    async findAll () {
     const { rows } = await this.pool.query("SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente' ORDER BY nome");
     return rows;
     }
 
     // Função para deletar um usuário (usado na rejeição)
-    static async deleteByCpf (cpf) {
+    async deleteByCpf (cpf) {
         const { rows } = await this.pool.query("DELETE FROM usuarios WHERE cpf = $1 RETURNING *", [cpf]);
         return rows[0];
     }
 
-    static async update (cpf, userData) {
+    async update (cpf, userData) {
 
         const keys = Object.keys(userData); 
 
