@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage'; 
+import HomePage from './pages/public/HomePage'; 
 import Login from './pages/Login';
 // Crie esses outros componentes depois
 // import Dashboard from './pages/Dashboard'; 
