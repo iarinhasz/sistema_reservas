@@ -23,7 +23,7 @@ import pool from './config/database.js';
 
 
 // == CAMADA DE MODELOS == (sem dependências) hsdghfsdhfjsk
-const usuarioModel = UsuarioModel; 
+const usuarioModel = new UsuarioModel(pool); 
 const ambienteModel = new AmbienteModel(pool);
 const equipamentoModel = new EquipamentoModel(pool);
 const reservaModel = new ReservaModel(pool);
