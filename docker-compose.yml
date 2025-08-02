@@ -8,9 +8,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Mapeia todo o diretório do backend para o diretório de trabalho no contêiner
       - ./backend:/app
-      # Adiciona um volume anônimo para node_modules para que o mapeamento local não o sobrescreva.
       - /app/node_modules
     env_file:
       - ./.env
@@ -46,6 +44,21 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_reservas
+    ports:
+      - "5173:5173"
+    volumes:
+      # Mapeia o código do frontend para o live-reload
+      - ./frontend:/app
+      # Isola o node_modules dentro do container
+      - /app/node_modules
+    depends_on:
+      - app
 
 volumes:
   postgres_data:
