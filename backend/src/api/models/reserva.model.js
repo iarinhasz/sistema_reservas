@@ -1,6 +1,4 @@
-import pool from '../../config/database.js';
-
-class ReservaAdmin{
+class ReservaModel{
     constructor(pool){
         this.pool = pool;
     }
@@ -18,7 +16,7 @@ class ReservaAdmin{
             RETURNING *;
         `;
         const values = [usuario_cpf, recurso_id, recurso_tipo, data_inicio, data_fim, titulo, status];
-        const { rows } = await pool.query(query, values);
+        const { rows } = await this.pool.query(query, values);
         return rows[0];
     }
     async findAll(){
@@ -30,7 +28,7 @@ class ReservaAdmin{
             LEFT JOIN usuarios u ON r.usuario_cpf = u.cpf
             ORDER BY r.data_inicio;
         `;
-        const { rows } = await pool.query(query);
+        const { rows } = await this.pool.query(query);
         return rows;
     }
     async checkAvailability ({ recurso_id, recurso_tipo, data_inicio, data_fim }){
@@ -122,4 +120,4 @@ class ReservaAdmin{
 }
 
 
-export default ReservaAdmin;
+export default ReservaModel;

@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import EquipamentoController from '../controllers/equipamento.controller.js'; // Importa a CLASSE
+import { equipamentoController} from '../../container.js';
+
 import adminMiddleware from '../middlewares/admin.middleware.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = Router();
-
-const equipamentoController = new EquipamentoController();
 
 router.post('/', authMiddleware, adminMiddleware, equipamentoController.create.bind(equipamentoController));
 router.patch('/:id', authMiddleware, adminMiddleware, equipamentoController.update.bind(equipamentoController));

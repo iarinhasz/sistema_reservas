@@ -1,8 +1,7 @@
-import EquipamentoService from '../services/equipamento.service.js';
 
 class EquipamentoController {
-    constructor() {
-        this.equipamentoService = new EquipamentoService();
+    constructor(EquipamentoService) {
+        this.equipamentoService = EquipamentoService;
     }
     async create(req, res) {
         try {
@@ -12,9 +11,13 @@ class EquipamentoController {
                 equipamento: novoEquipamento
             });
         } catch (error) {
-            if (error.message.includes("obrigatórios") || error.message.includes("Já existe um equipamento")) {
+            if (error.message.includes("obrigatórios")) {
                 return res.status(400).json({ message: error.message });
             }
+            if (error.message.includes("Já existe um equipamento")) {
+                return res.status(409).json({ message: error.message });
+            }
+
             res.status(500).json({ message: "Erro interno do servidor" });
         }
     }
@@ -51,7 +54,10 @@ class EquipamentoController {
                 equipamento: equipamentoAtualizado
             });
         } catch (error) {
-            if (error.message.includes("não encontrado") || error.message.includes("Nenhum campo fornecido")) {
+            if (error.message.includes("não encontrado")) {
+                return res.status(404).json({ message: error.message });
+            }
+            if (error.message.includes("Nenhum campo fornecido")) {
                 return res.status(400).json({ message: error.message });
             }
             res.status(500).json({ message: "Erro interno do servidor" });
@@ -67,8 +73,11 @@ class EquipamentoController {
                 equipamentoDeletado: equipamentoDeletado
             });
         } catch (error) {
-            if (error.message.includes("não encontrado") || error.message.includes("reservas futuras")) {
-                return res.status(400).json({ message: error.message });
+            if (error.message.includes("não encontrado para deletar")) {
+                return res.status(404).json({ message: error.message });
+            }
+            if (error.message.includes("reservas futuras")) {
+                return res.status(409).json({ message: error.message });
             }
             res.status(500).json({ message: "Erro interno do servidor" });
         }

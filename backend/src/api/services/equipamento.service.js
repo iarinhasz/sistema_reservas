@@ -1,14 +1,9 @@
-import pool from '../../config/database.js';
-import EquipamentoModel from '../models/equipamento.model.js';
-import ReservaModel from '../models/reserva.model.js';
-import AmbienteModel from '../models/ambiente.model.js';
-
 class EquipamentoService {
-    constructor() {
+    constructor(EquipamentoModel, ReservaModel, AmbienteModel) {
         // As instâncias dos models agora são propriedades da classe
-        this.equipamentoModel = new EquipamentoModel(pool);
-        //this.reservaModel = new ReservaModel(pool);
-        this.ambienteModel = new AmbienteModel(pool);
+        this.equipamentoModel = EquipamentoModel;
+        this.reservaModel = ReservaModel;
+        this.ambienteModel = AmbienteModel;
     }
 
     /**
@@ -18,7 +13,7 @@ class EquipamentoService {
         const { nome, quantidade_total, ambiente_id } = dadosEquipamento;
 
         if (nome === undefined || quantidade_total === undefined || ambiente_id === undefined) {
-            throw new Error("Os campos 'nome', 'quantidade_total' e 'ambiente_id' são obrigatórios.");
+            throw new Error("Os campos 'nome' e 'quantidade_total' são obrigatórios.");
         }
         
         const ambienteExistente = await this.ambienteModel.findById(ambiente_id);

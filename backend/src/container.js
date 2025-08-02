@@ -8,15 +8,15 @@ import UsuarioModel from './api/models/usuario.model.js';
 // Serviços
 import AmbienteService from './api/services/ambiente.service.js';
 import EmailService from './api/services/email.service.js';
-import UsuarioService from './api/services/usuario.service.js';
 import ReservaService from './api/services/reserva.service.js';
+import UsuarioService from './api/services/usuario.service.js';
+import EquipamentoService from './api/services/equipamento.service.js';
 
 // Controllersgit
 import AmbienteController from './api/controllers/ambiente.controller.js';
-import UsuarioController from './api/controllers/usuario.controller.js';
 import ReservaController from './api/controllers/reserva.controller.js';
-import AuthController from './api/controllers/auth.controller.js';
-
+import UsuarioController from './api/controllers/usuario.controller.js';
+import EquipamentoController from './api/controllers/equipamento.controller.js';
 
 
 import pool from './config/database.js';
@@ -34,17 +34,19 @@ const emailService = new EmailService();
 const usuarioService = new UsuarioService(usuarioModel, emailService);
 const ambienteService = new AmbienteService(ambienteModel);
 const reservaService = new ReservaService(reservaModel);
+const equipamentoService = new EquipamentoService(equipamentoModel, reservaModel, ambienteModel);
 
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
 const usuarioController = new UsuarioController(usuarioService);
 const ambienteController = new AmbienteController(ambienteService);
 const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
-// ... exporte os outros controllers instanciados
+const equipamentoController = new EquipamentoController(equipamentoService);
 
 // No final, você exporta apenas as instâncias dos controllers,
 // que serão usadas pelas rotas.
 export {
     ambienteController,
     reservaController,
-    usuarioController
+    usuarioController,
+    equipamentoController
 };
