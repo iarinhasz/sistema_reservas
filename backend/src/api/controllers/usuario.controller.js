@@ -62,7 +62,7 @@ export default class UsuarioController {
             if (error.message.includes("permissão") || error.message.includes("campo")) {
                 return res.status(403).json({ message: error.message });
             }
-             if (error.message.includes("não encontrado")) {
+            if (error.message.includes("não encontrado")) {
                 return res.status(404).json({ message: error.message });
             }
             if (error.message.includes("já em uso")) {
