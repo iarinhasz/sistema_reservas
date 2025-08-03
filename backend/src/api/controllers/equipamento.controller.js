@@ -5,7 +5,7 @@ class EquipamentoController {
     }
     async create(req, res) {
         try {
-            const novoEquipamento = await this.equipamentoService.create(req.body);
+            const novoEquipamento = await this.equipamentoService.create(req.body, req.user);
             res.status(201).json({
                 message: "Equipamento criado com sucesso!",
                 equipamento: novoEquipamento
@@ -79,6 +79,15 @@ class EquipamentoController {
             if (error.message.includes("reservas futuras")) {
                 return res.status(409).json({ message: error.message });
             }
+            res.status(500).json({ message: "Erro interno do servidor" });
+        }
+    }
+
+    async findAll(req, res){
+        try {
+            const equipamentos = await this.equipamentoService.findAll(req.query);
+            res.status(200).json(equipamentos);
+        } catch (error) {
             res.status(500).json({ message: "Erro interno do servidor" });
         }
     }

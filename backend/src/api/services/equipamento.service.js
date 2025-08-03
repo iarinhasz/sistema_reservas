@@ -9,12 +9,13 @@ class EquipamentoService {
     /**
      * Valida e cria um novo equipamento.
      */
-    async create(dadosEquipamento) {
-        const { nome, quantidade_total, ambiente_id } = dadosEquipamento;
+    async create(dadosEquipamento, usuarioLogado) {
+        const { nome, marca, modelo, quantidade_total, ambiente_id } = dadosEquipamento;
 
-        if (nome === undefined || quantidade_total === undefined || ambiente_id === undefined) {
-            throw new Error("Os campos 'nome' e 'quantidade_total' são obrigatórios.");
+        if (!nome || !nome.trim() || !quantidade_total || !ambiente_id) {
+            throw new Error("Os campos 'nome', 'quantidade_total' e 'ambiente_id' são obrigatórios.");
         }
+    
         
         const ambienteExistente = await this.ambienteModel.findById(ambiente_id);
         if (!ambienteExistente) {
@@ -26,7 +27,15 @@ class EquipamentoService {
             throw new Error("Já existe um equipamento com esse nome neste ambiente");
         }
         
-        return this.equipamentoModel.create(dadosEquipamento);
+        const dadosParaSalvar = {
+            nome: nome.trim(),
+            marca,
+            modelo,
+            quantidade_total,
+            ambiente_id,
+            criado_por_cpf: usuarioLogado.cpf 
+        };
+        return this.equipamentoModel.create(dadosParaSalvar);
     }
 
     /**

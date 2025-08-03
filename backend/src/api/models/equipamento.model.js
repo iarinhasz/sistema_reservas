@@ -11,11 +11,11 @@ class EquipamentoModel {
      * @returns {Promise<object>} O equipamento criado.
      */
     async create(equipamentoData) {
-        const { nome, marca, modelo, quantidade_total, ambiente_id } = equipamentoData;
+        const { nome, marca, modelo, quantidade_total, ambiente_id, criado_por_cpf } = equipamentoData;
         const query = `
-            INSERT INTO equipamentos (nome, marca, modelo, quantidade_total, ambiente_id)
-            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-        const values = [nome, marca || null, modelo || null, quantidade_total, ambiente_id];
+            INSERT INTO equipamentos (nome, marca, modelo, quantidade_total, ambiente_id, criado_por_cpf)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+        const values = [nome, marca || null, modelo || null, quantidade_total, ambiente_id, criado_por_cpf];
         
         const { rows } = await this.pool.query(query, values);
         return rows[0];
@@ -27,7 +27,13 @@ class EquipamentoModel {
      * @returns {Promise<Array>} Uma lista de equipamentos.
      */
     async findAll(filters = {}) {
-        let query = 'SELECT * FROM equipamentos';
+        let query = `
+                SELECT 
+                    eq.*, 
+                    u.nome as criado_por_nome 
+                FROM equipamentos eq
+                LEFT JOIN usuarios u ON eq.criado_por_cpf = u.cpf
+            `;
         const values = [];
         
         if (filters.ambiente_id) {
