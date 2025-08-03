@@ -5,7 +5,7 @@ import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import modalStyles from '../css/modal.module.css'
 
-const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess }) => {
+const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
     // Inicia o estado do formulário com os dados do equipamento que está sendo editado
     const [formData, setFormData] = useState({
         nome: equipamento.nome || '',
@@ -39,6 +39,21 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess }) => {
             setIsSubmitting(false);
         }
     };
+    const handleDelete = async () => {
+        // Pede confirmação antes de deletar
+        if (window.confirm(`Tem certeza que deseja deletar o equipamento "${equipamento.nome}"?`)) {
+            try {
+                // Chama a rota DELETE da API
+                await api.delete(`/equipamentos/${equipamento.id}`);
+                
+                // Avisa o componente pai que a deleção foi um sucesso
+                onDelete(equipamento.id);
+                onClose(); // Fecha o modal
+            } catch (error) {
+                setErrorMessage(error.response?.data?.message || 'Erro ao deletar equipamento.');
+            }
+        }
+    };
 
     return (
         <div className={modalStyles.modalBackdrop} onClick={onClose}>
@@ -64,11 +79,21 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess }) => {
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                        <button type="button" onClick={onClose} className={modalStyles.cancelButton}>Cancelar</button>
-                        <button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+                        <button 
+                            type="button" 
+                            onClick={handleDelete} 
+                            className={modalStyles.deleteButton}
+                        >
+                            Deletar
                         </button>
-                    </div>
+                        <div style={{ flex: 1 }}></div> {/* Espaçador */}
+                            <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
+                                Cancelar
+                            </button>
+                            <button type="submit" disabled={isSubmitting}>
+                                Salvar Alterações
+                            </button>
+                        </div>
                     {errorMessage && <p className={formStyles.error}>{errorMessage}</p>}
                 </form>
             </div>

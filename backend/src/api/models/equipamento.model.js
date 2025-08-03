@@ -53,7 +53,15 @@ class EquipamentoModel {
      * @returns {Promise<object|undefined>} O equipamento encontrado ou undefined.
      */
     async findById(id) {
-        const { rows } = await this.pool.query('SELECT * FROM equipamentos WHERE id = $1', [id]);
+        const query = `
+            SELECT 
+                eq.*, 
+                u.nome as criado_por_nome 
+            FROM equipamentos eq
+            LEFT JOIN usuarios u ON eq.criado_por_cpf = u.cpf
+            WHERE eq.id = $1
+        `;
+        const { rows } = await this.pool.query(query, [id]);
         return rows[0];
     }
 

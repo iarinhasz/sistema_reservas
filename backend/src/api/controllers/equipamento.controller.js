@@ -3,12 +3,16 @@ class EquipamentoController {
     constructor(EquipamentoService) {
         this.equipamentoService = EquipamentoService;
     }
-    async create(req, res) {
+    create= async (req, res) => {
         try {
             const novoEquipamento = await this.equipamentoService.create(req.body, req.user);
+            const equipamentoCompleto = await this.equipamentoService.findById(novoEquipamento.id);
+            
+            console.log("Objeto enviado para o frontend:", equipamentoCompleto);
+
             res.status(201).json({
                 message: "Equipamento criado com sucesso!",
-                equipamento: novoEquipamento
+                equipamento: equipamentoCompleto
             });
         } catch (error) {
             if (error.message.includes("obrigatórios")) {
@@ -22,7 +26,7 @@ class EquipamentoController {
         }
     }
 
-    async listAll(req, res) {
+    listAll = async (req, res) => {
         try {
             const filtros = req.query;
             const equipamentos = await this.equipamentoService.findAll(filtros);
@@ -32,7 +36,7 @@ class EquipamentoController {
         }
     }
 
-    async getById(req, res) {
+    getById = async (req, res) => {
         try {
             const { id } = req.params;
             const equipamento = await this.equipamentoService.findById(parseInt(id, 10));
@@ -45,7 +49,7 @@ class EquipamentoController {
         }
     }
 
-    async update(req, res) {
+    update = async (req, res) => {
         try {
             const { id } = req.params;
             const equipamentoAtualizado = await this.equipamentoService.update(parseInt(id, 10), req.body);
@@ -64,15 +68,26 @@ class EquipamentoController {
         }
     }
 
-    async delete_(req, res) {
+    delete = async (req, res) => {
         try {
             const { id } = req.params;
+            
+            console.log(`CONTROLLER: ID a ser deletado: ${id}`);
+
             const equipamentoDeletado = await this.equipamentoService.remove(parseInt(id, 10));
+            
+            console.log("CONTROLLER: Serviço executado com sucesso. Equipamento retornado:", equipamentoDeletado);
+            if (!equipamentoDeletado) {
+                console.log("CONTROLLER: Serviço retornou um valor 'falsy', mas não lançou erro. Forçando erro 404.");
+                return res.status(404).json({ message: 'Equipamento não encontrado após a deleção.' });
+            }
             res.status(200).json({
                 message: 'Equipamento deletado com sucesso!',
                 equipamentoDeletado: equipamentoDeletado
             });
         } catch (error) {
+            console.error("CONTROLLER: A execução caiu no bloco CATCH. O erro é:", error);
+
             if (error.message.includes("não encontrado para deletar")) {
                 return res.status(404).json({ message: error.message });
             }

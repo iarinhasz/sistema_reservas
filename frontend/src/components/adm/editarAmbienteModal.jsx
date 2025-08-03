@@ -10,6 +10,7 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
     const [formData, setFormData] = useState({
         identificacao: ambiente.identificacao || '',
         tipo: ambiente.tipo || 'Salas de Aula',
+        status: ambiente.status || 'Dispónivel',
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,7 +27,6 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
         setErrorMessage('');
 
         try {
-            // Usamos o método PATCH (ou PUT) para ATUALIZAR um recurso existente
             const response = await api.patch(`/ambientes/${ambiente.id}`, formData);
 
             onSuccess(response.data.ambiente); // Envia os dados atualizados para a página pai
@@ -56,6 +56,14 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
                             <option value="Salas de Aula">Salas de Aula</option>
                             <option value="Salas de Reunião">Salas de Reunião</option>
                             <option value="Multifuncionais">Multifuncionais</option>
+                        </select>
+                    </div>
+                    <div className={formStyles.formGroup}>
+                        <label htmlFor="status">Status</label>
+                        <select id="status" value={formData.status} onChange={handleChange}>
+                            <option value="Disponível">Disponível</option>
+                            <option value="Em Manutenção">Em Manutenção</option>
+                            <option value="Indisponível">Indisponível</option>
                         </select>
                     </div>
 

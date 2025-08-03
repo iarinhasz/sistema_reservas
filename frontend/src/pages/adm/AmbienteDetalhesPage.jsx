@@ -86,6 +86,12 @@ const AmbienteDetalhesPage = () => {
             )
         );
     };
+    const handleEquipamentoDeletado = (equipamentoId) => {
+        setEquipamentos(listaAtual => 
+            listaAtual.filter(eq => eq.id !== equipamentoId)
+        );
+        setIsEditModalOpen(false);
+    };
     const handleAmbienteAtualizado = (ambienteAtualizado) => {
         setAmbiente(ambienteAtualizado);
     };
@@ -188,6 +194,7 @@ const AmbienteDetalhesPage = () => {
                     equipamento={equipamentoParaEditar}
                     onClose={() => setIsEditModalOpen(false)}
                     onSuccess={handleEquipamentoAtualizado}
+                    onDelete={handleEquipamentoDeletado} 
                 />
             )}
             {isEditAmbienteModalOpen && (
