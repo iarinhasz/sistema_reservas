@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'; // Importante para criar links de navegação
 import styles from './css/admHomePage.module.css';
+import AmbientesList from '../../components/shared/AmbientesList.jsx';
 
 const AdmHomePage = () => {
     return (
@@ -22,13 +23,17 @@ const AdmHomePage = () => {
                     Visualizar Reviews
                 </Link>
 
-                <Link to="/admin/cadastrar-ambiente" className={styles.actionButtonCadastro}>
-                    + Cadastrar Novo Ambiente
-                </Link>
-                <Link to="Ver Perfil" className={styles.actionButton}>
+                <Link to="/admin/perfil" className={styles.actionButton}>
                     Ver Perfil
                 </Link>
             </div>
+                <hr className={styles.divider} />
+
+                <div className={styles.listSection}>
+                    <h2>Visão Geral dos Ambientes</h2>
+                    <Link to="/admin/cadastrar-ambiente" className={styles.actionButtonCadastro}>+ Cadastrar Novo Ambiente</Link>
+                </div>
+            <AmbientesList />
         </div>
     );
 };
