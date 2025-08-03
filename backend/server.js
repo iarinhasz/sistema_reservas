@@ -26,12 +26,12 @@ app.use('/api/usuarios', usuarioRoutes);
 
 
 //apenas p qnd for fazer teste
-if (process.env.NODE_ENV !== 'production') {
+/*if (process.env.NODE_ENV !== 'production') {
     const testingRoutes = (await import('./src/api/routes/testing.routes.js')).default;
     app.use('/api/testing', testingRoutes);
     console.log('Rotas de teste carregadas.');
 }
-
+*/
 
 app.listen(PORT, () => {
   console.log(`Servidor do backend rodando na porta ${PORT}`);

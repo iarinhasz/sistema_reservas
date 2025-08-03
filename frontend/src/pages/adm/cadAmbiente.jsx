@@ -39,7 +39,7 @@ const CadastrarAmbientePage = () => {
             // Após 2 segundos, volta para a página principal do admin
             setTimeout(() => {
                 navigate('/admin');
-            }, 2000);
+            }, 2000);  
 
         } catch (error) {
             // Pega a mensagem de erro da API (ex: "Identificador já cadastrado")

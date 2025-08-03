@@ -18,8 +18,11 @@ class AuthService{
             error.statusCode = 401; // Unauthorized
             throw error;
         }
-
+        console.log(`Senha Recebida: ${senha}`);
+        console.log(`Hash do Banco: ${user.senha}`);
         const senhaValida = await bcrypt.compare(senha, user.senha);
+        console.log(`A comparação de senha (bcrypt.compare) retornou: ${senhaValida}`);
+
         if (!senhaValida) {
             const error = new Error('Email ou senha inválidos.');
             error.statusCode = 401; // Unauthorized
@@ -36,7 +39,8 @@ class AuthService{
         const payload = {
             cpf: user.cpf,
             nome: user.nome,
-            tipo: user.tipo
+            tipo: user.tipo,
+            status: user.status
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {

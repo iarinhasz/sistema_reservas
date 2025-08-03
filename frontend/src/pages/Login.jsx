@@ -1,40 +1,55 @@
-import axios from 'axios';
-import { useState } from 'react';
+// src/pages/Login.jsx
 
-function Login() {
+import React, { useState } from 'react'; // Adicione a importação do React
+import { useAuth } from '../context/AuthContext';
+import styles from './LoginPage.module.css';
+
+const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [erro, setErro] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const { login, loading } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
         try {
-            // Chamada para sua API de login no backend
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
-                email,
-                senha
-            });
-            
-            console.log('Login bem-sucedido!', response.data);
-            // Aqui você guardaria o token (ex: no localStorage) e redirecionaria o usuário
-            localStorage.setItem('authToken', response.data.token);
-            window.location.href = '/dashboard'; // Redireciona para a página principal
-
-        } catch (error) {
-            console.error('Erro no login:', error.response.data.message);
-            setErro(error.response.data.message);
+            await login(email, senha);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Erro ao fazer login.');
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required />
-                <input type="password" value={senha} onChange={e => setSenha(e.target.value)} placeholder="Senha" required />
-                <button type="submit">Entrar</button>
+        <div className={styles.loginContainer}>
+            <form onSubmit={handleSubmit} className={styles.loginForm}>
+                <h2>Login</h2>
+                <div className={styles.formGroup}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className={styles.formGroup}>
+                    <label htmlFor="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                        required
+                    />
+                </div>
+                {error && <p className={styles.error}>{error}</p>}
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Entrando...' : 'Entrar'}
+                </button>
             </form>
-            {erro && <p style={{ color: 'red' }}>{erro}</p>}
         </div>
     );
 }
