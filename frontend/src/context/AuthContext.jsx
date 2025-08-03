@@ -50,9 +50,14 @@ export const AuthProvider = ({ children }) => {
                 api.defaults.headers.Authorization = `Bearer ${token}`;
                 
                 // Decodifica o token para pegar os dados do usuário (opcional, mas útil)
-
+                const userData = jwtDecode(token);
+                setUser(userData);
                 // Redireciona para a página de admin
-                navigate('/admin');
+                if (userData.tipo === 'admin') {
+                    navigate('/admin'); // Se for admin, vai para /admin
+                } else {
+                    navigate('/dashboard'); // Se for aluno ou professor, vai para um dashboard de usuário
+                }
             }
         } catch (error) {
             console.error("Falha no login", error);
