@@ -24,7 +24,7 @@ const AdminLayout = () => {
                     <p>Bem-vindo, {user?.nome || 'Admin'}</p>
                 </div>
                 <nav className={styles.nav}>
-                    <Link to="/admin" onClick={() => setIsPanelOpen(false)}>Dashboard</Link>
+                    <Link to="/admin" onClick={() => setIsPanelOpen(false)}>Pagina Inicial</Link>
                     <Link to="/admin/cadastrar-ambiente" onClick={() => setIsPanelOpen(false)}>Cadastrar Ambiente</Link>
                     <Link to="/admin/solicitacoes-cadastro" onClick={() => setIsPanelOpen(false)}>Solicitações de Cadastro</Link>
                     <Link to="/admin/solicitacoes-reserva" onClick={() => setIsPanelOpen(false)}>Solicitações de Reserva</Link>

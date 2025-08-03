@@ -36,9 +36,9 @@ class EquipamentoModel {
             `;
         const values = [];
         
-        if (filters.ambiente_id) {
+        if (filters.ambienteId) {
             query += ' WHERE ambiente_id = $1';
-            values.push(filters.ambiente_id);
+            values.push(filters.ambienteId);
         }
         
         query += ' ORDER BY nome';
