@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
 
     // Função de Logout
     const logout = () => {
+        console.log("Executando logout e redirecionando para /login");
         localStorage.removeItem('authToken');
         delete api.defaults.headers.Authorization;
         setUser(null);
