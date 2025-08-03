@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Para os botões de navegação
 import axios from 'axios'; // Para fazer a chamada à API
-import './HomePage.css'; // Arquivo de estilos que vamos criar
+import styles from './HomePage.module.css';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros
@@ -13,7 +13,7 @@ function HomePage() {
     useEffect(() => {
         const fetchAmbientes = async () => {
             try {
-                // Faz a requisição para o endpoint do backend
+                
                 const response = await axios.get('http://localhost:3000/api/ambientes');
                 setAmbientes(response.data); // Armazena os dados no estado
             } catch (err) {
@@ -42,24 +42,23 @@ function HomePage() {
     if (error) return <p className="error-message">{error}</p>;
 
     return (
-        <div className="home-container">
-            <header className="home-header">
+        <div className={styles.homeContainer}>
+            <header className={styles.homeHeader}>
                 <h1>Sistema de Reservas</h1>
                 <nav>
-                    <Link to="/login" className="header-button">Login</Link>
-                    <Link to="/solicitar-cadastro" className="header-button">Solicitar Cadastro</Link>
+                    {/* Para classes globais, usamos o nome da classe como string */}
+                    <Link to="/login" className="button">Login</Link>
+                    <Link to="/solicitar-cadastro" className="button">Solicitar Cadastro</Link>
                 </nav>
             </header>
 
-            <main className="ambientes-grid">
-                {/* Transforma o objeto de grupos em um array e o percorre para criar as colunas */}
+            <main className={styles.ambientesGrid}>
                 {Object.entries(ambientesAgrupados).map(([tipo, listaDeAmbientes]) => (
-                    <section key={tipo} className="ambiente-coluna">
+                    <section key={tipo} className={styles.ambienteColuna}>
                         <h2>{tipo}s</h2>
-                        <div className="botoes-container">
-                            {/* Percorre a lista de ambientes de cada tipo para criar os botões */}
+                        <div className={styles.botoesContainer}>
                             {listaDeAmbientes.map(ambiente => (
-                                <button key={ambiente.id} className="ambiente-botao">
+                                <button key={ambiente.id} className={styles.ambienteBotao}>
                                     {ambiente.identificacao}
                                 </button>
                             ))}
