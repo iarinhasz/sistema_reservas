@@ -53,6 +53,24 @@ const AmbientesList = () => {
     if (loading) return <p className={styles.message}>Carregando ambientes...</p>;
     if (error) return <p className={styles.errorMessage}>{error}</p>;
 
+    const handleDelete = async (ambienteId, ambienteNome) => {
+        // Pede confirmação ao usuário
+        if (window.confirm(`Tem certeza que deseja deletar o ambiente "${ambienteNome}"? Esta ação não pode ser desfeita.`)) {
+            try {
+                // Faz a chamada DELETE para a API do backend
+                await api.delete(`/ambientes/${ambienteId}`);
+                
+                // Remove o ambiente da lista na tela para feedback instantâneo
+                setAmbientes(listaAtual => listaAtual.filter(amb => amb.id !== ambienteId));
+
+            } catch (err) {
+                // Exibe a mensagem de erro da API (ex: "Não é possível excluir...")
+                alert(err.response?.data?.message || 'Erro ao deletar o ambiente.');
+                console.error(err);
+            }
+        }
+    };
+
     return (
         <main className={styles.ambientesGrid}>
             {Object.entries(ambientesAgrupados).map(([tipo, listaDeAmbientes]) => (
@@ -69,10 +87,21 @@ const AmbientesList = () => {
                                 </button>
                                 {/* Renderização condicional do ícone de edição */}
                                 {user?.tipo === 'admin' && (
-                                    <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.editIcon}>
-                                        ✏️
-                                    </Link>
+                                    <div className={styles.iconActions}>
+                                        <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.iconButton} title="Editar Ambiente">
+                                            ✏️
+                                        </Link>
+                                        {/* BOTÃO DE DELETAR COM O ÍCONE 'X' */}
+                                        <button 
+                                            onClick={() => handleDelete(ambiente.id, ambiente.identificacao)}
+                                            className={`${styles.iconButton} ${styles.deleteButton}`}
+                                            title="Deletar Ambiente"
+                                        >
+                                            ❌
+                                        </button>
+                                    </div>
                                 )}
+
                             </div>
                         ))}
                     </div>
