@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { jwtDecode } from 'jwt-decode';
 
 // 1. Cria o Contexto
 const AuthContext = createContext();
@@ -8,8 +9,32 @@ const AuthContext = createContext();
 // 2. Cria o Provedor (Provider) - o componente que vai gerenciar o estado
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null); // Guarda os dados do usuário logado
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            try {
+                // Decodifica o token para pegar os dados do usuário e a data de expiração
+                const decodedToken = jwtDecode(token);
+
+                // Verifica se o token não expirou
+                if (decodedToken.exp * 1000 > Date.now()) {
+                    setUser(decodedToken); // Define o usuário no estado
+                    api.defaults.headers.Authorization = `Bearer ${token}`; // Reconfigura o axios
+                } else {
+                    // Se o token expirou, limpa
+                    localStorage.removeItem('authToken');
+                }
+            } catch (error) {
+                console.error("Token inválido:", error);
+                localStorage.removeItem('authToken');
+            }
+        }
+        setLoading(false); // Finaliza o carregamento inicial
+    }, []); // O array vazio [] garante que isso só rode uma vez, quando a app carrega
+
 
     // Função de Login que será usada por toda a aplicação
     const login = async (email, senha) => {
@@ -47,6 +72,9 @@ export const AuthProvider = ({ children }) => {
         navigate('/login');
     };
 
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
     return (
         <AuthContext.Provider value={{ user, loading, login, logout }}>
             {children}

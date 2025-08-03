@@ -23,9 +23,6 @@ const AdmHomePage = () => {
                     Visualizar Reviews
                 </Link>
 
-                <Link to="/admin/perfil" className={styles.actionButton}>
-                    Ver Perfil
-                </Link>
             </div>
                 <hr className={styles.divider} />
 

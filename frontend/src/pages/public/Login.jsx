@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 
-import React, { useState } from 'react'; // Adicione a importação do React
-import { useAuth } from '../context/AuthContext';
+import { useState } from 'react'; // Adicione a importação do React
+import { useAuth } from '../../context/AuthContext';
 import styles from './LoginPage.module.css';
 
 const Login = () => {

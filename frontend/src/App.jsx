@@ -1,20 +1,27 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
+// frontend/src/App.jsx
+
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import HomePage from './pages/public/HomePage.jsx';
+import LoginPage from './pages/public/Login.jsx';
+import AdminLayout from './pages/adm/admLayout.jsx';
 import AdmHomePage from './pages/adm/admHomePage.jsx';
 import CadastrarAmbientePage from './pages/adm/cadAmbiente.jsx';
-import HomePage from './pages/public/HomePage';
+import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx'; // O componente da página de detalhes
 
 function App() {
     return (
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<Login />} />
-                {/*<Route path="/solicitar-cadastro" element={<SolicitarCadastro />} />*/}
-                {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-                {/* Adicione outras rotas aqui */}
-                <Route path="/admin" element={<AdmHomePage />} />
-                <Route path="/admin/cadastrar-ambiente" element={<CadastrarAmbientePage />} />
-            </Routes>
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdmHomePage />} />
+                <Route path="cadastrar-ambiente" element={<CadastrarAmbientePage />} />
+                <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
+            </Route>
+        </Routes>
     );
 }
 

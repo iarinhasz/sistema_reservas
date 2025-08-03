@@ -1,12 +1,30 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-
+import { useAuth } from '../../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../css/AmbientesList.module.css'; //
 
 const AmbientesList = () => {
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { user } = useAuth(); // Pega o usuário logado do contexto
+    const navigate = useNavigate(); // Hook para redirecionar
+
+    //permissoes de acesso aos usuarios que clicam no ambiente
+    const handleAmbienteClick = (ambienteId) => {
+        if (!user) {
+            // Cenário 3: Visitante não logado
+            navigate('/login');
+        } else if (user.tipo === 'admin') {
+            // Cenário 1: Administrador
+            navigate(`/admin/ambientes/${ambienteId}`);
+        } else {
+            // Cenário 2: Professor ou Aluno
+            navigate(`/ambientes/${ambienteId}`);
+        }
+    };
 
     useEffect(() => {
         const fetchAmbientes = async () => {
@@ -42,9 +60,20 @@ const AmbientesList = () => {
                     <h2>{tipo}</h2>
                     <div className={styles.botoesContainer}>
                         {listaDeAmbientes.map(ambiente => (
-                            <button key={ambiente.id} className={styles.ambienteBotao}>
-                                {ambiente.identificacao}
-                            </button>
+                            <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
+                                <button
+                                    onClick={() => handleAmbienteClick(ambiente.id)}
+                                    className={styles.ambienteBotao}
+                                >
+                                    {ambiente.identificacao}
+                                </button>
+                                {/* Renderização condicional do ícone de edição */}
+                                {user?.tipo === 'admin' && (
+                                    <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.editIcon}>
+                                        ✏️
+                                    </Link>
+                                )}
+                            </div>
                         ))}
                     </div>
                 </section>

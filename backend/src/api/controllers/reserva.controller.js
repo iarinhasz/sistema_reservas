@@ -131,7 +131,7 @@ class ReservaController{
         try {
             const todasAsReservas = await this.ReservaService.listAll(req.query);
             
-            res.status(200).json({ data: todasAsReservas });
+            res.status(200).json({ todasAsReservas });
 
         } catch (error) {
             console.error('Erro ao listar todas as reservas:', error);
