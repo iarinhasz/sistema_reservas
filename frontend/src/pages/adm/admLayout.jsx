@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './css/admLayout.module.css';
+import { MenuIcon, ProfileIcon, LogoutIcon } from '../../components/icons/index';
 
 const AdminLayout = () => {
     const { user, logout } = useAuth();
@@ -30,7 +31,9 @@ const AdminLayout = () => {
                     <Link to="/admin/solicitacoes-reserva" onClick={() => setIsPanelOpen(false)}>Solicitações de Reserva</Link>
                 </nav>
                 <div className={styles.panelFooter}>
-                    <button onClick={handleLogout} className={styles.logoutButton}>Sair (Logout)</button>
+                    <button onClick={handleLogout} className={styles.logoutButton}>
+                        <LogoutIcon />    Logout
+                    </button>
                 </div>
             </aside>
 
@@ -39,9 +42,7 @@ const AdminLayout = () => {
             <div className={styles.mainContent}>
                 <header className={styles.header}>
                     <button className={styles.hamburgerButton} onClick={() => setIsPanelOpen(!isPanelOpen)}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <MenuIcon />
                     </button>
                     <div className={styles.headerTitle}>
                         Sistema de Reservas - Admin

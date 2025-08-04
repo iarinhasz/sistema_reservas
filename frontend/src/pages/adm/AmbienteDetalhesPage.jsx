@@ -7,6 +7,9 @@ import EditarAmbienteModal from '../../components/adm/editarAmbienteModal.jsx';
 import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.jsx';
 import api from '../../services/api';
 import styles from './css/AmbienteDetalhesPage.module.css';
+import { MenuIcon, ProfileIcon, LogoutIcon, EditIcon } from '../../components/icons/index';
+
+
 
 // --- IMPORTAÇÕES E CONFIGURAÇÃO PARA O CALENDÁRIO ---
 import format from 'date-fns/format';
@@ -114,7 +117,7 @@ const AmbienteDetalhesPage = () => {
                     <h1>Detalhes de: {ambiente.identificacao}</h1>
                     <div className={styles.actions}>
                         <button className={styles.actionButton} onClick={() => setIsEditAmbienteModalOpen(true)}>
-                            Editar Dados do Ambiente
+                           <EditIcon /> Editar Dados do Ambiente
                         </button>
                         <button className={styles.reserveButton}>Fazer Reserva</button>
                     </div>
@@ -156,7 +159,7 @@ const AmbienteDetalhesPage = () => {
                                     <td>{eq.quantidade_total || 1}</td>
                                     <td>{eq.criado_por_nome || 'N/A'}</td> 
                                     <td>
-                                        <button onClick={() => handleOpenEditModal(eq)} className={styles.iconButton} title="Editar Equipamento">✏️</button>
+                                        <button onClick={() => handleOpenEditModal(eq)} className={styles.iconButton} title="Editar Equipamento"><EditIcon/></button>
                                     </td>
                                 </tr>
                             ))}

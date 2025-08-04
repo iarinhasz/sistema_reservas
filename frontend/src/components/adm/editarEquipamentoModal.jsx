@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import modalStyles from '../css/modal.module.css'
+import { MenuIcon, ProfileIcon, LogoutIcon, DeleteIcon, SaveIcon } from '../icons/index';
+
 
 const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
     // Inicia o estado do formulário com os dados do equipamento que está sendo editado
@@ -84,14 +86,14 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) =>
                             onClick={handleDelete} 
                             className={modalStyles.deleteButton}
                         >
-                            Deletar
+                            <DeleteIcon/>
                         </button>
                         <div style={{ flex: 1 }}></div> {/* Espaçador */}
                             <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
                                 Cancelar
                             </button>
                             <button type="submit" disabled={isSubmitting}>
-                                Salvar Alterações
+                               <SaveIcon/>   Salvar
                             </button>
                         </div>
                     {errorMessage && <p className={formStyles.error}>{errorMessage}</p>}
