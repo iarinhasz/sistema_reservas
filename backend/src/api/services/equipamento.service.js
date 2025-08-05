@@ -57,20 +57,29 @@ class EquipamentoService {
      * Deleta um equipamento após verificar se não há reservas futuras.
     */
     async remove(id) {
+
+        const equipamento = await this.equipamentoModel.findById(id);
+        
+        console.log("Equipamento encontrado:", equipamento); // LOG 1
+
+        if (!equipamento) {
+            throw new Error('Equipamento não encontrado para deletar.');
+        }
+
         const reservasFuturas = await this.reservaModel.findFutureByResourceId({
             recurso_id: id,
             recurso_tipo: 'equipamento'
         });
-
+        console.log("Reservas futuras encontradas:", reservasFuturas);
         if (reservasFuturas && reservasFuturas.length > 0) {
             throw new Error("Não é possível excluir o equipamento pois ele possui reservas futuras");
         }
 
-        const equipamentoDeletado = await this.equipamentoModel.remove(id);
-        if (!equipamentoDeletado) {
-            throw new Error('Equipamento não encontrado para deletar.');
-        }
-        return equipamentoDeletado;
+        console.log("Nenhuma reserva futura. Prosseguindo para a deleção..."); // LOG 3
+        const resultado = await this.equipamentoModel.remove(id);
+        console.log("Resultado da deleção no banco:", resultado);
+
+        return equipamento;
     }
     /**
      * Funções simples que apenas repassam a chamada para o Model.

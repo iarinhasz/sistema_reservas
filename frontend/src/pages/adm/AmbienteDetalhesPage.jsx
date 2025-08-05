@@ -1,18 +1,23 @@
 // frontend/src/pages/adm/AmbienteDetalhesPage.jsx
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import AdicionarEquipamentoModal from '../../components/adm/adicionarEquipamentoModal.jsx';
+import EditarAmbienteModal from '../../components/adm/editarAmbienteModal.jsx';
+import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.jsx';
 import api from '../../services/api';
 import styles from './css/AmbienteDetalhesPage.module.css';
-import AdicionarEquipamentoModal from '../../components/adm/adicionarEquipamentoModal.jsx';
+import { MenuIcon, ProfileIcon, LogoutIcon, EditIcon } from '../../components/icons/index';
+
+
 
 // --- IMPORTAÇÕES E CONFIGURAÇÃO PARA O CALENDÁRIO ---
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR'; // Importação estática do locale
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const locales = { 'pt-BR': ptBR };
@@ -34,8 +39,12 @@ const AmbienteDetalhesPage = () => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
     // Estado para controlar o modal de adicionar equipamento
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [equipamentoParaEditar, setEquipamentoParaEditar] = useState(null);
+    const [isEditAmbienteModalOpen, setIsEditAmbienteModalOpen] = useState(false);
 
     // --- LÓGICA DE BUSCA DE DADOS ---
     useEffect(() => {
@@ -69,7 +78,26 @@ const AmbienteDetalhesPage = () => {
         // Atualiza a lista na tela sem precisar recarregar a página
         setEquipamentos(listaAtual => [...listaAtual, novoEquipamento]);
     };
-
+    const handleOpenEditModal = (equipamento) => {
+        setEquipamentoParaEditar(equipamento);
+        setIsEditModalOpen(true);
+    };
+    const handleEquipamentoAtualizado = (equipamentoAtualizado) => {
+        setEquipamentos(listaAtual => 
+            listaAtual.map(eq => 
+                eq.id === equipamentoAtualizado.id ? equipamentoAtualizado : eq
+            )
+        );
+    };
+    const handleEquipamentoDeletado = (equipamentoId) => {
+        setEquipamentos(listaAtual => 
+            listaAtual.filter(eq => eq.id !== equipamentoId)
+        );
+        setIsEditModalOpen(false);
+    };
+    const handleAmbienteAtualizado = (ambienteAtualizado) => {
+        setAmbiente(ambienteAtualizado);
+    };
     // --- PREPARAÇÃO DE DADOS PARA O CALENDÁRIO ---
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.titulo,
@@ -88,7 +116,9 @@ const AmbienteDetalhesPage = () => {
                 <div className={styles.header}>
                     <h1>Detalhes de: {ambiente.identificacao}</h1>
                     <div className={styles.actions}>
-                        <button className={styles.actionButton}>Editar Dados do Ambiente</button>
+                        <button className={styles.actionButton} onClick={() => setIsEditAmbienteModalOpen(true)}>
+                           <EditIcon /> Editar Dados do Ambiente
+                        </button>
                         <button className={styles.reserveButton}>Fazer Reserva</button>
                     </div>
                 </div>
@@ -109,31 +139,32 @@ const AmbienteDetalhesPage = () => {
                         </button>
                     </div>
                     {equipamentos.length > 0 ? (
-                        <table className={styles.equipamentosTable}>
-                            <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Quantidade</th>
-            <th>Adicionado Por</th> 
-        </tr>
-    </thead>
-    <tbody>
-        {equipamentos.map(eq => (
-            <tr key={eq.id}>
-                <td>{eq.nome}</td>
-                <td>{eq.marca || 'N/A'}</td>
-                <td>{eq.modelo || 'N/A'}</td>
-                <td>{eq.quantidade_total || 1}</td>
-                <td>{eq.criado_por_nome || 'N/A'}</td> 
-            </tr>
-        ))}
-    </tbody>                        
-                        </table>
-                    ) : (
-                        <p>Nenhum equipamento cadastrado para este ambiente.</p>
-                    )}
+                    <table className={styles.equipamentosTable}>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Quantidade</th>
+                                <th>Adicionado Por</th> 
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {equipamentos.map(eq => (
+                                <tr key={eq.id}>
+                                    <td>{eq.nome}</td>
+                                    <td>{eq.marca || 'N/A'}</td>
+                                    <td>{eq.modelo || 'N/A'}</td>
+                                    <td>{eq.quantidade_total || 1}</td>
+                                    <td>{eq.criado_por_nome || 'N/A'}</td> 
+                                    <td>
+                                        <button onClick={() => handleOpenEditModal(eq)} className={styles.iconButton} title="Editar Equipamento"><EditIcon/></button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>                        
+                    </table>) : ( <p>Nenhum equipamento cadastrado para este ambiente.</p> )}
                 </div>
 
                 <hr />
@@ -159,6 +190,21 @@ const AmbienteDetalhesPage = () => {
                     ambienteId={id}
                     onClose={() => setIsModalOpen(false)}
                     onSuccess={handleEquipamentoAdicionado}
+                />
+            )}
+            {isEditModalOpen && (
+                <EditarEquipamentoModal
+                    equipamento={equipamentoParaEditar}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSuccess={handleEquipamentoAtualizado}
+                    onDelete={handleEquipamentoDeletado} 
+                />
+            )}
+            {isEditAmbienteModalOpen && (
+                <EditarAmbienteModal
+                    ambiente={ambiente}
+                    onClose={() => setIsEditAmbienteModalOpen(false)}
+                    onSuccess={handleAmbienteAtualizado}
                 />
             )}
         </>

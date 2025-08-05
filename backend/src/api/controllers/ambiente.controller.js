@@ -2,7 +2,6 @@ class AmbienteController{
 
     constructor(ambienteService) {
         this.ambienteService = ambienteService;
-        //this.reservaModel = reservaModel;
     }
 
     listAll = async(req, res)=>{

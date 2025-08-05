@@ -1,18 +1,17 @@
 // frontend/src/routes/AppRouter.jsx
 
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Importando componentes de Rota e Layout
+import AdminLayout from '../pages/adm/admLayout.jsx';
 import ProtectedRoute from './ProtectedRoute';
-import AdminLayout from '../pages/adm/admLayout.jsx'; 
 
 // Importando todas as páginas necessárias
-import LoginPage from '../pages/public/LoginPage.jsx';
-import HomePage from '../pages/public/HomePage.jsx';
 import AdminDashboardPage from '../pages/adm/admHomePage.jsx';
 import AmbienteDetalhesPage from '../pages/adm/AmbienteDetalhesPage.jsx';
 import CadastrarAmbientePage from '../pages/adm/cadAmbiente.jsx';
+import HomePage from '../pages/public/HomePage.jsx';
+import LoginPage from '../pages/public/LoginPage.jsx';
 // Importe outras páginas que você vai usar...
 
 const AdminRoutes = () => (
@@ -31,7 +30,16 @@ const AppRouter = () => {
                 {/* === ROTAS PÚBLICAS === */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
-
+                {/* === ROTAS LOGADOS NÃO ADMIN ===*/}
+                {/* Rota para Usuários Logados (não-admins) */}
+                <Route 
+                    path="/dashboard" 
+                    element={
+                        <ProtectedRoute>
+                            <UserDashboardPage />
+                        </ProtectedRoute>
+                    } 
+                />
                 {/* === ROTAS DE ADMIN === */}
                 {/* Esta é a rota "pai". Ela protege e aplica o layout a todas as rotas filhas. */}
                 <Route 

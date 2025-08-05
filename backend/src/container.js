@@ -35,7 +35,7 @@ const reservaModel = new ReservaModel(pool);
 // == CAMADA DE SERVIÇOS == (dependem dos models)
 const emailService = new EmailService();
 const usuarioService = new UsuarioService(usuarioModel, emailService);
-const ambienteService = new AmbienteService(ambienteModel);
+const ambienteService = new AmbienteService(ambienteModel, reservaModel);
 const reservaService = new ReservaService(reservaModel);
 const equipamentoService = new EquipamentoService(equipamentoModel, reservaModel, ambienteModel);
 const authService = new AuthService(usuarioModel);

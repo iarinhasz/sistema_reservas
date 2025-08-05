@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './css/admLayout.module.css';
+import { MenuIcon, ProfileIcon, LogoutIcon } from '../../components/icons/index';
 
 const AdminLayout = () => {
     const { user, logout } = useAuth();
@@ -24,13 +25,15 @@ const AdminLayout = () => {
                     <p>Bem-vindo, {user?.nome || 'Admin'}</p>
                 </div>
                 <nav className={styles.nav}>
-                    <Link to="/admin" onClick={() => setIsPanelOpen(false)}>Dashboard</Link>
+                    <Link to="/admin" onClick={() => setIsPanelOpen(false)}>Pagina Inicial</Link>
                     <Link to="/admin/cadastrar-ambiente" onClick={() => setIsPanelOpen(false)}>Cadastrar Ambiente</Link>
                     <Link to="/admin/solicitacoes-cadastro" onClick={() => setIsPanelOpen(false)}>Solicitações de Cadastro</Link>
                     <Link to="/admin/solicitacoes-reserva" onClick={() => setIsPanelOpen(false)}>Solicitações de Reserva</Link>
                 </nav>
                 <div className={styles.panelFooter}>
-                    <button onClick={handleLogout} className={styles.logoutButton}>Sair (Logout)</button>
+                    <button onClick={handleLogout} className={styles.logoutButton}>
+                        <LogoutIcon />    Logout
+                    </button>
                 </div>
             </aside>
 
@@ -39,9 +42,7 @@ const AdminLayout = () => {
             <div className={styles.mainContent}>
                 <header className={styles.header}>
                     <button className={styles.hamburgerButton} onClick={() => setIsPanelOpen(!isPanelOpen)}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <MenuIcon />
                     </button>
                     <div className={styles.headerTitle}>
                         Sistema de Reservas - Admin

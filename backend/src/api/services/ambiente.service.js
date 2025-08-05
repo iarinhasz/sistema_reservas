@@ -1,8 +1,8 @@
 class AmbienteService {
 
-    constructor(ambienteModel) {
+    constructor(ambienteModel, reservaModel) {
         this.ambienteModel = ambienteModel;
-        //this.reservaModel = reservaModel;
+        this.reservaModel = reservaModel;
     }
 
     async create({ tipo, identificacao }) {
@@ -24,7 +24,7 @@ class AmbienteService {
     }
 
     // Exclusão com verificação de reservas futuras
-    /*async delete(ambienteId) {
+    async delete(ambienteId) {
         
         const ambienteParaDeletar = await this.ambienteModel.findById(ambienteId);
 
@@ -42,7 +42,7 @@ class AmbienteService {
         };
         console.log('--- AMBIENTE SERVICE: Buscando reservas futuras com os parâmetros:', params);
 
-        const reservasFuturas = await this.ReservaModel.findFutureByResourceId(params);
+        const reservasFuturas = await this.reservaModel.findFutureByResourceId(params);
 
         console.log('--- AMBIENTE SERVICE: Resultado da busca por reservas futuras:', reservasFuturas);
         
@@ -53,7 +53,7 @@ class AmbienteService {
 
         console.log('--- AMBIENTE SERVICE: Nenhuma reserva encontrada. Prosseguindo para a deleção.');
         return this.ambienteModel.remove(ambienteId);
-    }*/
+    }
 
     // Atualização com verificação de duplicidade
     async update(id, dadosParaAtualizar) {
