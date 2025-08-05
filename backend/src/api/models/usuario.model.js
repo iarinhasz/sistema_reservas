@@ -46,14 +46,13 @@ export default class UsuarioModel {
 
     return { usuarios: rows, totalItems, totalPages: Math.ceil(totalItems / limit), currentPage: page };
     }
-
     // Função para mudar o status de um usuário
     async updateStatus (cpf, newStatus) {
-        const { rows } = await pool.query(
+        const { rows } = await this.pool.query( // Corrigido de 'pool' para 'this.pool'
             "UPDATE usuarios SET status = $1 WHERE cpf = $2 RETURNING *",
             [newStatus, cpf]
         );
-    return rows[0];
+        return rows[0];
     }
 
     async findAll () {
