@@ -13,7 +13,22 @@ const SolicitacoesCadastroPage = () => {
     const [justificativa, setJustificativa] = useState('');
 
     useEffect(() => {
-        // ... (seu useEffect para buscar solicitações continua o mesmo)
+        const checkForPendingRequests = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://localhost:3000/api/usuarios/pendentes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.data.usuarios && response.data.usuarios.length > 0) {
+                    setHasPendingRequests(true);
+                }
+            } catch (error) {
+                console.error("Erro ao verificar solicitações pendentes:", error);
+            }
+        };
+
+        checkForPendingRequests();
     }, []);
 
     const handleApprove = async (cpf) => {
