@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import styles from './css/solicitacoesCadastroPage.module.css';
 
 const SolicitacoesCadastroPage = () => {

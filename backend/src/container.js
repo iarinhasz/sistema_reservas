@@ -43,10 +43,9 @@ const authService = new AuthService(usuarioModel);
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
 const usuarioController = new UsuarioController(usuarioService);
 const ambienteController = new AmbienteController(ambienteService);
-//const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
+const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
 const equipamentoController = new EquipamentoController(equipamentoService);
 const authController = new AuthController(authService);
-const reservaController = new ReservaController(reservaService);
 
 
 export {

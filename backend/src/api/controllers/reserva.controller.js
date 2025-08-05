@@ -1,7 +1,9 @@
 class ReservaController{
 
     constructor(EmailService, ReservaService, UsuarioModel){
-        this.reservaService = reservaService;
+        this.ReservaService = ReservaService;
+        this.EmailService = EmailService;
+        this.UsuarioModel = UsuarioModel;
     }
 
     solicitar = async (req, res) => {

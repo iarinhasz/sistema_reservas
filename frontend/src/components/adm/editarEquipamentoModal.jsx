@@ -5,7 +5,7 @@ import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import modalStyles from '../css/modal.module.css'
 import { MenuIcon, ProfileIcon, LogoutIcon, DeleteIcon, SaveIcon } from '../icons/index';
-
+import Button from '../shared/Button';
 
 const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
     // Inicia o estado do formulário com os dados do equipamento que está sendo editado
@@ -81,19 +81,16 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) =>
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                        <button 
-                            type="button" 
-                            onClick={handleDelete} 
-                            className={modalStyles.deleteButton}
-                        >
+                        <button onClick={handleDelete} variant="danger" icon={DeleteIcon}>
                             <DeleteIcon/>
                         </button>
                         <div style={{ flex: 1 }}></div> {/* Espaçador */}
-                            <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
+                            <button onClick={onClose} variant="cancel">
                                 Cancelar
                             </button>
                             <button type="submit" disabled={isSubmitting}>
-                               <SaveIcon/>   Salvar
+                                <SaveIcon/>   Salvar
+                                {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
                             </button>
                         </div>
                     {errorMessage && <p className={formStyles.error}>{errorMessage}</p>}

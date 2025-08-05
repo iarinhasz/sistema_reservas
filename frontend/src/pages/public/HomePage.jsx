@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Para os botões de navegação
 import axios from 'axios'; // Para fazer a chamada à API
-import styles from './HomePage.module.css';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Para os botões de navegação
+//import './HomePage.css'; // Arquivo de estilos que vamos criar
+import styles from '/home/iara/Documentos/ec-iara/Faculdade/ESS/frontend/src/pages/public/HomePage.module.css';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros
