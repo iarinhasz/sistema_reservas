@@ -1,7 +1,6 @@
-// frontend/src/App.jsx
 
 import React from 'react';
-import { Routes, Route } from 'react-router-dom'; // Remova o BrowserRouter daqui
+import { Routes, Route } from 'react-router-dom';
 
 import HomePage from './pages/public/HomePage.jsx';
 import RequestAccessPage from './pages/public/RequestAccessPage';
@@ -11,8 +10,10 @@ import AdmHomePage from './pages/adm/admHomePage.jsx';
 import CadastrarAmbientePage from './pages/adm/cadAmbiente.jsx';
 import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx';
 
+
+import SolicitacoesCadastroPage from './pages/adm/solicitacoesCadastroPage.jsx';
+
 function App() {
-    // Retorne apenas o <Routes>
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />
@@ -23,6 +24,9 @@ function App() {
                 <Route index element={<AdmHomePage />} />
                 <Route path="cadastrar-ambiente" element={<CadastrarAmbientePage />} />
                 <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
+                
+                {/* 2. Adicione a nova rota aqui */}
+                <Route path="solicitacoes-cadastro" element={<SolicitacoesCadastroPage />} />
             </Route>
         </Routes>
     );

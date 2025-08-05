@@ -8,7 +8,7 @@
 .actionPanel {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem; /* Espaçamento entre os botões */
+    gap: 1rem;
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid #eee;
@@ -35,4 +35,32 @@
 
 .actionButtonCadastro:hover {
     background-color: #218838;
+}
+
+/* ================================== */
+/* == ESTILOS ADICIONADOS ABAIXO == */
+/* ================================== */
+
+/* Estilo para o botão quando há solicitações pendentes */
+.actionButtonAlert {
+    composes: actionButton; /* Herda os estilos de .actionButton */
+    background-color: #dc3545; /* Vermelho de alerta */
+    animation: pulse 1.5s infinite; /* Aplica a animação de pulso */
+}
+
+.actionButtonAlert:hover {
+    background-color: #c82333;
+}
+
+/* Animação de pulso para chamar a atenção do admin */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
 }

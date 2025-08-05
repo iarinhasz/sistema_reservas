@@ -1,8 +1,35 @@
 import { Link } from 'react-router-dom'; // Importante para criar links de navegação
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './css/admHomePage.module.css';
 import AmbientesList from '../../components/shared/AmbientesList.jsx';
 
 const AdmHomePage = () => {
+    // Estado para saber se existem solicitações pendentes
+    const [hasPendingRequests, setHasPendingRequests] = useState(false);
+
+    useEffect(() => {
+        // Função para buscar as solicitações pendentes na API
+        const checkForPendingRequests = async () => {
+            try {
+                // Supondo que você tenha o token salvo no localStorage
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://localhost:3000/api/usuarios/pendentes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                // Se a lista de usuários pendentes não estiver vazia, atualiza o estado
+                if (response.data.usuarios && response.data.usuarios.length > 0) {
+                    setHasPendingRequests(true);
+                }
+            } catch (error) {
+                console.error("Erro ao verificar solicitações pendentes:", error);
+            }
+        };
+
+        checkForPendingRequests();
+    }, []); // O array vazio [] faz com que rode apenas uma vez
+    
     return (
         <div className={styles.adminPage}>
             <h1>Pagina Inicial do Administrador</h1>
