@@ -25,7 +25,7 @@ import UsuarioController from './api/controllers/usuario.controller.js';
 import pool from './config/database.js';
 
 
-// == CAMADA DE MODELOS == (sem dependências) hsdghfsdhfjsk
+// == CAMADA DE MODELOS == (sem dependências)
 const usuarioModel = new UsuarioModel(pool); 
 const ambienteModel = new AmbienteModel(pool);
 const equipamentoModel = new EquipamentoModel(pool);
@@ -43,13 +43,12 @@ const authService = new AuthService(usuarioModel);
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
 const usuarioController = new UsuarioController(usuarioService);
 const ambienteController = new AmbienteController(ambienteService);
-const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
+//const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
 const equipamentoController = new EquipamentoController(equipamentoService);
 const authController = new AuthController(authService);
+const reservaController = new ReservaController(reservaService);
 
 
-// No final, você exporta apenas as instâncias dos controllers,
-// que serão usadas pelas rotas.
 export {
     ambienteController, authController, equipamentoController, reservaController,
     usuarioController
