@@ -31,8 +31,16 @@ const AgendaAmbiente = ({ ambienteId }) => {
 
             setLoading(true);
             try {
-                // Busca apenas as reservas para o ambiente específico
-                const response = await axios.get(`http://localhost:3000/api/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`);
+                const token = localStorage.getItem('authToken');
+                
+                const response = await axios.get(
+                    `http://localhost:3000/api/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
                 setReservas(response.data.data || []);
             } catch (err) {
                 setError('Não foi possível carregar a agenda.');
