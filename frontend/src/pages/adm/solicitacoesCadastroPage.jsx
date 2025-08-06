@@ -6,31 +6,30 @@ const SolicitacoesCadastroPage = () => {
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
-    // Estados para controlar o modal de rejeição
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUserCpf, setCurrentUserCpf] = useState(null);
     const [justificativa, setJustificativa] = useState('');
 
     useEffect(() => {
-        // ... (seu useEffect para buscar solicitações continua o mesmo)
+        const fetchSolicitacoes = async () => {
+            setLoading(true);
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://localhost:3000/api/usuarios/pendentes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                setSolicitacoes(response.data.usuarios || []);
+            } catch (err) {
+                setError('Erro ao carregar solicitações.');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSolicitacoes();
     }, []);
 
-    const handleApprove = async (cpf) => {
-        await handleAction('aprovar', cpf);
-    };
-
-    const handleReject = async () => {
-        if (!justificativa) {
-            alert('Por favor, informe o motivo da rejeição.');
-            return;
-        }
-        await handleAction('rejeitar', currentUserCpf, { justificativa });
-        closeModal();
-    };
-
     const handleAction = async (action, cpf, body = {}) => {
-        // ... (sua função handleAction, agora um pouco mais genérica)
         try {
             const token = localStorage.getItem('authToken');
             await axios.post(`http://localhost:3000/api/usuarios/${cpf}/${action}`, body, {
@@ -41,6 +40,19 @@ const SolicitacoesCadastroPage = () => {
             setError(`Erro ao ${action}r solicitação.`);
             console.error(err);
         }
+    };
+    
+    const handleApprove = async (cpf) => {
+        await handleAction('aprovar', cpf);
+    };
+
+    const handleConfirmReject = async () => {
+        if (!justificativa) {
+            alert('Por favor, informe o motivo da rejeição.');
+            return;
+        }
+        await handleAction('rejeitar', currentUserCpf, { justificativa });
+        closeModal();
     };
 
     const openModal = (cpf) => {
@@ -54,8 +66,8 @@ const SolicitacoesCadastroPage = () => {
         setJustificativa('');
     };
 
-    if (loading) return <p>Carregando...</p>;
-    if (error) return <p className={styles.errorMessage}>{error}</p>;
+    if (loading) return <div className={styles.pageContainer}><p>Carregando...</p></div>;
+    if (error) return <div className={styles.pageContainer}><p className={styles.errorMessage}>{error}</p></div>;
 
     return (
         <div className={styles.pageContainer}>
@@ -66,7 +78,12 @@ const SolicitacoesCadastroPage = () => {
                 <ul className={styles.solicitacoesList}>
                     {solicitacoes.map((solicitacao, index) => (
                         <li key={solicitacao.cpf} className={styles.solicitacaoItem}>
-                            {/* ... (a div userInfo continua a mesma) ... */}
+                            <div className={styles.userInfo}>
+                                <strong>Nome:</strong> {solicitacao.nome}<br />
+                                <strong>Email:</strong> {solicitacao.email}<br />
+                                <strong>CPF:</strong> {solicitacao.cpf}<br />
+                                <strong>Tipo:</strong> {solicitacao.tipo}
+                            </div>
                             <div className={styles.actionButtons}>
                                 <button 
                                     className={styles.approveButton}
@@ -77,7 +94,7 @@ const SolicitacoesCadastroPage = () => {
                                 </button>
                                 <button 
                                     className={styles.rejectButton}
-                                    onClick={() => openModal(solicitacao.cpf)} // MUDANÇA AQUI
+                                    onClick={() => openModal(solicitacao.cpf)}
                                     disabled={index !== 0}
                                 >
                                     Rejeitar
@@ -88,7 +105,6 @@ const SolicitacoesCadastroPage = () => {
                 </ul>
             )}
 
-            {/* Modal de Rejeição */}
             {isModalOpen && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -101,7 +117,7 @@ const SolicitacoesCadastroPage = () => {
                         />
                         <div className={styles.modalActions}>
                             <button onClick={closeModal} className={styles.cancelButton}>Cancelar</button>
-                            <button onClick={handleReject} className={styles.confirmButton}>Confirmar Rejeição</button>
+                            <button onClick={handleConfirmReject} className={styles.confirmButton}>Confirmar Rejeição</button>
                         </div>
                     </div>
                 </div>
