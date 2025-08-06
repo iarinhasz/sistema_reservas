@@ -123,3 +123,27 @@
 .deleteButton:hover {
     background-color: #dc3545; /* Vermelho */
 }
+
+.ambienteBotaoAlert {
+    background-color: #ffc107; /* Amarelo */
+    color: #212529; /* Texto escuro para melhor contraste */
+    font-weight: bold;
+    animation: pulse-yellow 2s infinite;
+}
+
+.ambienteBotaoAlert:hover {
+    background-color: #e0a800;
+}
+
+/* Animação de pulso amarela */
+@keyframes pulse-yellow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
