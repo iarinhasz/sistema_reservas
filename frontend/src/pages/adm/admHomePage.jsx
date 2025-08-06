@@ -38,7 +38,10 @@ const AdmHomePage = () => {
             <hr />
 
             <div className={styles.actionPanel}>
-                <Link to="/admin/solicitacoes-cadastro" className={styles.actionButton}>
+                <Link 
+                    to="/admin/solicitacoes-cadastro" 
+                    className={hasPendingRequests ? styles.actionButtonAlert : styles.actionButton}
+                >
                     Solicitações de Cadastro Pendentes
                 </Link>
 
