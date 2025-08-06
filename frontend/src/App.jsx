@@ -1,24 +1,26 @@
 import { Route, Routes } from 'react-router-dom';
 
+// Páginas Públicas
 import HomePage from './pages/public/HomePage.jsx';
 import LoginPage from './pages/public/Login.jsx';
 import RequestAccessPage from './pages/public/RequestAccessPage';
+import PublicAmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPage.jsx';
 
+// Páginas e Layouts de Admin
 import AdmHomePage from './pages/adm/admHomePage.jsx';
 import AdminLayout from './pages/adm/admLayout.jsx';
 import CadastrarAmbientePage from './pages/adm/cadAmbiente.jsx';
 import SolicitacoesCadastroPage from './pages/adm/solicitacoesCadastroPage.jsx';
-import PublicAmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPage.jsx';
+// A LINHA ABAIXO FOI CORRIGIDA PARA APONTAR PARA A PASTA 'adm'
+import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx';
 
-import AmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPage.jsx';
+// Páginas e Layouts de Usuário
 import MinhasReservasPage from './pages/user/professor/minhasReservasPage.jsx';
 import ProfessorHomePage from './pages/user/professor/professorHomePage.jsx';
 import ProfessorLayout from './pages/user/professor/professorLayout.jsx';
 import ReservarAmbientePage from './pages/user/professor/reservarAmbientePage.jsx';
-
 import AlunoHomePage from './pages/user/aluno/alunoHomePage.jsx';
 import AlunoLayout from './pages/user/aluno/alunoLayout.jsx';
-
 import UserProfilePage from './pages/user/userProfilePage.jsx';
 
 function App() {

@@ -11,10 +11,15 @@ import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
 
+    // Estados para todos os dados da página
     const [ambiente, setAmbiente] = useState(null);
     const [equipamentos, setEquipamentos] = useState([]);
+    const [solicitacoesReserva, setSolicitacoesReserva] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    // Estados para os modais (funções que você já tinha)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [equipamentoParaEditar, setEquipamentoParaEditar] = useState(null);
@@ -24,13 +29,15 @@ const AmbienteDetalhesPage = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [ambienteRes, equipamentosRes] = await Promise.all([
+                const [ambienteRes, equipamentosRes, solicitacoesRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`),
+                    api.get(`/reservas?recurso_id=${id}&recurso_tipo=ambiente&status=pendente`)
                 ]);
 
                 setAmbiente(ambienteRes.data);
                 setEquipamentos(equipamentosRes.data);
+                setSolicitacoesReserva(solicitacoesRes.data.todasAsReservas.data || []);
                 setError('');
             } catch (err) {
                 setError('Falha ao carregar dados. Verifique se o ambiente existe.');
@@ -43,30 +50,34 @@ const AmbienteDetalhesPage = () => {
         fetchData();
     }, [id]);
 
+    const handleReservaAction = async (action, reservaId) => {
+        try {
+            await api.put(`/reservas/${reservaId}/${action}`, {});
+            setSolicitacoesReserva(prev => prev.filter(r => r.id !== reservaId));
+            setRefreshKey(prevKey => prevKey + 1); 
+        } catch (err) {
+            alert(`Erro ao ${action}r reserva.`);
+            console.error(err);
+        }
+    };
+    
+    // Suas funções de manipulação de equipamento e ambiente que já existiam
     const handleEquipamentoAdicionado = (novoEquipamento) => {
         setEquipamentos(listaAtual => [...listaAtual, novoEquipamento]);
     };
-
     const handleOpenEditModal = (equipamento) => {
         setEquipamentoParaEditar(equipamento);
         setIsEditModalOpen(true);
     };
-
     const handleEquipamentoAtualizado = (equipamentoAtualizado) => {
         setEquipamentos(listaAtual => 
-            listaAtual.map(eq => 
-                eq.id === equipamentoAtualizado.id ? equipamentoAtualizado : eq
-            )
+            listaAtual.map(eq => eq.id === equipamentoAtualizado.id ? equipamentoAtualizado : eq)
         );
     };
-
     const handleEquipamentoDeletado = (equipamentoId) => {
-        setEquipamentos(listaAtual => 
-            listaAtual.filter(eq => eq.id !== equipamentoId)
-        );
+        setEquipamentos(listaAtual => listaAtual.filter(eq => eq.id !== equipamentoId));
         setIsEditModalOpen(false);
     };
-
     const handleAmbienteAtualizado = (ambienteAtualizado) => {
         setAmbiente(ambienteAtualizado);
     };
@@ -105,7 +116,7 @@ const AmbienteDetalhesPage = () => {
                     </div>
                     {equipamentos.length > 0 ? (
                     <table className={styles.equipamentosTable}>
-                        <thead>
+                         <thead>
                             <tr>
                                 <th>Nome</th>
                                 <th>Marca</th>
@@ -134,34 +145,39 @@ const AmbienteDetalhesPage = () => {
 
                 <hr />
 
+                <div className={styles.solicitacoesSection}>
+                    <h2>Solicitações de Reserva Pendentes</h2>
+                    {solicitacoesReserva.length > 0 ? (
+                        <ul className={styles.solicitacoesList}>
+                            {solicitacoesReserva.map((reserva, index) => (
+                                <li key={reserva.id} className={styles.solicitacaoItem}>
+                                    <div className={styles.reservaInfo}>
+                                        <strong>{reserva.titulo}</strong> por: {reserva.usuario_nome}<br/>
+                                        <small>
+                                            {new Date(reserva.data_inicio).toLocaleString()} até {new Date(reserva.data_fim).toLocaleString()}
+                                        </small>
+                                    </div>
+                                    <div className={styles.actionButtons}>
+                                        <button onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0} className={styles.approveButton}>Aprovar</button>
+                                        <button onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0} className={styles.rejectButton}>Rejeitar</button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (<p>Nenhuma solicitação de reserva pendente para este ambiente.</p>)}
+                </div>
+
+                <hr />
+
                 <div className={styles.agendaSection}>
                     <h2>Agenda de Reservas</h2>
-                    <AgendaAmbiente ambienteId={id} />
+                    <AgendaAmbiente ambienteId={id} key={refreshKey} />
                 </div>
             </div>
 
-            {isModalOpen && (
-                <AdicionarEquipamentoModal
-                    ambienteId={id}
-                    onClose={() => setIsModalOpen(false)}
-                    onSuccess={handleEquipamentoAdicionado}
-                />
-            )}
-            {isEditModalOpen && (
-                <EditarEquipamentoModal
-                    equipamento={equipamentoParaEditar}
-                    onClose={() => setIsEditModalOpen(false)}
-                    onSuccess={handleEquipamentoAtualizado}
-                    onDelete={handleEquipamentoDeletado} 
-                />
-            )}
-            {isEditAmbienteModalOpen && (
-                <EditarAmbienteModal
-                    ambiente={ambiente}
-                    onClose={() => setIsEditAmbienteModalOpen(false)}
-                    onSuccess={handleAmbienteAtualizado}
-                />
-            )}
+            {isModalOpen && (<AdicionarEquipamentoModal ambienteId={id} onClose={() => setIsModalOpen(false)} onSuccess={handleEquipamentoAdicionado}/>)}
+            {isEditModalOpen && (<EditarEquipamentoModal equipamento={equipamentoParaEditar} onClose={() => setIsEditModalOpen(false)} onSuccess={handleEquipamentoAtualizado} onDelete={handleEquipamentoDeletado} />)}
+            {isEditAmbienteModalOpen && (<EditarAmbienteModal ambiente={ambiente} onClose={() => setIsEditAmbienteModalOpen(false)} onSuccess={handleAmbienteAtualizado} />)}
         </>
     );
 };
