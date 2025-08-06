@@ -1,8 +1,8 @@
-import axios from 'axios'; // Para fazer a chamada à API
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Para os botões de navegação
-//import './HomePage.css'; // Arquivo de estilos que vamos criar
-import styles from '/home/iara/Documentos/ec-iara/Faculdade/ESS/frontend/src/pages/public/HomePage.module.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import styles from './HomePage.module.css';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros
@@ -10,7 +10,10 @@ function HomePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // useEffect para buscar os dados da API assim que o componente for montado
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    // useEffect para buscar os dados da API
     useEffect(() => {
         const fetchAmbientes = async () => {
             try {
@@ -26,19 +29,31 @@ function HomePage() {
         };
 
         fetchAmbientes();
-    }, []); // O array vazio [] garante que isso rode apenas uma vez
+    }, []);
+
+    const handleAmbienteClick = (ambienteId) => {
+        if (!user) {
+            // Se não estiver logado, vai para a página pública de detalhes
+            navigate(`/ambientes/${ambienteId}`);
+        } else if (user.tipo === 'admin') {
+            // Se for admin, vai para a página de admin
+            navigate(`/admin/ambientes/${ambienteId}`);
+        } else {
+            // Se for aluno ou professor, também vai para a página pública
+            navigate(`/ambientes/${ambienteId}`);
+        }
+    };
 
     // Função para agrupar os ambientes por tipo
     const ambientesAgrupados = ambientes.reduce((acc, ambiente) => {
         const tipo = ambiente.tipo || 'Outros'; // Agrupa ambientes sem tipo em 'Outros'
         if (!acc[tipo]) {
-            acc[tipo] = []; // Cria a categoria se ela não existir
+            acc[tipo] = []; 
         }
         acc[tipo].push(ambiente);
         return acc;
     }, {});
 
-    // Renderiza mensagens de carregamento ou erro
     if (loading) return <p className="loading-message">Carregando ambientes...</p>;
     if (error) return <p className="error-message">{error}</p>;
 
@@ -59,8 +74,12 @@ function HomePage() {
                         <h2>{tipo}s</h2>
                         <div className={styles.botoesContainer}>
                             {listaDeAmbientes.map(ambiente => (
-                                <button key={ambiente.id} className={styles.ambienteBotao}>
-                                    {ambiente.identificacao}
+                                <button 
+                                    key={ambiente.id} 
+                                    className={styles.ambienteBotao}
+                                    onClick={() => handleAmbienteClick(ambiente.id)}
+                                >
+                                    {ambiente.identificacao}                                
                                 </button>
                             ))}
                         </div>

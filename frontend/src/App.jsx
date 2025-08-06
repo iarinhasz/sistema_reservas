@@ -12,21 +12,24 @@ import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx';
 
 
 import SolicitacoesCadastroPage from './pages/adm/solicitacoesCadastroPage.jsx';
+import PublicAmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPage.jsx';
 
 function App() {
     return (
         <Routes>
+            {/* --- ROTAS PÚBLICAS --- */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/solicitar-cadastro" element={<RequestAccessPage />} />
+            <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
 
+            {/* --- ROTAS DE ADMIN (ANINHADAS) --- */}
             <Route path="/admin" element={<AdminLayout />}>
+                {/* As rotas filhas de admin */}
                 <Route index element={<AdmHomePage />} />
                 <Route path="cadastrar-ambiente" element={<CadastrarAmbientePage />} />
-                <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
-                
-                {/* 2. Adicione a nova rota aqui */}
                 <Route path="solicitacoes-cadastro" element={<SolicitacoesCadastroPage />} />
+                <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
             </Route>
         </Routes>
     );
