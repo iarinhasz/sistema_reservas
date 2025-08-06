@@ -23,8 +23,9 @@ CREATE TABLE IF NOT EXISTS equipamentos (
     nome VARCHAR(100) NOT NULL,
     marca VARCHAR(50),
     modelo VARCHAR(50),
-    quantidade_total INTEGER NOT NULL CHECK (quantidade_total >= 0), -- VÍRGULA ADICIONADA
-    ambiente_id INTEGER REFERENCES ambientes(id) ON DELETE SET NULL
+    quantidade_total INTEGER NOT NULL CHECK (quantidade_total >= 0),
+    ambiente_id INTEGER REFERENCES ambientes(id) ON DELETE SET NULL,
+    criado_por_cpf VARCHAR(11) REFERENCES usuarios(cpf) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS reservas (
