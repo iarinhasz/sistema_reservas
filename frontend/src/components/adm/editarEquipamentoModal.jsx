@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import modalStyles from '../css/modal.module.css'
-import { MenuIcon, ProfileIcon, LogoutIcon, DeleteIcon, SaveIcon } from '../icons/index';
+import { MenuIcon, ProfileIcon, DeleteIcon, SaveIcon } from '../icons/index';
 import Button from '../shared/Button';
 
 const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
-    // Inicia o estado do formulário com os dados do equipamento que está sendo editado
     const [formData, setFormData] = useState({
         nome: equipamento.nome || '',
         marca: equipamento.marca || '',
