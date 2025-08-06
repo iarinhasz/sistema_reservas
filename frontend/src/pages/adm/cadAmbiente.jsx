@@ -80,7 +80,11 @@ const CadastrarAmbientePage = () => {
                     </select>
                 </div>
 
-                <button type="submit" disabled={isSubmitting}>
+                <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className={styles.submitButton}
+                >
                     {isSubmitting ? 'Cadastrando...' : 'Cadastrar Ambiente'}
                 </button>
 

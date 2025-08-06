@@ -1,38 +1,92 @@
-.adminPage {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: sans-serif;
+.formContainer {
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; /* Define a largura máxima do card */
+    margin: 2rem auto; /* Centraliza o card na área de conteúdo */
+    color: #333; /* Garante que o texto dentro seja escuro */
 }
 
-.actionPanel {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem; /* Espaçamento entre os botões */
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
-}
-
-.actionButton, .actionButtonCadastro {
-    text-decoration: none;
-    color: white;
-    background-color: #007bff; /* Azul */
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
+.formContainer h2 {
     text-align: center;
-    transition: background-color 0.2s;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: #2c3e50;
 }
 
-.actionButton:hover {
-    background-color: #0056b3;
+.formGroup {
+    margin-bottom: 1.5rem;
 }
 
-.actionButtonCadastro {
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.formGroup input,
+.formGroup select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.submitButton {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 6px;
     background-color: #28a745; /* Verde */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; 
 }
 
-.actionButtonCadastro:hover {
+.submitButton:disabled {
+    background-color: #9c9c9c;
+    cursor: not-allowed;
+}
+
+.submitButton:hover:not(:disabled) {
     background-color: #218838;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 1rem;
 }

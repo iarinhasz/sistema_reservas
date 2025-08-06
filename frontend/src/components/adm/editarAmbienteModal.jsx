@@ -1,9 +1,11 @@
 // frontend/src/components/admin/EditarAmbienteModal.jsx
 
-import React, { useState } from 'react';
-import api from '../../services/api';
+import { useState } from 'react';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
-import modalStyles from '../css/modal.module.css'
+import api from '../../services/api';
+import modalStyles from '../css/modal.module.css';
+import { SaveIcon } from '../icons/index';
+import Button from '../shared/Button';
 
 const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
     // O estado do formulário já começa com os dados do ambiente a ser editado
@@ -43,7 +45,8 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
         <div className={modalStyles.modalBackdrop} onClick={onClose}>
             <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
                 <h2>Editar Ambiente: {ambiente.identificacao}</h2>
-                <form onSubmit={handleSubmit} className={formStyles.formContainer}>
+                
+                <form onSubmit={handleSubmit}>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="identificacao">Identificador</label>
                         <input type="text" id="identificacao" value={formData.identificacao} onChange={handleChange} required />
@@ -68,10 +71,13 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                        <button type="button" onClick={onClose} className={modalStyles.cancelButton}>Cancelar</button>
-                        <button type="submit" disabled={isSubmitting}>
+                        <Button onClick={onClose} variant="cancel">
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={isSubmitting} variant="secondary"> {/* Usando a variante verde */}
+                            <SaveIcon />
                             {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
-                        </button>
+                        </Button>
                     </div>
                     {errorMessage && <p className={formStyles.error}>{errorMessage}</p>}
                 </form>

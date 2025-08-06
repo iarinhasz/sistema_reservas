@@ -9,6 +9,8 @@ const SolicitacoesCadastroPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUserCpf, setCurrentUserCpf] = useState(null);
     const [justificativa, setJustificativa] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
 
     useEffect(() => {
         const fetchSolicitacoes = async () => {
@@ -43,7 +45,15 @@ const SolicitacoesCadastroPage = () => {
     };
     
     const handleApprove = async (cpf) => {
-        await handleAction('aprovar', cpf);
+        try {
+            await handleAction('aprovar', cpf);
+            setSuccessMessage('Usuário aprovado com sucesso!');
+            setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const handleConfirmReject = async () => {
@@ -72,6 +82,12 @@ const SolicitacoesCadastroPage = () => {
     return (
         <div className={styles.pageContainer}>
             <h1>Solicitações de Cadastro Pendentes</h1>
+            
+            {successMessage && (
+                <div className={styles.successMessage}>
+                    {successMessage}
+                </div>
+            )}
             {solicitacoes.length === 0 ? (
                 <p>Nenhuma solicitação pendente no momento.</p>
             ) : (
