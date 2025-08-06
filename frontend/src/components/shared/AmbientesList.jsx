@@ -81,7 +81,7 @@ const AmbientesList = () => {
                             <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
                                 <button
                                     onClick={() => handleAmbienteClick(ambiente.id)}
-                                    className={styles.ambienteBotao}
+                                    className={`${styles.ambienteBotao} ${ambiente.pending_reservations_count > 0 ? styles.ambienteBotaoAlert : ''}`}
                                 >
                                     {ambiente.identificacao}
                                 </button>

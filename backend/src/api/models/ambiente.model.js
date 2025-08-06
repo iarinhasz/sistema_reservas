@@ -8,14 +8,21 @@ export default class AmbienteModel{
      * @returns {Promise<Array>}
      */
     async findAll(filters = {}){
-        let query = 'SELECT * FROM ambientes';
-        const queryParams = [];
-        if (filters.tipo) {
-            queryParams.push(filters.tipo);
-            query += ` WHERE tipo = $1`;
-        }
-        query += ' ORDER BY identificacao';
-        const { rows } = await this.pool.query(query, queryParams);
+        const query = `
+            SELECT 
+                a.*, 
+                COUNT(r.id) FILTER (WHERE r.status = 'pendente') as pending_reservations_count
+            FROM 
+                ambientes a
+            LEFT JOIN 
+                reservas r ON a.id = r.recurso_id AND r.recurso_tipo = 'ambiente'
+            GROUP BY 
+                a.id
+            ORDER BY 
+                a.identificacao;
+        `;
+        
+        const { rows } = await this.pool.query(query);
         return rows;
     }
         /**
