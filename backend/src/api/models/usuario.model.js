@@ -35,7 +35,7 @@ export default class UsuarioModel {
             query += ` AND nome ILIKE $${queryParams.length}`;
         }
 
-        query += ` ORDER BY data_criacao DESC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+        query += ` ORDER BY data_criacao ASC LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
         queryParams.push(limit, offset);
 
         const { rows } = await this.pool.query(query, queryParams);
