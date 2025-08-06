@@ -23,8 +23,9 @@ CREATE TABLE IF NOT EXISTS equipamentos (
     nome VARCHAR(100) NOT NULL,
     marca VARCHAR(50),
     modelo VARCHAR(50),
-    quantidade_total INTEGER NOT NULL CHECK (quantidade_total >= 0), -- VÍRGULA ADICIONADA
-    ambiente_id INTEGER REFERENCES ambientes(id) ON DELETE SET NULL
+    quantidade_total INTEGER NOT NULL CHECK (quantidade_total >= 0),
+    ambiente_id INTEGER REFERENCES ambientes(id) ON DELETE SET NULL,
+    criado_por_cpf VARCHAR(11) REFERENCES usuarios(cpf) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS reservas (
@@ -44,16 +45,15 @@ CREATE TABLE IF NOT EXISTS reservas (
 
 );
 
--- Inserção de dados para teste (com o campo status corrigido)
+-- Inserção de dados para teste (com o campo status corrigido) senha: senha_segura
 INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
-('12345678900', 'Admin Padrão', 'admin@email.com', 'senha_segura', 'admin', 'ativo')
-ON CONFLICT (cpf) DO NOTHING;
-
--- Dados para teste referente ao usuário
-INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
-('12345678901', 'Aluno Teste', 'aluno@email.com', 'senha_segura', 'aluno', 'ativo')
+('12345678900', 'Admin Padrão', 'admin@email.com', '$2b$10$d8.WzV7.L1y6j/fH.dY3..DyS.1yZ0.e4K3zL3yW8bJ6hJ8dZ6b.q', 'admin', 'ativo')
 ON CONFLICT (cpf) DO NOTHING;
 
 INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
-('12345678902', 'Professor Teste', 'professor@email.com', 'senha_segura', 'professor', 'ativo')
+('12345678901', 'Aluno Teste', 'aluno@email.com', '$2b$10$d8.WzV7.L1y6j/fH.dY3..DyS.1yZ0.e4K3zL3yW8bJ6hJ8dZ6b.q', 'aluno', 'ativo')
+ON CONFLICT (cpf) DO NOTHING;
+
+INSERT INTO usuarios (cpf, nome, email, senha, tipo, status) VALUES
+('12345678902', 'Professor Teste', 'professor@email.com', '$2b$10$d8.WzV7.L1y6j/fH.dY3..DyS.1yZ0.e4K3zL3yW8bJ6hJ8dZ6b.q', 'professor', 'ativo')
 ON CONFLICT (cpf) DO NOTHING;

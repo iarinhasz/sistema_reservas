@@ -1,8 +1,8 @@
 class ReservaController{
 
     constructor(EmailService, ReservaService, UsuarioModel){
-        this.EmailService = EmailService;
         this.ReservaService = ReservaService;
+        this.EmailService = EmailService;
         this.UsuarioModel = UsuarioModel;
     }
 

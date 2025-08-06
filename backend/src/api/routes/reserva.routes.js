@@ -13,7 +13,7 @@ router.post('/', authMiddleware, reservaController.solicitar);
 router.get('/mine', authMiddleware, reservaController.listMine);
 
 // Rota para um administrador listar TODAS as reservas
-router.get('/', authMiddleware, adminMiddleware, reservaController.listAll);
+router.get('/', reservaController.listAll);
 
 // Rotas para um administrador aprovar ou rejeitar uma solicitação
 router.put('/:id/aprovar', authMiddleware, adminMiddleware, reservaController.aprovar);
