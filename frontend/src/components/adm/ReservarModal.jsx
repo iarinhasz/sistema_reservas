@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import styles from './css/ReservarModal.module.css';
 
-const gerarHorarios = (inicio = 8, fim = 22, intervalo = 60) => {
+const gerarHorarios = (inicio = 8, fim = 22) => {
     const horarios = [];
     for (let i = inicio; i < fim; i++) {
         horarios.push(`${String(i).padStart(2, '0')}:00`);
@@ -13,7 +13,7 @@ const gerarHorarios = (inicio = 8, fim = 22, intervalo = 60) => {
 const getTodayString = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses são de 0 a 11
+    const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
@@ -55,6 +55,7 @@ const ReservarModal = ({ ambiente, onClose, onSuccess }) => {
 
     useEffect(() => {
         if (!selectedDate) return;
+
         const todosHorarios = gerarHorarios();
         const horariosOcupados = reservasDoDia.flatMap(reserva => {
             const inicio = new Date(reserva.data_inicio).getHours();
@@ -65,7 +66,21 @@ const ReservarModal = ({ ambiente, onClose, onSuccess }) => {
             }
             return horarios;
         });
-        const disponiveis = todosHorarios.filter(h => !horariosOcupados.includes(h));
+
+        const hojeString = getTodayString();
+        const horaAtual = new Date().getHours();
+
+        const disponiveis = todosHorarios.filter(h => {
+            const horarioJaOcupado = horariosOcupados.includes(h);
+            
+            if (selectedDate === hojeString) {
+                const horaDoSlot = parseInt(h.split(':')[0]);
+                return !horarioJaOcupado && horaDoSlot > horaAtual;
+            }
+            
+            return !horarioJaOcupado;
+        });
+
         setHorariosInicioDisponiveis(disponiveis);
         setStartTime('');
         setEndTime('');
@@ -126,18 +141,26 @@ const ReservarModal = ({ ambiente, onClose, onSuccess }) => {
                     <div className={styles.timeGrid}>
                         <div className={styles.formGroup}>
                             <label htmlFor="data">Dia</label>
-                            <input type="date" id="data" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} required />
+                            <input
+                                type="date"
+                                id="data"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                required
+                                // ALTERAÇÃO AQUI: Impede a seleção de datas passadas
+                                min={getTodayString()}
+                            />
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="startTime">Horário de Início</label>
-                            <select id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required disabled={horariosInicioDisponiveis.length === 0}>
+                            <select id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required disabled={!selectedDate || horariosInicioDisponiveis.length === 0}>
                                 <option value="" disabled>Selecione</option>
                                 {horariosInicioDisponiveis.map(h => <option key={h} value={h}>{h}</option>)}
                             </select>
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="endTime">Horário de Fim</label>
-                            <select id="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required disabled={horariosFimDisponiveis.length === 0}>
+                            <select id="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required disabled={!startTime || horariosFimDisponiveis.length === 0}>
                                 <option value="" disabled>Selecione</option>
                                 {horariosFimDisponiveis.map(h => <option key={h} value={h}>{h}</option>)}
                             </select>
