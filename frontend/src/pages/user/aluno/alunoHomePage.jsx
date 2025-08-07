@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext'; // Ajuste o caminho conforme seu projeto
-import styles from '../../adm/css/admHomePage.module.css';
+import styles from '../css/userPages.module.css';
+import AmbientesList from '../../../components/shared/AmbientesList.jsx';
 
 const AlunoHomePage = () => {
     const { user } = useAuth();
 
     return (
-        <div className={styles.adminPage}>
+        <div className={styles.userPage}>
             <h1>Minha Página Inicial</h1>
             <p>Bem-vindo{user && user.nome ? `, ${user.nome}` : ''}! Aqui você pode gerenciar suas reservas de equipamentos.</p>
             
@@ -20,6 +21,9 @@ const AlunoHomePage = () => {
                     + Fazer Nova Reserva
                 </Link>
             </div>
+            <h2>Ambientes Disponíveis</h2>
+            <AmbientesList />
+            
         </div>
     );
 };
