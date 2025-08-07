@@ -8,7 +8,6 @@
     color: #333; /* Cor escura para o título */
 }
 
-/* --- LINHA ADICIONADA PARA CORRIGIR O PROBLEMA --- */
 .userPage p {
     color: #555; /* Cor cinza escura para o parágrafo */
     font-size: 1.1rem;

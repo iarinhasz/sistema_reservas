@@ -1,28 +1,25 @@
 // src/pages/user/professor/professorLayout.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { LogoutIcon, MenuIcon } from '../../../components/icons/index';
 import { useAuth } from '../../../context/AuthContext';
-import styles from '../../adm/css/admLayout.module.css';
-import { LogoutIcon } from '../../../components/icons/index';
+import styles from '../css/userPages.module.css';
 
 const ProfessorLayout = () => {
   const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || user.tipo !== 'professor')) {
       logout();
-      navigate('/login');
     }
-  }, [user, loading, navigate, logout]);
+  }, [user, loading, logout]);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
   };
 
-  const closeMenu = () => setMenuOpen(false);
 
   if (loading || !user) {
     return <div>Verificando acesso...</div>;
@@ -30,44 +27,45 @@ const ProfessorLayout = () => {
 
   return (
     <div className={styles.layoutContainer}>
-      <aside className={`${styles.sidePanel} ${menuOpen ? styles.open : ''}`}>
+      {/* O painel lateral agora usa 'isPanelOpen' */}
+      <aside className={`${styles.sidePanel} ${isPanelOpen ? styles.open : ''}`}>
         <div className={styles.panelHeader}>
           <h3>Painel do Professor</h3>
           <p>Bem-vindo, {user.nome}</p>
         </div>
         <nav className={styles.nav}>
-          <Link to="/professor" className={styles.navLink} onClick={closeMenu}>Página Inicial</Link>
-          <Link to="/professor/buscar-recursos" className={styles.navLink} onClick={closeMenu}>Reservar Recursos</Link>
-          <Link to="/professor/minhas-reservas" className={styles.navLink} onClick={closeMenu}>Minhas Reservas</Link>
+          {/* Os links agora chamam 'closeMenu' que usa 'setIsPanelOpen' */}
+          <Link to="/professor" onClick={() => setIsPanelOpen(false)}>Página Inicial</Link>
+          <Link to="/professor/buscar-recursos"  onClick={() => setIsPanelOpen(false)}>Reservar Recursos</Link>
+          <Link to="/professor/minhas-reservas"  onClick={() => setIsPanelOpen(false)}>Minhas Reservas</Link>
         </nav>
         <div className={styles.panelFooter}>
           <button onClick={handleLogout} className={styles.logoutButton}>
-            <LogoutIcon /> Logout
+            <LogoutIcon /> Sair
           </button>
         </div>
       </aside>
 
-      {menuOpen && <div className={styles.overlay} onClick={closeMenu}></div>}
+      {/* O overlay agora usa 'isPanelOpen' */}
+      {isPanelOpen && <div className={styles.overlay} onClick={() => setIsPanelOpen(false)}></div>}
 
       <div className={styles.mainContent}>
         <header className={styles.header}>
           <button 
             className={styles.hamburgerButton} 
-            onClick={() => setMenuOpen(prev => !prev)} 
-            aria-label="Abrir menu lateral"
-            aria-expanded={menuOpen}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+            onClick={() => setIsPanelOpen(!isPanelOpen)} 
+            aria-label="Abrir menu"
+            aria-expanded={isPanelOpen}
 
+          >
+            <MenuIcon />
+          </button>
           <div className={styles.headerTitle}>Sistema de Reservas</div>
           <Link to="/professor/perfil" className={styles.profileButton}>Ver Perfil</Link>
         </header>
 
         <main className={styles.content}>
-          <Outlet /> {/* Páginas-filhas serão renderizadas aqui */}
+          <Outlet />
         </main>
       </div>
     </div>

@@ -3,8 +3,8 @@ import { Route, Routes } from 'react-router-dom';
 // Páginas Públicas
 import HomePage from './pages/public/HomePage.jsx';
 import LoginPage from './pages/public/Login.jsx';
-import RequestAccessPage from './pages/public/RequestAccessPage';
 import PublicAmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPage.jsx';
+import RequestAccessPage from './pages/public/RequestAccessPage';
 
 // Páginas e Layouts de Admin
 import AdmHomePage from './pages/adm/admHomePage.jsx';
@@ -14,12 +14,12 @@ import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx';
 import GerenciarUsuariosPage from './pages/adm/GerenciarUsuariosPage.jsx';
 
 // Páginas e Layouts de Usuário
+import AlunoHomePage from './pages/user/aluno/alunoHomePage.jsx';
+import AlunoLayout from './pages/user/aluno/alunoLayout.jsx';
 import MinhasReservasPage from './pages/user/professor/minhasReservasPage.jsx';
 import ProfessorHomePage from './pages/user/professor/professorHomePage.jsx';
 import ProfessorLayout from './pages/user/professor/professorLayout.jsx';
 import ReservarAmbientePage from './pages/user/professor/reservarAmbientePage.jsx';
-import AlunoHomePage from './pages/user/aluno/alunoHomePage.jsx';
-import AlunoLayout from './pages/user/aluno/alunoLayout.jsx';
 import UserProfilePage from './pages/user/userProfilePage.jsx';
 
 function App() {
@@ -45,6 +45,7 @@ function App() {
             <Route index element={<AlunoHomePage />} />
             <Route path="reservar-recursos" element={<ReservarAmbientePage />} />
             <Route path="minhas-reservas" element={<MinhasReservasPage />} />
+            <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
             <Route path="perfil" element={<UserProfilePage />} />
         </Route>
 
@@ -54,6 +55,7 @@ function App() {
             <Route path="perfil" element={<UserProfilePage />} />
             <Route path="buscar-recursos" element={<ReservarAmbientePage />} />
             <Route path="minhas-reservas" element={<MinhasReservasPage />} /> 
+            <Route path="ambientes/:id" element={<PublicAmbienteDetalhesPage />}></Route>
         </Route>
         </Routes>
     );
