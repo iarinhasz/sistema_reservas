@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-    // ✅ MODIFICADO AQUI:
     const login = async (email, senha) => {
         setLoading(true);
         try {

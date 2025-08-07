@@ -15,8 +15,12 @@ export default class UsuarioService {
         const { cpf, nome, email, senha, tipo } = dados;
 
         // 1. Validação de dados essenciais
-        if (!cpf || !nome || !email || !senha || !tipo) {
-            throw new Error("Cpf, nome, email, senha e tipo são obrigatórios");
+        if (!cpf || cpf.trim() === '' ||
+            !nome || nome.trim() === '' ||
+            !email || email.trim() === '' ||
+            !senha || senha.trim() === '' || // Senha também não pode ser só espaços
+            !tipo) {
+            throw new Error("CPF, nome, email, senha e tipo são obrigatórios e não podem ser vazios.");
         }
 
         const cpfApenasNumeros = cpf.replace(/\D/g, '');
@@ -61,7 +65,7 @@ export default class UsuarioService {
 
     async rejeitarCadastro(cpf, justificativa) {
         // Regra de negócio: "Tentativa de rejeitar um cadastro sem informar a justificativa"
-        if (!justificativa) {
+        if (!justificativa || justificativa.trim() === '') {
             throw new Error("O motivo da rejeição é obrigatório.");
         }
         
