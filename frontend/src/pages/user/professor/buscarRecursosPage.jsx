@@ -11,7 +11,6 @@ const BuscarRecursosPage = () => {
     useEffect(() => {
         const fetchAmbientes = async () => {
             try {
-                // Requisição à API para buscar todos os ambientes
                 const response = await api.get('/ambientes');
                 setAmbientes(response.data);
             } catch (err) {

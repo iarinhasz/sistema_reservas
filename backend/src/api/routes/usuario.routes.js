@@ -1,12 +1,20 @@
 
 import { Router } from 'express';
-// Importa a instância pronta do container!
 import { usuarioController } from '../../container.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 import adminMiddleware from '../middlewares/admin.middleware.js';
 
 const router = Router();
 router.post('/solicitar', usuarioController.solicitarCadastro);
+
+router.get(
+    '/', 
+    authMiddleware, 
+    adminMiddleware, 
+    usuarioController.listarTodos
+);
+
+
 router.get(
     '/pendentes',
     authMiddleware,       

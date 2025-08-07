@@ -55,12 +55,29 @@ export default class UsuarioModel {
         return rows[0];
     }
 
-    async findAll () {
-    const { rows } = await this.pool.query("SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente' ORDER BY nome");
-    return rows;
+    async findAll(filters = {}) {
+        let query = "SELECT cpf, nome, email, tipo, status, data_criacao FROM usuarios WHERE status != 'pendente'";
+        const values = [];
+
+        if (filters.nome) {
+            values.push(`%${filters.nome}%`);
+            query += ` AND nome ILIKE $${values.length}`;
+        }
+        if (filters.cpf) {
+            values.push(`%${filters.cpf}%`);
+            query += ` AND cpf LIKE $${values.length}`;
+        }
+        if (filters.tipo) {
+            values.push(filters.tipo);
+            query += ` AND tipo = $${values.length}`;
+        }
+
+        query += " ORDER BY nome";
+        
+        const { rows } = await this.pool.query(query, values);
+        return rows;
     }
 
-    // Função para deletar um usuário (usado na rejeição)
     async deleteByCpf (cpf) {
         const { rows } = await this.pool.query("DELETE FROM usuarios WHERE cpf = $1 RETURNING *", [cpf]);
         return rows[0];

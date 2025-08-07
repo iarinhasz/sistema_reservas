@@ -10,9 +10,8 @@ import PublicAmbienteDetalhesPage from './pages/public/PublicAmbienteDetalhesPag
 import AdmHomePage from './pages/adm/admHomePage.jsx';
 import AdminLayout from './pages/adm/admLayout.jsx';
 import CadastrarAmbientePage from './pages/adm/cadAmbiente.jsx';
-import SolicitacoesCadastroPage from './pages/adm/solicitacoesCadastroPage.jsx';
-// A LINHA ABAIXO FOI CORRIGIDA PARA APONTAR PARA A PASTA 'adm'
 import AmbienteDetalhesPage from './pages/adm/AmbienteDetalhesPage.jsx';
+import GerenciarUsuariosPage from './pages/adm/GerenciarUsuariosPage.jsx';
 
 // Páginas e Layouts de Usuário
 import MinhasReservasPage from './pages/user/professor/minhasReservasPage.jsx';
@@ -32,12 +31,11 @@ function App() {
         <Route path="/solicitar-cadastro" element={<RequestAccessPage />} />
         <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
 
-
         {/* Admin com rotas filhas */}
         <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdmHomePage />} />           
             <Route path="cadastrar-ambiente" element={<CadastrarAmbientePage />} />
-            <Route path="solicitacoes-cadastro" element={<SolicitacoesCadastroPage />} />
+            <Route path="solicitacoes-cadastro" element={<GerenciarUsuariosPage />} />
             <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
             <Route path="perfil" element={<UserProfilePage />} />
         </Route>
