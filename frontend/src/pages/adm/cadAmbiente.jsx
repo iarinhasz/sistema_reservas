@@ -42,7 +42,6 @@ const CadastrarAmbientePage = () => {
             }, 2000);  
 
         } catch (error) {
-            // Pega a mensagem de erro da API (ex: "Identificador já cadastrado")
             setErrorMessage(error.response?.data?.message || 'Ocorreu um erro inesperado.');
         } finally {
             setIsSubmitting(false);

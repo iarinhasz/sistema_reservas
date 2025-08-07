@@ -43,54 +43,31 @@ const AdicionarEquipamentoModal = ({ ambienteId, onClose, onSuccess }) => {
     };
 
     return (
-        // O fundo escurecido do modal. Clicar aqui fecha o modal.
         <div className={modalStyles.modalBackdrop} onClick={onClose}>
-            {/* O conteúdo do modal. Clicar aqui NÃO fecha. */}
             <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
                 <h2>Adicionar Novo Equipamento</h2>
                 <p>Adicionando ao ambiente {ambienteId}</p>
 
-                <form onSubmit={handleSubmit} className={formStyles.formContainer}>
+                <form onSubmit={handleSubmit}>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="nome">Nome do Equipamento</label>
-                        <input
-                            type="text"
-                            id="nome"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                            required
-                        />
+                        <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
                     </div>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="marca">Marca</label>
-                        <input
-                            type="text"
-                            id="marca"
-                            value={marca}
-                            onChange={(e) => setMarca(e.target.value)}
-                        />
+                        <input type="text" id="marca" value={marca} onChange={(e) => setMarca(e.target.value)} />
                     </div>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="quantidade_total">Quantidade</label>
-                        <input
-                            type="text"
-                            id="quantidade_total"
-                            value={quantidade_total}
-                            onChange={(e) => setQuantidade(e.target.value)}
-                        />
+                        <input type="number" id="quantidade_total" value={quantidade_total} onChange={(e) => setQuantidade(e.target.value)} />
                     </div>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="modelo">Modelo</label>
-                        <input
-                            type="text"
-                            id="modelo"
-                            value={modelo}
-                            onChange={(e) => setModelo(e.target.value)}
-                        />
+                        <input type="text" id="modelo" value={modelo} onChange={(e) => setModelo(e.target.value)} />
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                         <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
+                        <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
                             Cancelar
                         </button>
                         <button type="submit" disabled={isSubmitting}>

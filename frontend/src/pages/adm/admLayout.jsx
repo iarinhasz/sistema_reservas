@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './css/admLayout.module.css';
-import { LogoutIcon } from '../../components/icons/index';
+import { LogoutIcon, EditIcon, MenuIcon} from '../../components/icons/index';
 
 const AdminLayout = () => {
     const { user, logout } = useAuth();
@@ -17,7 +17,6 @@ const AdminLayout = () => {
 
     return (
         <div className={styles.layoutContainer}>
-            {/* Menu lateral */}
             <aside className={`${styles.sidePanel} ${isPanelOpen ? styles.open : ''}`}>
                 <div className={styles.panelHeader}>
                     <h3>Painel ADM</h3>
@@ -39,19 +38,15 @@ const AdminLayout = () => {
             {/* Overlay ao abrir menu */}
             {isPanelOpen && <div className={styles.overlay} onClick={() => setIsPanelOpen(false)}></div>}
 
-            {/* Conteúdo principal */}
             <div className={styles.mainContent}>
                 <header className={styles.header}>
-                    {/* Botão hambúrguer com 3 barras (igual aluno/professor) */}
                     <button
                         className={styles.hamburgerButton}
                         onClick={() => setIsPanelOpen(!isPanelOpen)}
                         aria-label="Abrir menu lateral"
                         aria-expanded={isPanelOpen}
                     >
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <MenuIcon/>
                     </button>
 
                     <div className={styles.headerTitle}>Sistema de Reservas - Admin</div>

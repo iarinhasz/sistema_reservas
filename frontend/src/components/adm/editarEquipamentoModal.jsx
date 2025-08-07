@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import modalStyles from '../css/modal.module.css'
-import { MenuIcon, ProfileIcon, LogoutIcon, DeleteIcon, SaveIcon } from '../icons/index';
+import { MenuIcon, ProfileIcon, DeleteIcon, SaveIcon } from '../icons/index';
 import Button from '../shared/Button';
 
 const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
-    // Inicia o estado do formulário com os dados do equipamento que está sendo editado
     const [formData, setFormData] = useState({
         nome: equipamento.nome || '',
         marca: equipamento.marca || '',
@@ -61,8 +60,7 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) =>
         <div className={modalStyles.modalBackdrop} onClick={onClose}>
             <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
                 <h2>Editar Equipamento</h2>
-                <form onSubmit={handleSubmit} className={formStyles.formContainer}>
-                    {/* Campos do formulário */}
+                <form onSubmit={handleSubmit}>
                     <div className={formStyles.formGroup}>
                         <label htmlFor="nome">Nome do Equipamento</label>
                         <input type="text" id="nome" value={formData.nome} onChange={handleChange} required />
@@ -84,12 +82,12 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) =>
                         <button onClick={handleDelete} variant="danger" icon={DeleteIcon}>
                             <DeleteIcon/>
                         </button>
-                        <div style={{ flex: 1 }}></div> {/* Espaçador */}
+                        <div style={{ flex: 1 }}></div>
                             <button onClick={onClose} variant="cancel">
                                 Cancelar
                             </button>
                             <button type="submit" disabled={isSubmitting}>
-                                <SaveIcon/>   Salvar
+                                <SaveIcon/>
                                 {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
                             </button>
                         </div>

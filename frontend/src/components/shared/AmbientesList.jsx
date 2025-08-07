@@ -4,6 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../css/AmbientesList.module.css'; //
 
+import {DeleteIcon, EditIcon } from '../icons/index';
+
 const AmbientesList = () => {
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -89,7 +91,7 @@ const AmbientesList = () => {
                                 {user?.tipo === 'admin' && (
                                     <div className={styles.iconActions}>
                                         <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.iconButton} title="Editar Ambiente">
-                                            ✏️
+                                            <EditIcon />
                                         </Link>
                                         {/* BOTÃO DE DELETAR COM O ÍCONE 'X' */}
                                         <button 
@@ -97,7 +99,7 @@ const AmbientesList = () => {
                                             className={`${styles.iconButton} ${styles.deleteButton}`}
                                             title="Deletar Ambiente"
                                         >
-                                            ❌
+                                            <DeleteIcon />
                                         </button>
                                     </div>
                                 )}
