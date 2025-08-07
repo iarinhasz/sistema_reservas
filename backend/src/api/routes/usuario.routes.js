@@ -38,4 +38,11 @@ router.post(
     usuarioController.rejeitarCadastro
 );
 
+router.delete(
+    '/:cpf',
+    authMiddleware,
+    adminMiddleware,
+    usuarioController.delete
+);
+
 export default router;

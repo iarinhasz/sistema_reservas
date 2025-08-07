@@ -133,6 +133,30 @@
     color: white;
 }
 
+.deleteActionBtn {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.deleteActionBtn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Estilos para o modal de deleção */
+.confirmDeleteButton {
+    background-color: #dc3545 !important; /* !important para sobrescrever outros estilos de botão se necessário */
+    color: white;
+}
+.confirmDeleteButton:hover {
+    background-color: #c82333 !important;
+}
+
+
 .divider { margin: 2rem 0; }
 .section { margin-bottom: 2rem; }
 .filters { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 8px; }
@@ -146,3 +170,4 @@ th { background-color: #f2f2f2; }
 .status { padding: 0.25rem 0.5rem; border-radius: 12px; color: white; font-size: 0.8rem; text-transform: capitalize; }
 .status.ativo { background-color: #28a745; }
 .status.rejeitado { background-color: #dc3545; }
+
