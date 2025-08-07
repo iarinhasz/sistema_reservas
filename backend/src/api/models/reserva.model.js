@@ -30,7 +30,6 @@ class ReservaModel{
             LEFT JOIN equipamentos eq ON r.recurso_id = eq.id AND r.recurso_tipo = 'equipamento'
             LEFT JOIN usuarios u ON r.usuario_cpf = u.cpf
         `;
-        
         const values = [];
         const whereClauses = [];
 
@@ -38,21 +37,22 @@ class ReservaModel{
             whereClauses.push(`r.recurso_id = $${values.length + 1} AND r.recurso_tipo = $${values.length + 2}`);
             values.push(filters.recurso_id, filters.recurso_tipo);
         }
-        
         if (filters.status) {
             whereClauses.push(`r.status = $${values.length + 1}`);
             values.push(filters.status);
+        }
+        if (filters.data) {
+            whereClauses.push(`r.data_inicio::date = $${values.length + 1}`);
+            values.push(filters.data);
         }
 
         if (whereClauses.length > 0) {
             query += ` WHERE ${whereClauses.join(' AND ')}`;
         }
-
-        // Ordena pela data de criação para a fila de aprovação funcionar corretamente
         query += ' ORDER BY r.data_criacao ASC;';
         
         const { rows } = await this.pool.query(query, values);
-        return { data: rows }; 
+        return rows; 
     }
     
     async checkAvailability ({ recurso_id, recurso_tipo, data_inicio, data_fim }){

@@ -36,14 +36,14 @@ const reservaModel = new ReservaModel(pool);
 const emailService = new EmailService();
 const usuarioService = new UsuarioService(usuarioModel, emailService);
 const ambienteService = new AmbienteService(ambienteModel, reservaModel);
-const reservaService = new ReservaService(reservaModel);
+const reservaService = new ReservaService(reservaModel, usuarioModel, emailService);
 const equipamentoService = new EquipamentoService(equipamentoModel, reservaModel, ambienteModel);
 const authService = new AuthService(usuarioModel);
 
 // == CAMADA DE CONTROLLERS == (dependem dos serviços)
 const usuarioController = new UsuarioController(usuarioService);
 const ambienteController = new AmbienteController(ambienteService);
-const reservaController = new ReservaController(emailService, reservaService, usuarioModel);
+const reservaController = new ReservaController(reservaService);
 const equipamentoController = new EquipamentoController(equipamentoService);
 const authController = new AuthController(authService);
 

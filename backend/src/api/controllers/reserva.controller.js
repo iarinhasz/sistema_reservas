@@ -1,112 +1,48 @@
-class ReservaController{
+export default class ReservaController {
+    constructor(reservaService) {
+        this.reservaService = reservaService;
+    }
 
-    constructor(EmailService, ReservaService, UsuarioModel){
-        this.ReservaService = ReservaService;
-        this.EmailService = EmailService;
-        this.UsuarioModel = UsuarioModel;
+    listAll = async (req, res) => {
+        try {
+            const reservas = await this.reservaService.listAll(req.query);
+            // Resposta padronizada que o frontend espera
+            res.status(200).json({ data: reservas }); 
+        } catch (error) {
+            res.status(500).json({ message: "Erro ao listar todas as reservas." });
+        }
     }
 
     solicitar = async (req, res) => {
-        console.log(`[RESERVA CONTROLLER] A requisição chegou na função solicitar.`);
         try {
-            const novaReserva = await this.ReservaService.solicitar(req.body, req.user);
-
-            const solicitante = await this.UsuarioModel.findByCpf(req.user.cpf);
-            if (solicitante) {
-                await this.EmailService.sendReservationRequestEmail(solicitante, novaReserva);
-            }
-            res.status(201).json({
-                message: "Solicitação de reserva enviada com sucesso. Aguardando aprovação.",
-                data: novaReserva
+            const novaReserva = await this.reservaService.solicitar(req.body, req.user);
+            res.status(201).json({ 
+                message: "Solicitação de reserva enviada com sucesso.",
+                data: novaReserva 
             });
         } catch (error) {
-            console.error('Erro ao solicitar reserva:', error.message);
-
-            if (error.message.includes("Acesso proibido")) {
-                return res.status(403).json({ message: error.message });
-            }
-            if (error.message.includes("Conflito")) {
-                return res.status(409).json({ message: error.message });
-            }
-            res.status(500).json({ message: "Erro interno do servidor" });
+            res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
-
-
-    aprovar = async (req, res) => {
-        try {
-            const { id } = req.params;
-
-            const reservaAprovada = await this.ReservaService.aprovar(id);
-
-            const solicitante = await this.UsuarioModel.findByCpf(reservaAprovada.usuario_cpf);
-            if (solicitante) {
-                await this.EmailService.sendReservationStatusEmail(solicitante, reservaAprovada);
-            }
     
-            res.status(200).json({ message: "Reserva aprovada com sucesso.", data: reservaAprovada });
-        } catch (error) {
-            console.error('Erro ao aprovar reserva:', error.message);
-
-            if (error.message.includes("não encontrada")) {
-                return res.status(404).json({ message: error.message });
-            }
-            if (error.message.includes("Conflito")) {
-                return res.status(409).json({ message: error.message });
-            }
-
-            res.status(500).json({ message: "Erro interno do servidor" });
-        }
-    }
-
-    /**
-     * Um administrador rejeita uma reserva.
-     */
-    rejeitar = async (req, res) => {
+    listMine = async (req, res) => {
         try {
-            const { id } = req.params;
-            const reservaRejeitada = await this.ReservaService.rejeitar(id);
-            
-            const solicitante = await this.UsuarioModel.findByCpf(reservaRejeitada.usuario_cpf);
-            if (solicitante) {
-                await this.EmailService.sendReservationStatusEmail(solicitante, reservaRejeitada);
-            }
-
-            res.status(200).json({ message: "Reserva rejeitada com sucesso.", data: reservaRejeitada });
+            const minhasReservas = await this.reservaService.listMine(req.user.cpf, req.query);
+            res.status(200).json({data: minhasReservas});
         } catch (error) {
-            if (error.message.includes("não encontrada")) {
-                return res.status(404).json({ message: error.message });
-            }
-            res.status(500).json({ message: "Erro interno do servidor" });
+            res.status(500).json({ message: "Erro ao listar minhas reservas." });
         }
     }
 
-    /**
-     * Cancela uma reserva. Pode ser feito pelo dono da reserva ou por um admin.
-     */
     cancelar = async (req, res) => {
         try {
-            const { id } = req.params;
-            const reservaCancelada = await this.ReservaService.cancelar(id, req.user);
-
-            const solicitante = await this.UsuarioModel.findByCpf(reservaCancelada.usuario_cpf);
-            if (solicitante) {
-                await this.EmailService.sendCancellationEmail(solicitante, reservaCancelada);
-            }
-
+            const reservaCancelada = await this.reservaService.cancelar(req.params.id, req.user);
             res.status(200).json({ message: "Reserva cancelada com sucesso.", data: reservaCancelada });
         } catch (error) {
-            if (error.message.includes("não encontrada")) {
-                return res.status(404).json({ message: error.message });
-            }
-            if (error.message.includes("Acesso proibido")) {
-                return res.status(403).json({ message: error.message });
-            }
-            res.status(500).json({ message: "Erro interno do servidor" });
+            res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
-
-
+    
     deixarReview = async (req, res) => {
         try {
             const { id } = req.params;
@@ -126,29 +62,31 @@ class ReservaController{
             res.status(500).json({ message: "Erro interno do servidor" });
         }
     }
-
-    listAll = async (req, res) => {
+    
+    criarReservaAdmin = async (req, res) => {
         try {
-            const todasAsReservas = await this.ReservaService.listAll(req.query);
-            
-            res.status(200).json({ todasAsReservas });
-
+            const novaReserva = await this.reservaService.criarReservaAdmin(req.body, req.user);
+            res.status(201).json({ message: "Reserva criada e aprovada com sucesso.", data: novaReserva });
         } catch (error) {
-            console.error('Erro ao listar todas as reservas:', error);
-            res.status(500).json({ message: "Erro interno do servidor" });
+            res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
-
-
-    listMine = async (req, res) => {
+    
+    aprovar = async (req, res) => {
         try {
-            const minhasReservas = await this.ReservaService.listMine(req.user.cpf, req.query);
-            res.status(200).json({data: minhasReservas});
+            const reservaAprovada = await this.reservaService.aprovar(req.params.id);
+            res.status(200).json({ message: "Reserva aprovada com sucesso.", data: reservaAprovada });
         } catch (error) {
-            console.error('Erro ao listar minhas reservas:', error);
-            res.status(500).json({ message: "Erro interno do servidor" });
+            res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
+    
+    rejeitar = async (req, res) => {
+        try {
+            const reservaRejeitada = await this.reservaService.rejeitar(req.params.id);
+            res.status(200).json({ message: "Reserva rejeitada com sucesso.", data: reservaRejeitada });
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
 }
-
-export default ReservaController;

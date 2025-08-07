@@ -25,4 +25,6 @@ router.put('/:id/cancelar', authMiddleware, reservaController.cancelar);
 //Rota para o usuário deixar uma review sobre uma reserva feita
 router.post('/:id/review', authMiddleware, reservaController.deixarReview);
 
+router.post('/admin-create', authMiddleware, adminMiddleware, reservaController.criarReservaAdmin);
+
 export default router;
