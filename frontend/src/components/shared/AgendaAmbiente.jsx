@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 // --- IMPORTAÇÕES E CONFIGURAÇÃO PARA O CALENDÁRIO ---
@@ -7,7 +7,7 @@ import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const locales = { 'pt-BR': ptBR };
@@ -24,6 +24,9 @@ const AgendaAmbiente = ({ ambienteId }) => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [date, setDate] = useState(new Date());
+
+    const handleNavigate = useCallback((newDate) => setDate(newDate), [setDate]);
 
     useEffect(() => {
         const fetchReservas = async () => {
@@ -69,8 +72,22 @@ const AgendaAmbiente = ({ ambienteId }) => {
                 events={eventosDoCalendario}
                 startAccessor="start"
                 endAccessor="end"
-                defaultView="week"
-                messages={{ next: "Próximo", previous: "Anterior", today: "Hoje", month: "Mês", week: "Semana", day: "Dia" }}
+                defaultView={Views.WEEK}
+                toolbar={true}
+                views={[Views.WEEK]}
+                date={date} // Controla a data que o calendário exibe
+                onNavigate={handleNavigate} // Diz ao calendário qual função chamar ao navegar
+                messages={{
+                    next: "Próxima",
+                    today: "Hoje",
+                    previous: "Anterior",                    
+                }}
+                formats={{
+                    timeGutterFormat: (date, culture, localizer) =>
+                      localizer.format(date, 'HH:mm', culture),
+                    eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+                      `${localizer.format(start, 'HH:mm', culture)} – ${localizer.format(end, 'HH:mm', culture)}`
+                }}
             />
         </div>
     );

@@ -40,7 +40,6 @@ const PublicAmbienteDetalhesPage = () => {
                 <Link to="/" className={styles.backButton}>Voltar</Link>
             </header>
             
-            {/* Renderiza o componente de agenda, passando o ID do ambiente */}
             <AgendaAmbiente ambienteId={id} />
         </div>
     );
