@@ -1,125 +1,80 @@
-class ReservaService{
-  constructor(ReservaModel){
-      this.ReservaModel = ReservaModel;
-  }
-  /**
-   * Lógica para aprovar uma reserva.
-     * @param {number} reservaId - O ID da reserva a ser aprovada.
-     * @returns {Promise<object>} - A reserva aprovada.
-     */
-    async aprovar(reservaId){
-        // Busca a reserva para garantir que ela existe
-        const reservaParaAprovar = await this.ReservaModel.findById(reservaId);
-        if (!reservaParaAprovar || reservaParaAprovar.status !== 'pendente') {
+export default class ReservaService {
+    constructor(reservaModel, usuarioModel, emailService) {
+        this.reservaModel = reservaModel;
+        this.usuarioModel = usuarioModel;
+        this.emailService = emailService;
+    }
+
+    async aprovar(reservaId) {
+        const reservaAprovada = await this.reservaModel.findById(reservaId);
+        if (!reservaAprovada || reservaAprovada.status !== 'pendente') {
             throw new Error("Reserva não encontrada ou já processada.");
         }
+        
+        await this.reservaModel.updateStatus(reservaId, 'aprovada');
 
-        // Verifica conflitos no momento da aprovação
-        const hasConflict = await this.ReservaModel.checkAvailability({
-            ...reservaParaAprovar,
-            reservaIdToExclude: reservaId
-        });
-        if (hasConflict) {
-            throw new Error("Conflito: Este horário já foi preenchido por outra reserva aprovada.");
+        const solicitante = await this.usuarioModel.findByCpf(reservaAprovada.usuario_cpf);
+        if (solicitante) {
+            await this.emailService.sendReservationStatusEmail(solicitante, reservaAprovada);
         }
 
-        const reservaAprovada = await this.ReservaModel.updateStatus(reservaId, 'aprovada');
-
-        // Rejeita automaticamente as outras reservas conflitantes
-        if (reservaAprovada) {
-            await this.ReservaModel.rejectConflictsFor(reservaAprovada);
-        }
-
+        await this.reservaModel.rejectConflictsFor(reservaAprovada);
         return reservaAprovada;
     }
 
-
-    async rejeitar(reservaId){
-        const reserva = await this.ReservaModel.findById(reservaId);
-        if (!reserva) {
-          throw new Error("Reserva não encontrada.");
+    async rejeitar(reservaId) {
+        const reservaRejeitada = await this.reservaModel.updateStatus(reservaId, 'rejeitada');
+        if (!reservaRejeitada) {
+            throw new Error("Reserva não encontrada.");
         }
-        return this.ReservaModel.updateStatus(reservaId, 'rejeitada');
-      }
 
-      //lista todas as reservas
-      async listAll(queryParams){
-        return this.ReservaModel.findAll(queryParams);
-      }
-
-      /**
-       * Lista as reservas de um usuário específico.
-       */
-      async listMine(usuarioCpf, queryParams){
-        return this.ReservaModel.findByUser(usuarioCpf, queryParams);
-      }
-      /**
-     * Lógica para solicitar uma nova reserva.
-     * @param {object} dadosSolicitacao
-     * @param {object} dadosUsuario
-     * @returns {Promise<object>}
-     * @throws {Error}
-     */
-    async solicitar(dadosSolicitacao, dadosUsuario){
-        
-        if (dadosUsuario.tipo === 'admin') {
-        const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
-        const hasConflict = await this.ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
-        if (hasConflict) {
-            throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
+        const solicitante = await this.usuarioModel.findByCpf(reservaRejeitada.usuario_cpf);
+        if (solicitante) {
+            await this.emailService.sendReservationStatusEmail(solicitante, reservaRejeitada);
         }
-        const novaReserva = await this.ReservaModel.create({ 
+        return reservaRejeitada;
+    }
+    
+    async listAll(queryParams) {
+        return this.reservaModel.findAll(queryParams);
+    }
+    
+    async criarReservaAdmin(dadosSolicitacao, dadosUsuario) {
+        const novaReserva = await this.reservaModel.create({ 
             ...dadosSolicitacao, 
             usuario_cpf: dadosUsuario.cpf,
             status: 'aprovada'
         });
-        await this.ReservaModel.rejectConflictsFor(novaReserva);
-        return novaReserva;
-        }
-
-        // Professor Aluno
-        const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
-
-        const inicio = new Date(data_inicio);
-        const fim = new Date(data_fim);
-    
-        // Verificar se as datas são válidas após a conversão
-        if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
-            throw new Error("Formato de data inválido. Use o formato ISO 8601 (ex: 'AAAA-MM-DDTHH:mm:ss-03:00').");
-        }
-
-        // Validação se data_fim deve ser posterior a data_inicio
-        if (fim <= inicio) {
-            throw new Error("Não é possível criar reservas para datas passadas.");
-        }
-
-        if (dadosUsuario.tipo === 'aluno' && recurso_tipo !== 'equipamento') {
-            throw new Error("Acesso proibido. Alunos podem reservar apenas equipamentos.");
-        }
-        const hasConflict = await this.ReservaModel.checkAvailability({ recurso_id, recurso_tipo, data_inicio, data_fim });
-        if (hasConflict) {
-            throw new Error("Conflito: Já existe uma reserva aprovada para este recurso no horário solicitado.");
-        }
-
-        const novaReserva = await this.ReservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
+        await this.reservaModel.rejectConflictsFor(novaReserva);
         return novaReserva;
     }
-        /**
-       * Cancela uma reserva. Verifica se o usuário tem permissão.
-       */
-    async cancelar(reservaId, usuarioLogado){
-        const reserva = await this.ReservaModel.findById(reservaId);
-        if (!reserva) {
-            throw new Error("Reserva não encontrada.");
+
+    async solicitar(dadosSolicitacao, dadosUsuario) {
+        const novaReserva = await this.reservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
+
+        const solicitante = await this.usuarioModel.findByCpf(dadosUsuario.cpf);
+        if (solicitante) {
+            await this.emailService.sendReservationRequestEmail(solicitante, novaReserva);
         }
-    
+        return novaReserva;
+    }
+
+    async cancelar(reservaId, usuarioLogado) {
+        const reserva = await this.reservaModel.findById(reservaId);
+        if (!reserva) { throw new Error("Reserva não encontrada."); }
         if (reserva.usuario_cpf !== usuarioLogado.cpf && usuarioLogado.tipo !== 'admin') {
-            throw new Error("Acesso proibido. Você não tem permissão para cancelar esta reserva.");
+            throw new Error("Acesso proibido.");
         }
+        const reservaCancelada = await this.reservaModel.updateStatus(reservaId, 'cancelada');
         
-        return this.ReservaModel.updateStatus(reservaId, 'cancelada');
+        const solicitante = await this.usuarioModel.findByCpf(reservaCancelada.usuario_cpf);
+        if (solicitante) {
+            await this.emailService.sendCancellationEmail(solicitante, reservaCancelada);
+        }
+        return reservaCancelada;
     }
-    async deixarReview(reservaId, dadosReview, usuarioLogado){
+
+    async deixarReview(reservaId, dadosReview, usuarioLogado) {
         const { nota, comentario } = dadosReview;
         const reserva = await this.ReservaModel.findById(reservaId);
         if (!reserva) {
@@ -137,6 +92,8 @@ class ReservaService{
 
         return this.ReservaModel.addReview(reservaId, nota, comentario);
     }
-}
 
-export default ReservaService;
+    async listMine(usuarioCpf, queryParams) {
+        return this.reservaModel.findByUser(usuarioCpf, queryParams);
+    }
+}
