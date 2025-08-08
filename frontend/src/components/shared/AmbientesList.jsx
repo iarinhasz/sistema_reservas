@@ -24,7 +24,7 @@ const AmbientesList = () => {
             navigate(`/admin/ambientes/${ambienteId}`);
         } else {
             // Cenário 2: Professor ou Aluno
-            navigate(`/ambientes/${ambienteId}`);
+            navigate(`/${user.tipo}/ambientes/${ambienteId}`);
         }
     };
 

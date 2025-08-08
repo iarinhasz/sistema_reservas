@@ -20,7 +20,7 @@ const localizer = dateFnsLocalizer({
 });
 
 // O componente recebe o ID do ambiente como uma propriedade (prop)
-const AgendaAmbiente = ({ ambienteId }) => {
+const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -50,7 +50,7 @@ const AgendaAmbiente = ({ ambienteId }) => {
             }
         };
         fetchReservas();
-    }, [ambienteId]); // Re-executa se o ID do ambiente mudar
+    }, [ambienteId, refreshKey]); // Re-executa se o ID do ambiente mudar
 
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.status === 'aprovada' ? `Reservado - ${reserva.titulo}` : `Pendente - ${reserva.titulo}`,

@@ -35,9 +35,8 @@ const BuscarRecursosPage = () => {
                     {ambientes.map(ambiente => (
                         <li key={ambiente.id}>
                             {ambiente.identificacao} - {ambiente.tipo}
-                            {/* O link para a página de reserva agora inclui o ID do ambiente */}
-                            <Link to={`/professor/reservar-ambiente/${ambiente.id}`}>
-                                <button>Reservar</button>
+                            <Link to={`/ambientes/${ambiente.id}`}>
+                                <button>Ver Agenda e Reservar</button>
                             </Link>
                         </li>
                     ))}

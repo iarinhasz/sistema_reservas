@@ -1,0 +1,50 @@
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.reservasTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+}
+
+.reservasTable th,
+.reservasTable td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.8rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.reservasTable th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.reservasTable tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    text-transform: capitalize;
+    font-size: 0.8rem;
+}
+
+/* Cores dos Status */
+.status.aprovada { background-color: #28a745; } /* Verde */
+.status.pendente { background-color: #ffc107; color: #333; } /* Amarelo */
+.status.rejeitada { background-color: #dc3545; } /* Vermelho */
+.status.cancelada { background-color: #6c757d; } /* Cinza */
+.status.concluida { background-color: #0d6efd; } /* Azul */
+
+.actionsCell {
+    display: flex;
+    gap: 0.5rem;
+}
