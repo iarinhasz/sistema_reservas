@@ -8,12 +8,15 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import ReservaDetalhesModal from './ReservaDetalhesModal';
+import { useAuth } from '../../context/AuthContext';
 
 const locales = { 'pt-BR': ptBR };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 // O componente recebe o ID do ambiente como uma propriedade (prop)
 const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
+    const { user } = useAuth();
+    const userRole = user?.tipo 
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -38,6 +41,14 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
         };
         fetchReservas();
     }, [ambienteId, refreshKey]); // Re-executa se o ID do ambiente mudar
+
+    const handleSelectEvent = useCallback((evento) => {
+        // Lógica para abrir o modal de detalhes apenas para admins
+        if (userRole === 'admin') {
+            setReservaSelecionada(evento.resource);
+            setModalAberta(true);
+        }
+    }, [userRole]);
 
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.status === 'aprovada' ? `Reservado - ${reserva.titulo}` : `Pendente - ${reserva.titulo}`,
