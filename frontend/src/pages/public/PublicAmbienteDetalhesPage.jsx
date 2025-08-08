@@ -72,12 +72,8 @@ const PublicAmbienteDetalhesPage = () => {
                 </div>
                 <Link to="/" className={styles.backButton}>Voltar</Link>
             </header>
-<<<<<<< HEAD
-            
-=======
             {renderActionButtons()}
 
->>>>>>> tailwind-front-admin
             <AgendaAmbiente ambienteId={id} />
         </div>
     );
