@@ -1,10 +1,10 @@
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 // Layouts
+import AppLayout from '../components/layout/AppLayout.jsx';
 import AdminLayout from '../pages/adm/admLayout.jsx';
 import AlunoLayout from '../pages/user/aluno/alunoLayout.jsx';
 import ProfessorLayout from '../pages/user/professor/professorLayout.jsx';
-import AppLayout from '../components/layout/AppLayout.jsx';
 
 // Páginas Públicas
 import HomePage from '../pages/public/HomePage.jsx';
@@ -14,9 +14,9 @@ import RequestAccessPage from '../pages/public/RequestAccessPage';
 
 // Páginas de Admin
 import AdmHomePage from '../pages/adm/admHomePage.jsx';
+import AmbienteDetalhesPage from '../pages/adm/AmbienteDetalhesPage.jsx';
 import CadastrarAmbientePage from '../pages/adm/cadAmbiente.jsx';
 import GerenciarUsuariosPage from '../pages/adm/GerenciarUsuariosPage.jsx';
-import AmbienteDetalhesPage from '../pages/adm/AmbienteDetalhesPage.jsx';
 
 // Páginas de Usuário
 import AlunoHomePage from '../pages/user/aluno/alunoHomePage.jsx';
@@ -60,6 +60,7 @@ const AppRouter = () => {
       {/* Rota de Professor */}
       <Route path="/professor" element={<ProfessorLayout />}>
         <Route index element={<ProfessorHomePage />} />
+        <Route path="/professor/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
         <Route path="minhas-reservas" element={<MinhasReservasPage />} />
         <Route path="perfil" element={<UserProfilePage />} />
         <Route path="buscar-recursos" element={<ReservarAmbientePage />} />

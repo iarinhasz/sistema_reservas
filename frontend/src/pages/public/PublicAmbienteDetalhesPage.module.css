@@ -1,9 +1,11 @@
-.container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
+.container {
+    width: 100%;
+    max-width: 960px; /* Define uma largura máxima para o conteúdo não ficar esticado demais em telas grandes */
+    margin: 0 auto; /* Centraliza o container na página, mas o texto dentro dele ficará à esquerda */
+    padding: 1rem;
+    text-align: left; /* Garante que todo o texto comece à esquerda */
+}
 .header {
     display: flex;
     justify-content: space-between;
@@ -12,6 +14,12 @@
     border-bottom: 2px solid #eee;
     padding-bottom: 1rem;
 }
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #333;
+}
+
 
 .subtitulo {
     color: #666;
@@ -48,6 +56,24 @@
     margin-bottom: 2rem;
 }
 
+/* Seção de Detalhes e Equipamentos */
+.ambienteDetails {
+    margin-bottom: 2rem;
+}
+
+.ambienteDetails h2, .container > h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #007bff; /* Linha azul para destacar o título da seção */
+    padding-bottom: 0.5rem;
+}
+
+.ambienteDetails p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
 .equipamentosList {
     list-style: none;
     padding: 0;
@@ -59,4 +85,37 @@
     border-radius: 6px;
     margin-bottom: 0.5rem;
     border: 1px solid #e9ecef;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
+    gap: 1rem; /* Espaçamento entre os botões */
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1.5rem;
+}
+.actionButton {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 20px; /* Deixa os botões arredondados como pílulas */
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.actionButton:hover {
+    background-color: #e0e0e0;
+    border-color: #bbb;
+}
+.message, .error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+.error {
+    color: #dc3545;
 }
