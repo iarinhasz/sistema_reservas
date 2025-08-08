@@ -12,7 +12,8 @@ import ReservaDetalhesModal from './ReservaDetalhesModal';
 const locales = { 'pt-BR': ptBR };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
-const AgendaAmbiente = ({ ambienteId, userRole = 'visitante' }) => {
+// O componente recebe o ID do ambiente como uma propriedade (prop)
+const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -36,16 +37,7 @@ const AgendaAmbiente = ({ ambienteId, userRole = 'visitante' }) => {
             }
         };
         fetchReservas();
-    }, [ambienteId, date]);
-
-    const handleSelectEvent = useCallback((evento) => {
-        if (userRole === 'admin') {
-            setReservaSelecionada(evento.resource);
-            setModalAberta(true);
-        }
-    }, [userRole]);
-
-    
+    }, [ambienteId, refreshKey]); // Re-executa se o ID do ambiente mudar
 
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.status === 'aprovada' ? `Reservado - ${reserva.titulo}` : `Pendente - ${reserva.titulo}`,
