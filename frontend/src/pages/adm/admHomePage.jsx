@@ -38,11 +38,7 @@ const AdmHomePage = () => {
                     to="/admin/solicitacoes-cadastro" 
                     className={hasPendingRequests ? styles.actionButtonAlert : styles.actionButton}
                 >
-                    Solicitações de Cadastro Pendentes
-                </Link>
-
-                <Link to="/admin/solicitacoes-reserva" className={styles.actionButton}>
-                    Solicitações de Reservas Pendentes
+                    Gerencia de Usuários
                 </Link>
 
                 <Link to="/admin/reviews" className={styles.actionButton}>

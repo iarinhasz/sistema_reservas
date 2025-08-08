@@ -82,8 +82,34 @@ export default class UsuarioService {
         return this.usuarioModel.findPending();
     }
 
-    async listarTodos() {
-        return this.usuarioModel.findAll();
+    async listarTodos(filters = {}) {
+        return this.usuarioModel.findAll(filters);
+    }
+
+    async delete(cpfToDelete, adminUser, adminPassword) {
+        if (!adminPassword) {
+            const error = new Error("A senha do administrador é obrigatória para confirmar a exclusão.");
+            error.statusCode = 400;
+            throw error;
+        }
+        const adminInDb = await this.usuarioModel.findByCpf(adminUser.cpf);
+        
+        const isPasswordValid = await bcrypt.compare(adminPassword, adminInDb.senha);
+        
+        if (!isPasswordValid) {
+            const error = new Error("Senha do administrador incorreta. Ação não autorizada.");
+            error.statusCode = 403; // Forbidden
+            throw error;
+        }
+
+        const deletedUser = await this.usuarioModel.deleteByCpf(cpfToDelete);
+        if (!deletedUser) {
+            const error = new Error("Usuário a ser deletado não foi encontrado.");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        return deletedUser;
     }
 }
 

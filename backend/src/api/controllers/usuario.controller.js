@@ -53,7 +53,7 @@ export default class UsuarioController {
 
     listarTodos = async (req, res) => {
         try {
-            const usuarios = await this.usuarioService.listarTodos();
+            const usuarios = await this.usuarioService.listarTodos(req.query);
             res.status(200).json(usuarios);
         } catch (error) {
             console.error("Erro ao listar usuários:", error);
@@ -94,6 +94,20 @@ export default class UsuarioController {
                 return res.status(409).json({ message: error.message });
             }
             res.status(500).json({ message: "Erro interno do servidor." });
+        }
+    };
+
+    delete = async (req, res) => {
+        try {
+            const { cpf } = req.params;
+            const { password } = req.body; // Pega a senha do admin do corpo da requisição
+
+            // Passa o admin logado (req.user) e a senha para o service
+            await this.usuarioService.delete(cpf, req.user, password);
+            
+            res.status(200).json({ message: "Usuário deletado com sucesso!" });
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message });
         }
     };
 }

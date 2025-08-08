@@ -7,10 +7,12 @@ import ReservarModal from '../../components/adm/ReservarModal.jsx';
 import api from '../../services/api';
 import styles from './css/AmbienteDetalhesPage.module.css';
 import { EditIcon } from '../../components/icons/index';
+import { useAuth } from '../../context/AuthContext';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
 
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const [ambiente, setAmbiente] = useState(null);
     const [equipamentos, setEquipamentos] = useState([]);
     const [solicitacoesReserva, setSolicitacoesReserva] = useState([]);
@@ -125,7 +127,7 @@ const AmbienteDetalhesPage = () => {
                 <hr />
                 <div className={styles.agendaSection}>
                     <h2>Agenda de Reservas</h2>
-                    <AgendaAmbiente ambienteId={id} key={refreshKey} />
+                    <AgendaAmbiente ambienteId={id} key={refreshKey} userRole={user?.tipo} />
                 </div>
             </div>
             {isAdicionarEquipamentoOpen && (<AdicionarEquipamentoModal ambienteId={id} onClose={() => setAdicionarEquipamentoOpen(false)} onSuccess={handleEquipamentoAdicionado}/>)}

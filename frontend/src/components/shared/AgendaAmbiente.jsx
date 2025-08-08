@@ -1,79 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-// --- IMPORTAÇÕES E CONFIGURAÇÃO PARA O CALENDÁRIO ---
+import React, { useState, useEffect, useCallback } from 'react';
+import api from '../../services/api';
+import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import format from 'date-fns/format';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt-BR';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import ReservaDetalhesModal from './ReservaDetalhesModal';
+import { useAuth } from '../../context/AuthContext';
 
 const locales = { 'pt-BR': ptBR };
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-});
+const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 // O componente recebe o ID do ambiente como uma propriedade (prop)
 const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
+    const { user } = useAuth();
+    const userRole = user?.tipo 
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [date, setDate] = useState(new Date());
+    const [modalAberta, setModalAberta] = useState(false);
+    const [reservaSelecionada, setReservaSelecionada] = useState(null);
+
+    const handleNavigate = useCallback((newDate) => setDate(newDate), [setDate]);
 
     useEffect(() => {
         const fetchReservas = async () => {
-            if (!ambienteId) return; // Não faz nada se não receber um ID
-
-            setLoading(true);
+            if (!ambienteId) return;
             try {
-                const token = localStorage.getItem('authToken');
-                
-                const response = await axios.get(
-                    `http://localhost:3000/api/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }
-                );
+                const response = await api.get(`/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`);
                 setReservas(response.data.data || []);
             } catch (err) {
                 setError('Não foi possível carregar a agenda.');
                 console.error(err);
             } finally {
-                setLoading(false);
+                if (loading) setLoading(false);
             }
         };
         fetchReservas();
     }, [ambienteId, refreshKey]); // Re-executa se o ID do ambiente mudar
+
+    const handleSelectEvent = useCallback((evento) => {
+        // Lógica para abrir o modal de detalhes apenas para admins
+        if (userRole === 'admin') {
+            setReservaSelecionada(evento.resource);
+            setModalAberta(true);
+        }
+    }, [userRole]);
 
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.status === 'aprovada' ? `Reservado - ${reserva.titulo}` : `Pendente - ${reserva.titulo}`,
         start: new Date(reserva.data_inicio),
         end: new Date(reserva.data_fim),
         allDay: false,
+        resource: reserva,
     })) : [];
 
     if (loading) return <p>Carregando agenda...</p>;
-    if (error) return <p style={{color: 'red'}}>{error}</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
-        <div style={{ height: '70vh', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
-            <Calendar
-                localizer={localizer}
-                events={eventosDoCalendario}
-                startAccessor="start"
-                endAccessor="end"
-                defaultView="week"
-                messages={{ next: "Próximo", previous: "Anterior", today: "Hoje", month: "Mês", week: "Semana", day: "Dia" }}
-            />
-        </div>
+        <>
+            <div style={{ height: '70vh', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                <Calendar
+                    localizer={localizer}
+                    culture='pt-BR'
+                    events={eventosDoCalendario}
+                    startAccessor="start"
+                    endAccessor="end"
+                    defaultView={Views.WEEK}
+                    views={[Views.WEEK]}
+                    toolbar={true}
+                    date={date}
+                    onNavigate={handleNavigate}
+                    onSelectEvent={handleSelectEvent}
+                    eventPropGetter={() => ({ style: { cursor: userRole === 'admin' ? 'pointer' : 'default' } })}
+                    messages={{ next: "Próxima", previous: "Anterior", today: "Hoje" }}
+                    formats={{
+                        timeGutterFormat: (date, culture, localizer) => localizer.format(date, 'HH:mm', culture),
+                        eventTimeRangeFormat: ({ start, end }, culture, localizer) => `${localizer.format(start, 'HH:mm', culture)} – ${localizer.format(end, 'HH:mm', culture)}`,
+                        headerFormat: (date, culture, localizer) => localizer.format(date, 'MMMM yyyy', culture).replace(/^\w/, (c) => c.toUpperCase()),
+                        dayRangeHeaderFormat: ({ start, end }, culture, localizer) => {
+                            const startMonth = localizer.format(start, 'MMMM', culture).replace(/^\w/, c => c.toUpperCase());
+                            const endMonth = localizer.format(end, 'MMMM', culture).replace(/^\w/, c => c.toUpperCase());
+                            if (startMonth !== endMonth) return `${localizer.format(start, 'dd')} de ${startMonth} – ${localizer.format(end, 'dd')} de ${endMonth}`;
+                            return `${localizer.format(start, 'dd')} – ${localizer.format(end, 'dd')} de ${startMonth}`;
+                        }
+                    }}
+                />
+            </div>
+            {modalAberta && (
+                <ReservaDetalhesModal 
+                    reserva={reservaSelecionada} 
+                    onClose={() => setModalAberta(false)} 
+                />
+            )}
+        </>
     );
 };
-
 export default AgendaAmbiente;
