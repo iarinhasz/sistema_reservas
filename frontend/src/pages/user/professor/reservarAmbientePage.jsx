@@ -1,7 +1,7 @@
 // src/pages/user/professor/reservarAmbientePage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
 import styles from '../css/reservarAmbientePage.module.css';
 
@@ -9,6 +9,9 @@ const ReservarAmbientePage = () => {
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchAmbientes = async () => {
@@ -25,63 +28,33 @@ const ReservarAmbientePage = () => {
         fetchAmbientes();
     }, []);
 
-    const handleReserva = async (ambienteId) => {
-        try {
-            const reservaData = {
-                ambienteId: ambienteId,
-                // Exemplo:
-                // data: '2025-10-27',
-                // horario: '10:00'
-                // professorId: user.id
-            };
-            
-            await api.post('/reservas', reservaData);
-            alert('Reserva realizada com sucesso!');
-        } catch (err) {
-            alert('Erro ao realizar a reserva. Tente novamente.');
-            console.error(err);
-        }
+    const handleReservarClick = (ambienteId) => {
+        navigate(`/professor/ambientes/${ambienteId}`);
     };
 
     if (loading) return <p>Carregando ambientes...</p>;
     if (error) return <p>{error}</p>;
 
     return (
-        <div className={styles.container}>
+        <div className={styles.pageContainer}>
             <h1>Reservar Ambiente</h1>
-            {ambientes.length > 0 ? (
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Tipo</th>
-                            <th>Capacidade</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ambientes.map((ambiente) => (
-                            <tr key={ambiente.id}>
-                                <td>{ambiente.nome}</td>
-                                <td>{ambiente.descricao}</td>
-                                <td>{ambiente.tipo}</td>
-                                <td>{ambiente.capacidade}</td>
-                                <td>
-                                    <button
-                                        onClick={() => handleReserva(ambiente.id)}
-                                        className={styles.button}
-                                    >
-                                        Reservar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>Nenhum ambiente cadastrado.</p>
-            )}
+            <p>Selecione um ambiente abaixo para ver os detalhes e solicitar uma reserva.</p>
+            <div className={styles.ambientesList}>
+                {ambientes.map(ambiente => (
+                    <div key={ambiente.id} className={styles.ambienteCard}>
+                        <div className={styles.cardInfo}>
+                            <h3>{ambiente.identificacao}</h3>
+                            <p>Capacidade: {ambiente.capacidade} pessoas</p>
+                        </div>
+                        <button
+                            onClick={() => handleReservarClick(ambiente.id)}
+                            className={styles.reservarButton}
+                        >
+                            Reservar
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

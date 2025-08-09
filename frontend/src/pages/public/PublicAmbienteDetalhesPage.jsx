@@ -102,9 +102,6 @@ const PublicAmbienteDetalhesPage = () => {
                     </Link>
                 )}
                 
-                <Link to={`/review/ambiente/${id}`} className={styles.actionButton}>
-                    Fazer Review
-                </Link>
             </div>
         );
     };
