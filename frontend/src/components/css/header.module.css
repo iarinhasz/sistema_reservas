@@ -1,0 +1,52 @@
+.headerBar {
+    display: flex;
+    justify-content: space-between; /* Empurra o título para a esquerda e os botões para a direita */
+    align-items: center;
+    width: 100%;
+    padding: 1rem 2rem; /* Espaçamento interno */
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    box-sizing: border-box; /* Previne que o padding afete a largura */
+}
+
+/* Estilos para o título e as ações */
+.headerTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.headerActions {
+    display: flex;
+    gap: 2rem; /* Espaço entre os botões */
+}
+
+/* Estilos dos botões */
+.headerButton {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem; /* Adicionado para consistência */
+    transition: all 0.2s ease-in-out;
+}
+
+.loginBtn {
+    background-color: #007bff;
+    color: #ffffff;
+    border: 1px solid #007bff;
+}
+.loginBtn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+.registerBtn {
+    background-color: #007bff;
+    color: #ffffff;
+    border: 1px solid #007bff;
+}
+
+.registerBtn:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}

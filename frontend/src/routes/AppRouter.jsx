@@ -35,12 +35,12 @@ const AppRouter = () => {
       <Route element={<AppLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
-      </Route>
-
+      
+    </Route>
       {/* Rotas de Autenticação */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/solicitar-cadastro" element={<RequestAccessPage />} />
-
+      
       {/* Rotas de Admin */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdmHomePage />} />

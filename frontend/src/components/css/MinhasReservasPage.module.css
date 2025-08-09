@@ -48,3 +48,8 @@
     display: flex;
     gap: 0.5rem;
 }
+.reviewedMessage {
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.9rem;
+}

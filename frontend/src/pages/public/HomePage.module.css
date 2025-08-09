@@ -3,25 +3,6 @@
     padding: 2rem;
     min-height: 100vh;
 }
-
-.homeHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 1rem;
-}
-
-.homeHeader h1 {
-    color: #333;
-}
-
-.homeHeader nav {
-    display: flex;
-    gap: 1rem;
-}
-
 .ambientesGrid {
     display: flex;
     gap: 2rem;

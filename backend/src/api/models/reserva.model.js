@@ -125,16 +125,39 @@ class ReservaModel{
         return rows;
     }
 
-    async addReview (id, nota, comentario){
-        const query = `
-            UPDATE reservas 
-            SET nota = $1, comentario = $2 
-            WHERE id = $3 
-            RETURNING *;
-        `;
-        const values = [nota, comentario, id];
-        const { rows } = await this.pool.query(query, values);
-        return rows[0];
+    async addReview(id, nota, comentario) {
+        const client = await this.pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            // Query com conversão de tipo (CAST) explícita
+            const query = `
+                UPDATE reservas 
+                SET nota = $1::INTEGER, comentario = $2::TEXT 
+                WHERE id = $3::INTEGER 
+                RETURNING *;
+            `;
+            const values = [nota, comentario, id];
+
+            const { rows } = await client.query(query, values);
+
+            await client.query('COMMIT');
+
+            if (rows.length === 0) {
+                throw new Error(`Nenhuma reserva encontrada com o ID ${id} para atualizar.`);
+            }
+
+            // Adicionamos um log para ver os dados que o banco RETORNOU após o UPDATE
+            console.log(`MODEL: Review para reserva ID ${id} salva com sucesso. Dados atualizados:`, rows[0]);
+            return rows[0];
+
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('MODEL (addReview): Erro na transação.', error);
+            throw error;
+        } finally {
+            client.release();
+        }
     }
 }
 

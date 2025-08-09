@@ -76,7 +76,8 @@ export default class ReservaService {
 
     async deixarReview(reservaId, dadosReview, usuarioLogado) {
         const { nota, comentario } = dadosReview;
-        const reserva = await this.ReservaModel.findById(reservaId);
+        const reserva = await this.reservaModel.findById(reservaId);
+        console.log('BACKEND DEBUG: Dados da reserva encontrada no banco:', reserva);
         if (!reserva) {
             throw new Error("Reserva não encontrada.");
         }
@@ -86,11 +87,10 @@ export default class ReservaService {
         if (new Date() < new Date(reserva.data_fim)) {
             throw new Error("Acesso proibido. A reserva ainda não terminou.");
         }
-        if (reserva.nota) {
+        if (reserva.nota !== null && reserva.nota !== undefined) {
             throw new Error("Conflito. Esta reserva já foi avaliada.");
         }
-
-        return this.ReservaModel.addReview(reservaId, nota, comentario);
+        return this.reservaModel.addReview(reservaId, nota, comentario);
     }
 
     async listMine(usuarioCpf, queryParams) {

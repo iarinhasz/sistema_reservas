@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import api from '../../services/api';
 import styles from './PublicAmbienteDetalhesPage.module.css';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente'; // Importe o novo componente
@@ -134,7 +133,6 @@ const PublicAmbienteDetalhesPage = () => {
                 
                 {renderActionButtons()}
 
-                {/* Seção de detalhes do ambiente (opcional, mas recomendado) */}
                 <div className={styles.ambienteDetails}>
                     <h2>Detalhes do Ambiente</h2>
                     <p><strong>Tipo:</strong> {ambiente.tipo}</p>

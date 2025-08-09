@@ -1,14 +1,22 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import api from '../../services/api';
 import styles from '../css/MinhasReservasPage.module.css';
 import Button from '../shared/Button.jsx';
+import ReviewModal from './reviewModal.jsx';
 
 const MinhasReservasPage = () => {
     const { user, loading: authLoading } = useAuth();
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    // Estados para o modal de review
+    const [isReviewModalOpen, setReviewModalOpen] = useState(false);
+    const [selectedReserva, setSelectedReserva] = useState(null);
+
+    // Estado para o filtro de status
+    const [filtroStatus, setFiltroStatus] = useState('todos');
 
     // Definimos a função de busca aqui usando useCallback
     const fetchMinhasReservas = useCallback(async () => {
@@ -35,7 +43,23 @@ const MinhasReservasPage = () => {
         }
     }, [user, authLoading, fetchMinhasReservas]);
 
+    const sortedAndFilteredReservas = useMemo(() => {
+            const statusOrder = { 'pendente': 1, 'aprovada': 2, 'concluida': 3, 'cancelada': 4, 'rejeitada': 5 };
 
+            return reservas
+                .map(r => {
+                    const agora = new Date();
+                    const dataFim = new Date(r.data_fim);
+                    let statusCalculado = r.status;
+
+                    if (r.status === 'aprovada') {
+                        if (agora > dataFim) statusCalculado = 'concluida';
+                    }
+                    return { ...r, statusCalculado };
+                })
+                .filter(r => filtroStatus === 'todos' || r.statusCalculado === filtroStatus) // Filtra primeiro
+                .sort((a, b) => statusOrder[a.statusCalculado] - statusOrder[b.statusCalculado]); // Ordena depois
+        }, [reservas, filtroStatus]);
     const handleCancelReserva = async (reservaId) => {
         if (!window.confirm('Tem certeza que deseja cancelar esta reserva?')) return;
         try {
@@ -46,19 +70,6 @@ const MinhasReservasPage = () => {
             alert(err.response?.data?.message || 'Erro ao cancelar a reserva.');
         }
     };
-
-    const handleFazerReview = async (reservaId) => {
-        const reviewText = prompt("Por favor, deixe sua avaliação sobre esta reserva:");
-        if (reviewText) {
-            try {
-                await api.post(`/reservas/${reservaId}/review`, { review: reviewText });
-                alert('Obrigado pelo seu feedback!');
-            } catch (err) {
-                alert(err.response?.data?.message || 'Erro ao enviar a avaliação.');
-            }
-        }
-    };
-
     if (authLoading) {
         return <p>Verificando autenticação...</p>;
     }
@@ -71,56 +82,103 @@ const MinhasReservasPage = () => {
         return <p style={{ color: 'red' }}>{error}</p>;
     }
 
-    // O JSX para renderizar a tabela continua o mesmo
-    return (
-        <div className={styles.container}>
-            <h1>Minhas Reservas</h1>
-            {reservas.length === 0 ? (
-                <p>Você não tem nenhuma reserva no momento.</p>
-            ) : (
-                <table className={styles.reservasTable}>
-                    <thead>
-                        <tr>
-                            <th>Recurso</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reservas.map(reserva => {
-                            const isConcluida = new Date() > new Date(reserva.data_fim);
-                            const status = isConcluida && reserva.status === 'aprovada' ? 'concluida' : reserva.status;
-                            const canCancel = ['aprovada', 'pendente'].includes(reserva.status) && !isConcluida;
+    
 
-                            return (
-                                <tr key={reserva.id}>
-                                    <td>{reserva.recurso_nome || reserva.titulo}</td>
-                                    <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
-                                    <td>
-                                        <span className={`${styles.status} ${styles[status]}`}>
-                                            {status}
-                                        </span>
-                                    </td>
-                                    <td className={styles.actionsCell}>
-                                        {canCancel && (
-                                            <Button variant="danger" onClick={() => handleCancelReserva(reserva.id)}>
-                                                Cancelar
-                                            </Button>
-                                        )}
-                                        {status === 'concluida' && (
-                                            <Button variant="secondary" onClick={() => handleFazerReview(reserva.id)}>
+    const handleOpenReviewModal = (reserva) => {
+        setSelectedReserva(reserva);
+        setReviewModalOpen(true);
+    };
+    const handleReviewSubmit = async ({ rating, comment, reservaId }) => {
+        //console.log('FRONTEND: Dados recebidos do modal:', rating, comment, reservaId); 
+
+        try {
+            await api.post(`/reservas/${reservaId}/review`, { nota: rating, comentario: comment }); // Corrigido para enviar nota e comentario
+            alert('Obrigado pelo seu feedback!');
+            setReviewModalOpen(false);
+            fetchMinhasReservas();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Erro ao enviar a avaliação.');
+        }
+    };
+    const handleShowRejectionReason = (motivo) => {
+        alert(`Motivo da Rejeição/Cancelamento:\n\n${motivo}`);
+    };
+
+    return (
+        <>
+            {isReviewModalOpen && (
+                    <ReviewModal
+                        reserva={selectedReserva}
+                        onClose={() => setReviewModalOpen(false)}
+                        onSubmit={handleReviewSubmit}
+                    />
+                )}
+
+            <div className={styles.container}>
+                <h1>Minhas Reservas</h1>
+
+                <div className={styles.filterContainer}>
+                    <span>Filtrar por:</span>
+                    <Button variant={filtroStatus === 'todos' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('todos')}>Todos</Button>
+                    <Button variant={filtroStatus === 'pendente' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('pendente')}>Pendentes</Button>
+                    <Button variant={filtroStatus === 'concluida' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('concluida')}>Concluídas</Button>
+                    <Button variant={filtroStatus === 'cancelada' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('cancelada')}>Canceladas</Button>
+                </div>
+
+                {sortedAndFilteredReservas.length === 0 ? (
+                    <p>Você não tem nenhuma reserva para o filtro selecionado.</p>
+                ) : (
+                    <table className={styles.reservasTable}>
+                        <thead>
+                            <tr>
+                                <th>Recurso</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sortedAndFilteredReservas.map(reserva => {
+                                const { statusCalculado, motivo_rejeicao } = reserva;
+                                const canCancel = ['pendente', 'aprovada', 'andamento'].includes(statusCalculado);
+                                const isClickable = ['cancelada', 'rejeitada'].includes(statusCalculado) && motivo_rejeicao;
+
+                                return (
+                                    <tr key={reserva.id}>
+                                        <td>{reserva.recurso_nome || reserva.titulo}</td>
+                                        <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
+                                        <td>
+                                            <span 
+                                                className={`${styles.status} ${styles[statusCalculado]} ${isClickable ? styles.clickable : ''}`}
+                                                onClick={() => isClickable && handleShowRejectionReason(motivo_rejeicao)}
+                                                title={isClickable ? 'Clique para ver o motivo' : ''}
+                                            >
+                                                {statusCalculado}
+                                            </span>
+                                        </td>
+                                        <td className={styles.actionsCell}>
+                                            {canCancel && (
+                                                <Button variant="danger" onClick={() => handleCancelReserva(reserva.id)}>
+                                                    Cancelar
+                                                </Button>
+                                            )}
+                                        {statusCalculado === 'concluida' && !reserva.nota && (
+                                            <Button variant="secondary" onClick={() => handleOpenReviewModal(reserva)}>
                                                 Fazer Review
                                             </Button>
                                         )}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            )}
-        </div>
+                                        {reserva.nota && statusCalculado === 'concluida' && (
+                                            <span className={styles.reviewedMessage}>Já Avaliado ({reserva.nota} ★)</span>
+                                        )}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </>
     );
 };
 

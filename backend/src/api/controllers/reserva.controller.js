@@ -44,9 +44,11 @@ export default class ReservaController {
     }
     
     deixarReview = async (req, res) => {
+        console.log('BACKEND (Controller): req.body recebido:', req.body);
+        console.log('BACKEND (Controller): req.params recebido:', req.params);
         try {
             const { id } = req.params;
-            const reservaComReview = await this.ReservaService.deixarReview(id, req.body, req.user);
+            const reservaComReview = await this.reservaService.deixarReview(id, req.body, req.user);
             res.status(200).json({ message: "Review enviado com sucesso!", data: reservaComReview });
         } catch (error) {
             if (error.message.includes("não encontrada")) {
