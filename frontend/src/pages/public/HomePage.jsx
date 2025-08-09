@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom'; // Para os botões de navegação
 import { useAuth } from '../../context/AuthContext';
 import styles from '../public/HomePage.module.css';
 import { useNavigate } from 'react-router-dom';
+import AmbientesList from '../../components/shared/AmbientesList.jsx';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -64,30 +64,21 @@ function HomePage() {
             <header className={styles.homeHeader}>
                 <h1>Sistema de Reservas</h1>
                 <nav>
-                    {/* Para classes globais, usamos o nome da classe como string */}
-                    <Link to="/login" className="button">Login</Link>
-                    <Link to="/solicitar-cadastro" className="button">Solicitar Cadastro</Link>
+                    {user ? (
+                        <Link to={user.tipo === 'admin' ? '/admin' : `/${user.tipo}`} className="button">
+                            Ver Painel
+                        </Link>
+                    ) : (
+                        <>
+                            <Link to="/login" className="button">Login</Link>
+                            <Link to="/solicitar-cadastro" className="button">Solicitar Cadastro</Link>
+                        </>
+                    )}
                 </nav>
             </header>
 
-            <main className={styles.ambientesGrid}>
-                {Object.entries(ambientesAgrupados).map(([tipo, listaDeAmbientes]) => (
-                    <section key={tipo} className={styles.ambienteColuna}>
-                        <h2>{tipo}s</h2>
-                        <div className={styles.botoesContainer}>
-                            {listaDeAmbientes.map(ambiente => (
-                                <button 
-                                    key={ambiente.id} 
-                                    className={styles.ambienteBotao}
-                                    onClick={() => handleAmbienteClick(ambiente.id)}
-                                >
-                                    {ambiente.identificacao}                                
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-                ))}
-            </main>
+
+            <AmbientesList userRole={user?.tipo} />
         </div>
     );
 }

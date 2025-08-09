@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'; // Importante para criar links de naveg
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './css/admHomePage.module.css';
+import { useAuth } from '../../context/AuthContext';
 import AmbientesList from '../../components/shared/AmbientesList.jsx';
 
 const AdmHomePage = () => {
+    const { user } = useAuth();
     const [hasPendingRequests, setHasPendingRequests] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => {        
         const checkForPendingRequests = async () => {
             try {
                 const token = localStorage.getItem('authToken');
@@ -24,7 +26,7 @@ const AdmHomePage = () => {
         };
 
         checkForPendingRequests();
-    }, []); // O array vazio [] faz com que rode apenas uma vez
+    }, []);
     
     return (
         <div className={styles.adminPage}>
@@ -52,7 +54,7 @@ const AdmHomePage = () => {
                     <h2>Visão Geral dos Ambientes</h2>
                     <Link to="/admin/cadastrar-ambiente" className={styles.actionButtonCadastro}>+ Cadastrar Novo Ambiente</Link>
                 </div>
-            <AmbientesList />
+            <AmbientesList userRole={user?.tipo} />
         </div>
     );
 };

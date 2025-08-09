@@ -6,7 +6,7 @@ import styles from '../css/AmbientesList.module.css'; //
 
 import {DeleteIcon, EditIcon } from '../icons/index';
 
-const AmbientesList = () => {
+const AmbientesList = ({ userRole }) => {
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -79,33 +79,37 @@ const AmbientesList = () => {
                 <section key={tipo} className={styles.ambienteColuna}>
                     <h2>{tipo}</h2>
                     <div className={styles.botoesContainer}>
-                        {listaDeAmbientes.map(ambiente => (
-                            <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
-                                <button
-                                    onClick={() => handleAmbienteClick(ambiente.id)}
-                                    className={`${styles.ambienteBotao} ${ambiente.pending_reservations_count > 0 ? styles.ambienteBotaoAlert : ''}`}
-                                >
-                                    {ambiente.identificacao}
-                                </button>
-                                {/* Renderização condicional do ícone de edição */}
-                                {user?.tipo === 'admin' && (
-                                    <div className={styles.iconActions}>
-                                        <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.iconButton} title="Editar Ambiente">
-                                            <EditIcon />
-                                        </Link>
-                                        {/* BOTÃO DE DELETAR COM O ÍCONE 'X' */}
-                                        <button 
-                                            onClick={() => handleDelete(ambiente.id, ambiente.identificacao)}
+                        {listaDeAmbientes.map(ambiente => {
+                            const temAlerta = userRole === 'admin' && ambiente.pending_reservations_count > 0;
+                            return (
+                            
+                                <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
+                                    <button
+                                        onClick={() => handleAmbienteClick(ambiente.id)}
+                                        className={`${styles.ambienteBotao} ${temAlerta ? styles.ambienteBotaoAlert : ''}`}
+                                    >
+                                        {ambiente.identificacao}
+                                    </button>
+
+
+
+                                    {user?.tipo === 'admin' && (
+                                        <div className={styles.iconActions}>
+                                            <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.iconButton} title="Editar Ambiente">
+                                                <EditIcon />
+                                            </Link>
+                                            <button 
+                                                onClick={() => handleDelete(ambiente.id, ambiente.identificacao)}
                                             className={`${styles.iconButton} ${styles.deleteButton}`}
                                             title="Deletar Ambiente"
-                                        >
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                )}
-
-                            </div>
-                        ))}
+                                            >
+                                                <DeleteIcon />
+                                            </button>
+                                        </div>                                    
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </section>
             ))}
