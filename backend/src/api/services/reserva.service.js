@@ -96,4 +96,15 @@ export default class ReservaService {
     async listMine(usuarioCpf, queryParams) {
         return this.reservaModel.findByUser(usuarioCpf, queryParams);
     }
+
+    async findAllWithReviews() {
+        console.log(`\n--- RESERVA SERVICE: Buscando todas as reservas com reviews ---`);
+        const reviews = await this.reservaModel.findAllWithReviews();
+        if (!reviews) {
+            console.log(`--- RESERVA SERVICE: Nenhum review encontrado.`);
+            return [];
+        }
+        console.log(`--- RESERVA SERVICE: Encontrados ${reviews.length} reviews.`);
+        return reviews;
+    }
 }

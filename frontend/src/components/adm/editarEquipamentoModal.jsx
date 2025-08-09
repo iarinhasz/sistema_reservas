@@ -1,7 +1,7 @@
 // frontend/src/components/admin/EditarEquipamentoModal.jsx
 
 import { useState } from 'react';
-import formStyles from '../../pages/adm/css/FormPage.module.css';
+import formStyles from '../../styles/FormPage.module.css';
 import api from '../../services/api';
 import modalStyles from '../../styles/modal.module.css';
 import { DeleteIcon, SaveIcon } from '../icons/index';

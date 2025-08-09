@@ -56,7 +56,7 @@ const PublicAmbienteDetalhesPage = () => {
     if (loading) return <p>Carregando...</p>;
     if (error) return <p style={{color: 'red'}}>{error}</p>;
     if (!ambiente) return <p>Ambiente não encontrado.</p>;
-    
+
     return (
         <>
             {isModalOpen && (
@@ -80,7 +80,7 @@ const PublicAmbienteDetalhesPage = () => {
                 
                 {user && (
                     <div className={layout.actionsBar}>
-                        <Button as={Link} to={`/${user.tipo}/minhas-reservas`} variant="primary">
+                        <Button as={Link}     to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
                             Minhas Reservas
                         </Button>
 

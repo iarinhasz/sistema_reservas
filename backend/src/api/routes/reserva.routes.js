@@ -27,4 +27,7 @@ router.post('/:id/review', authMiddleware, reservaController.deixarReview);
 
 router.post('/admin-create', authMiddleware, adminMiddleware, reservaController.criarReservaAdmin);
 
+router.get('/review-all', authMiddleware, adminMiddleware, (req, res, next) => 
+    reservaController.findAllWithReviews(req, res, next)
+);
 export default router;

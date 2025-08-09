@@ -177,6 +177,30 @@ class ReservaModel{
             client.release();
         }
     }
+    async findAllWithReviews() {
+        const query = `
+            SELECT
+                r.id,
+                r.titulo,
+                r.nota,
+                r.comentario,
+                r.data_fim,
+                u.nome AS usuario_nome,
+                a.identificacao AS recurso_nome
+            FROM
+                reservas r
+            LEFT JOIN
+                usuarios u ON r.usuario_cpf = u.cpf
+            LEFT JOIN
+                ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
+            WHERE
+                r.nota IS NOT NULL AND r.comentario IS NOT NULL
+            ORDER BY
+                r.data_fim DESC;
+        `;
+        const { rows } = await this.pool.query(query);
+        return rows;
+    }
 }
 
 export default ReservaModel;

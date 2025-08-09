@@ -59,3 +59,39 @@
     vertical-align: middle;
     padding-left: 10px; 
 }
+.statusColumn {
+    text-align: center; /* Centraliza o conteúdo da célula */
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 0.8rem;
+    display: inline-block; /* Garante que o padding seja aplicado corretamente */
+    min-width: 110px;  /* Define uma largura mínima para todos os badges */
+    text-align: center; 
+}
+.statusClickable {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.statusClickable:hover {
+    transform: scale(1.05);
+}
+
+/* Cores dos Status */
+.aprovada { background-color: #28a745; color: white; }
+.pendente { background-color: #ffc107; color: #333; }
+.rejeitada { background-color: #dc3545; color: white; }
+.cancelada { background-color: #6c757d; color: white; }
+.concluida { background-color: #0d6efd; color: white; }
+
+
+.reviewedMessage {
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Impede que o texto quebre a linha */
+}

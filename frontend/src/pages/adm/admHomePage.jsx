@@ -4,6 +4,7 @@ import axios from 'axios';
 import styles from './css/admHomePage.module.css';
 import { useAuth } from '../../context/AuthContext';
 import AmbientesList from '../../components/shared/AmbientesList.jsx';
+import Button from '../../components/shared/Button.jsx';
 
 const AdmHomePage = () => {
     const { user } = useAuth();
@@ -36,23 +37,26 @@ const AdmHomePage = () => {
             <hr />
 
             <div className={styles.actionPanel}>
-                <Link 
+                <Button 
+                    as={Link}
                     to="/admin/solicitacoes-cadastro" 
-                    className={hasPendingRequests ? styles.actionButtonAlert : styles.actionButton}
+                    variant={hasPendingRequests ? 'danger' : 'primary'} // Fica vermelho se houver alertas
                 >
                     Gerencia de Usuários
-                </Link>
+                </Button>
 
-                <Link to="/admin/reviews" className={styles.actionButton}>
+                <Button as={Link} to="/admin/reviews" variant="primary">
                     Visualizar Reviews
-                </Link>
+                </Button>
 
             </div>
                 <hr className={styles.divider} />
 
-                <div className={styles.listSection}>
+                <div className={styles.listSectionHeader}>
                     <h2>Visão Geral dos Ambientes</h2>
-                    <Link to="/admin/cadastrar-ambiente" className={styles.actionButtonCadastro}>+ Cadastrar Novo Ambiente</Link>
+                        <Button as={Link} to="/admin/cadastrar-ambiente" variant="secondary">
+                            + Cadastrar Novo Ambiente
+                        </Button>
                 </div>
             <AmbientesList userRole={user?.tipo} />
         </div>

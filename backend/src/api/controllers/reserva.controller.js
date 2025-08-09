@@ -91,4 +91,12 @@ export default class ReservaController {
             res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
+    async findAllWithReviews(req, res, next) {
+        try {
+            const reviews = await this.reservaService.findAllWithReviews() ;
+            res.status(200).json({ data: reviews });
+        } catch (error) {
+            next(error);
+        }
+    }
 }

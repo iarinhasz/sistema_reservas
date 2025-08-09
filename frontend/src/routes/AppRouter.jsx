@@ -17,7 +17,7 @@ import AdmHomePage from '../pages/adm/admHomePage.jsx';
 import AmbienteDetalhesPage from '../pages/adm/AmbienteDetalhesPage.jsx';
 import CadastrarAmbientePage from '../pages/adm/cadAmbiente.jsx';
 import GerenciarUsuariosPage from '../pages/adm/GerenciarUsuariosPage.jsx';
-
+import VisualizarReviewsPage from '../components/adm/VisualizarReviewsPage.jsx';
 // Páginas de Usuário
 import AlunoHomePage from '../pages/user/aluno/alunoHomePage.jsx';
 import ProfessorHomePage from '../pages/user/professor/professorHomePage.jsx';
@@ -49,6 +49,8 @@ const AppRouter = () => {
         <Route path="solicitacoes-cadastro" element={<GerenciarUsuariosPage />} />
         <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
         <Route path="perfil" element={<UserProfilePage />} />
+        <Route path="reviews" element={<VisualizarReviewsPage />} />
+
       </Route>
 
       {/* Rota de Aluno */}

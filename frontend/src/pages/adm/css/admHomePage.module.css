@@ -1,8 +1,5 @@
 .adminPage {
     padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: sans-serif;
 }
 
 .actionPanel {
@@ -10,57 +7,15 @@
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    padding: 1.5rem 0;
     border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 2rem;
 }
 
-.actionButton, .actionButtonCadastro {
-    text-decoration: none;
-    color: white;
-    background-color: #007bff; /* Azul */
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.2s;
-}
-
-.actionButton:hover {
-    background-color: #0056b3;
-}
-
-.actionButtonCadastro {
-    background-color: #28a745; /* Verde */
-}
-
-.actionButtonCadastro:hover {
-    background-color: #218838;
-}
-
-/* ================================== */
-/* == ESTILOS ADICIONADOS ABAIXO == */
-/* ================================== */
-
-/* Estilo para o botão quando há solicitações pendentes */
-.actionButtonAlert {
-    composes: actionButton; /* Herda os estilos de .actionButton */
-    background-color: #dc3545; /* Vermelho de alerta */
-    animation: pulse 1.5s infinite; /* Aplica a animação de pulso */
-}
-
-.actionButtonAlert:hover {
-    background-color: #c82333;
-}
-
-/* Animação de pulso para chamar a atenção do admin */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-    }
+.listSectionHeader {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 1.5rem; 
 }

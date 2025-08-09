@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api.js';
-import styles from './css/FormPage.module.css';
+import styles from '../../styles/FormPage.module.css';
+import Button from '../../components/shared/Button.jsx';
 
 const CadastrarAmbientePage = () => {
     // Estados para controlar os campos do formulário
@@ -79,13 +80,14 @@ const CadastrarAmbientePage = () => {
                     </select>
                 </div>
 
-                <button 
+                <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className={styles.submitButton}
+                    variant="secondary" // Verde
+                    className={{width: '100%'}} // Estilo customizado para largura total
                 >
                     {isSubmitting ? 'Cadastrando...' : 'Cadastrar Ambiente'}
-                </button>
+                </Button>
 
                 {/* Mensagens de feedback */}
                 {successMessage && <p className={styles.success}>{successMessage}</p>}

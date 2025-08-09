@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import api from '../../services/api';
-import formStyles from '../../pages/adm/css/FormPage.module.css'; // Reutilizando o estilo dos formulários
+import formStyles from '../../styles/FormPage.module.css'; // Reutilizando o estilo dos formulários
 import modalStyles from '../../styles/modal.module.css'
 
 const AdicionarEquipamentoModal = ({ ambienteId, onClose, onSuccess }) => {

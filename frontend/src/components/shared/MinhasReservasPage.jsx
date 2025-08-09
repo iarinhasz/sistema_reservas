@@ -3,9 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import axios from 'axios';
 import api from '../../services/api';
-import styles from '../css/MinhasReservasPage.module.css';
 import Button from '../shared/Button.jsx';
 import ReviewModal from './reviewModal.jsx';
+
+import styles from '../css/MinhasReservasPage.module.css';
+import layout from '../../styles/Layout.module.css';
+import table from '../../styles/Table.module.css';
 
 const MinhasReservasPage = () => {
     const { user, loading: authLoading } = useAuth();
@@ -56,7 +59,7 @@ const MinhasReservasPage = () => {
     }, [user, authLoading, fetchMinhasReservas]);
 
     const sortedAndFilteredReservas = useMemo(() => {
-            const statusOrder = { 'pendente': 1, 'aprovada': 2, 'concluida': 3, 'cancelada': 4, 'rejeitada': 5 };
+            const statusOrder = { 'pendente': 1, 'aprovada': 2,'concluida': 3, 'cancelada': 4, 'rejeitada': 5 };
 
             return reservas
                 .map(r => {
@@ -133,12 +136,12 @@ const MinhasReservasPage = () => {
 
                 <div className={styles.filterContainer}>
                     <span>Filtrar por:</span>
-                    <Button variant={filtroStatus === 'todos' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('todos')}>Todos</Button>
-                    <Button variant={filtroStatus === 'pendente' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('pendente')}>Pendentes</Button>
-                    <Button variant={filtroStatus === 'concluida' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('concluida')}>Concluídas</Button>
-                    <Button variant={filtroStatus === 'cancelada' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('cancelada')}>Canceladas</Button>
-                    <Button variant={filtroStatus === 'rejeitada' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('rejeitada')}>Rejeitadas</Button>
-
+                        <Button variant={filtroStatus === 'todos' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('todos')}>Todos</Button>
+                        <Button variant={filtroStatus === 'pendente' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('pendente')}>Pendentes</Button>
+                        <Button variant={filtroStatus === 'aprovada' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('aprovada')}>Aprovadas</Button>
+                        <Button variant={filtroStatus === 'concluida' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('concluida')}>Concluídas</Button>
+                        <Button variant={filtroStatus === 'cancelada' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('cancelada')}>Canceladas</Button>
+                        <Button variant={filtroStatus === 'rejeitada' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('rejeitada')}>Rejeitadas</Button>
                 </div>
 
                 {sortedAndFilteredReservas.length === 0 ? (
@@ -149,7 +152,7 @@ const MinhasReservasPage = () => {
                             <tr>
                                 <th>Recurso</th>
                                 <th>Data</th>
-                                <th>Status</th>
+                                <th className={table.statusColumn} >Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -163,9 +166,9 @@ const MinhasReservasPage = () => {
                                     <tr key={reserva.id}>
                                         <td>{reserva.recurso_nome || reserva.titulo}</td>
                                         <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
-                                        <td>
+                                        <td className={table.statusColumn}>
                                             <span 
-                                                className={`${styles.status} ${styles[statusCalculado]} ${isClickable ? styles.clickable : ''}`}
+                                                className={`${table.status} ${table[statusCalculado]} ${isClickable ? table.statusClickable : ''}`}
                                                 onClick={() => isClickable && handleShowRejectionReason(motivo_rejeicao)}
                                                 title={isClickable ? 'Clique para ver o motivo' : ''}
                                             >
