@@ -1,0 +1,61 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que o border-radius funcione nas tabelas */
+}
+
+.table th,
+.table td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #fdfdfd;
+}
+
+.table tbody tr:hover {
+    background-color: #f7f7f7;
+}
+.reservasTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+}
+
+.reservasTable th,
+.reservasTable td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.8rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.reservasTable th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.reservasTable tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.actionsCell {
+    vertical-align: middle;
+    padding-left: 10px; 
+}

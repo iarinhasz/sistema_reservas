@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import '../css/header.module.css'; 
-import styles from '../css/header.module.css';
+import styles from '../../styles/header.module.css';
+import Button from './Button';
 
 const Header = () => {
     const { user, logout } = useAuth(); // Pegando o usuário e a função de logout do seu hook
@@ -24,20 +24,14 @@ const Header = () => {
             {user ? (
             // Se o usuário está LOGADO
             <>
-                <Link to="/perfil" className={styles.headerLink}>Ver Perfil</Link>
-                <button onClick={handleLogout} className={`${styles.headerButton} ${styles.logoutBtn}`}>
-                Sair
-                </button>
+                <Button as={Link} to="/perfil" variant="primary">Ver Perfil</Button>
+                <Button onClick={handleLogout} variant="cancel">Sair</Button>
             </>
             ) : (
             // Se o usuário está DESLOGADO
             <>
-                <button onClick={() => navigate('/login')} className={`${styles.headerButton} ${styles.loginBtn}`}>
-                    Login
-                </button>
-                <button onClick={() => navigate('/solicitar-cadastro')} className={`${styles.headerButton} ${styles.registerBtn}`}>
-                    Solicitar Cadastro
-                </button>
+                <Button onClick={() => navigate('/login')} variant="primary">Login</Button>
+                <Button onClick={() => navigate('/solicitar-cadastro')} variant="secondary">Solicitar Cadastro</Button>
             </>
             )}
         </div>

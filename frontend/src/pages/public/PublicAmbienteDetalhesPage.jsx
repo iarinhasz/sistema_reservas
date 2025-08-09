@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import styles from './PublicAmbienteDetalhesPage.module.css';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente'; // Importe o novo componente
 import { useAuth} from '../../context/AuthContext';
 import ReservarModal from '../../components/shared/ReservarModal';
+
+import layout from '../../styles/Layout.module.css';
+import EquipamentosList from '../../components/shared/EquipamentoList'; 
+import Button from '../../components/shared/Button'; 
 
 const PublicAmbienteDetalhesPage = () => {
     const { id } = useParams();
@@ -12,7 +15,6 @@ const PublicAmbienteDetalhesPage = () => {
     const navigate = useNavigate();
 
     const [ambiente, setAmbiente] = useState(null);
-    const [equipamentos, setEquipamentos] = useState([]);
     
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -37,30 +39,6 @@ const PublicAmbienteDetalhesPage = () => {
         fetchAmbiente();
     }, [id]);
 
-    useEffect(() => {
-        if (!id) return;
-
-        const fetchEquipamentos = async () => {
-            try {
-                // 1. Buscamos TODOS os equipamentos
-                const response = await api.get(`/equipamentos`);
-                
-                // 2. Filtramos a lista para pegar apenas os que pertencem a este ambiente
-                //    (usando '==' para comparar string com número sem problemas de tipo)
-                const equipamentosDoAmbiente = response.data.filter(
-                    (equipamento) => equipamento.ambiente_id == id
-                );
-                
-                // 3. Atualizamos o estado com a lista já filtrada
-                setEquipamentos(equipamentosDoAmbiente || []);
-
-            } catch (error) {
-                console.error("Erro ao buscar equipamentos:", error);
-            }
-        };
-
-        fetchEquipamentos();
-    }, [id]); 
     const handleOpenReserveModal = () => {
         if (!user) {
             navigate('/login'); // Se por algum motivo o usuário se deslogou, peça login
@@ -75,44 +53,12 @@ const PublicAmbienteDetalhesPage = () => {
         setRefreshAgendaKey(prevKey => prevKey + 1);
     };
 
-    const renderActionButtons = () => {
-        if (!user) {
-            return null;
-        }
-
-        return (
-            <div className={styles.actions}>
-                <Link
-                    to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`}
-                    className={styles.actionButton}
-                >
-                    Minhas Reservas
-                </Link>
-
-                {/* Botão de Fazer Reserva muda conforme o tipo de usuário */}
-                {(user.tipo === 'professor') && (
-                    <button onClick={handleOpenReserveModal} className={styles.actionButton}>
-                        + Fazer Nova Reserva
-                    </button>
-                )}
-
-                {user.tipo === 'aluno' && (
-                    <Link to={`/aluno/reservar-equipamento/${id}`} className={styles.actionButton}>
-                        Reservar Equipamento
-                    </Link>
-                )}
-                
-            </div>
-        );
-    };
-
-    if (loading) return <p className={styles.message}>Carregando...</p>;
-    if (error) return <p className={styles.error}>{error}</p>;
-    if (!ambiente) return <p className={styles.message}>Ambiente não encontrado.</p>;
-
+    if (loading) return <p>Carregando...</p>;
+    if (error) return <p style={{color: 'red'}}>{error}</p>;
+    if (!ambiente) return <p>Ambiente não encontrado.</p>;
+    
     return (
         <>
-            {/* 4. Renderização condicional do Modal */}
             {isModalOpen && (
                 <ReservarModal
                     recurso={{...ambiente, recurso_tipo: 'ambiente'}}
@@ -122,37 +68,59 @@ const PublicAmbienteDetalhesPage = () => {
                 />
             )}
 
-            <div className={styles.container}>
-                <header className={styles.header}>
+            {/* 4. Aplicando os novos estilos de layout e os componentes reutilizáveis */}
+            <div className={layout.container}>
+                <div className={layout.pageHeader}>
                     <div>
                         <h1>{ambiente.identificacao}</h1>
-                        <p className={styles.subtitulo}>Veja a agenda de horários e solicite sua reserva.</p>
+                        <p>Veja a agenda de horários e solicite sua reserva.</p>
                     </div>
-                    <Link to="/" className={styles.backButton}>Voltar para Início</Link>
-                </header>
+                    <Button as={Link} to="/" variant="cancel">Voltar para Início</Button>
+                </div>
                 
-                {renderActionButtons()}
+                {user && (
+                    <div className={layout.actionsBar}>
+                        <Button as={Link} to={`/${user.tipo}/minhas-reservas`} variant="primary">
+                            Minhas Reservas
+                        </Button>
 
-                <div className={styles.ambienteDetails}>
-                    <h2>Detalhes do Ambiente</h2>
+                        {user.tipo === 'professor' && (
+                            <Button onClick={handleOpenReserveModal} variant="secondary">
+                                + Fazer Nova Reserva
+                            </Button>
+                        )}
+
+                        {user.tipo === 'aluno' && (
+                            <Button as={Link} to={`/aluno/reservar-equipamento/${id}`} variant="secondary">
+                                Reservar Equipamento
+                            </Button>
+                        )}
+                    </div>
+                )}
+
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Detalhes do Ambiente</h2>
+                    </div>
                     <p><strong>Tipo:</strong> {ambiente.tipo}</p>
                     <p><strong>Capacidade:</strong> {ambiente.capacidade} pessoas</p>
                     <p><strong>Descrição:</strong> {ambiente.descricao}</p>
                 </div>
-                <h2>Equipamentos neste Ambiente</h2>
-                    {equipamentos.length > 0 ? (
-                        <ul className={styles.equipamentosList}>
-                            {equipamentos.map((equipamento) => (
-                                <li key={equipamento.id}>
-                                    {equipamento.nome}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Nenhum equipamento cadastrado para este ambiente.</p>
-                    )}                    
-                <h2>Agenda de Reservas</h2>
-                <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} />
+                                
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Equipamentos neste Ambiente</h2>
+                    </div>
+                    {/* 5. Usando o componente EquipamentosList para exibir a lista */}
+                    <EquipamentosList ambienteId={id} userRole={user?.tipo} />
+                </div>
+                
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Agenda de Reservas</h2>
+                    </div>
+                    <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} />
+                </div>
             </div>
         </>
     );

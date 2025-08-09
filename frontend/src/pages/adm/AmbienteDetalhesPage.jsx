@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import AdicionarEquipamentoModal from '../../components/adm/adicionarEquipamentoModal.jsx';
 import EditarAmbienteModal from '../../components/adm/editarAmbienteModal.jsx';
 import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.jsx';
 import ReservarModal from '../../components/adm/ReservarModal.jsx';
 import api from '../../services/api';
-import styles from './css/AmbienteDetalhesPage.module.css';
+//import styles from './css/AmbienteDetalhesPage.module.css';
 import { EditIcon } from '../../components/icons/index';
 import { useAuth } from '../../context/AuthContext';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
+
+//estilos refatorados
+import layout from '../../styles/Layout.module.css';
+import table from '../../styles/Table.module.css';
+import list from '../../styles/List.module.css';
+import Button from '../../components/shared/Button.jsx'; 
 
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
@@ -24,6 +30,8 @@ const AmbienteDetalhesPage = () => {
     const [equipamentoParaEditar, setEquipamentoParaEditar] = useState(null);
     const [isEditAmbienteOpen, setEditAmbienteOpen] = useState(false);
     const [isReservarOpen, setReservarOpen] = useState(false);
+
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,6 +66,12 @@ const AmbienteDetalhesPage = () => {
             console.error(err);
         }
     };
+    
+    const handleAmbienteDeletado = () => {
+        alert('Ambiente deletado com sucesso!');
+        navigate(`/ambientes/${id}`);
+    };
+
     const handleReservaSuccess = () => { setRefreshKey(prevKey => prevKey + 1) };
     const handleEquipamentoAdicionado = (novoEquipamento) => { setEquipamentos(listaAtual => [...listaAtual, novoEquipamento]) };
     const handleOpenEditModal = (equipamento) => { setEquipamentoParaEditar(equipamento); setEditEquipamentoOpen(true) };
@@ -71,68 +85,70 @@ const AmbienteDetalhesPage = () => {
 
     return (
         <>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h1>Detalhes de: {ambiente.identificacao}</h1>
-                    <div className={styles.actions}>
-                        <button className={styles.actionButton} onClick={() => setEditAmbienteOpen(true)}><EditIcon /> Editar Dados do Ambiente</button>
-                        <button className={styles.reserveButton} onClick={() => setReservarOpen(true)}>Fazer Reserva</button>
+            <div className={layout.container}>
+                <div className={layout.pageHeader}>
+                    <h1>{ambiente.identificacao}</h1>
+                    <div className={layout.pageHeaderActions}>
+                        <Button variant="primary" onClick={() => setEditAmbienteOpen(true)}><EditIcon /> Editar Ambiente</Button>
+                        <Button variant="primary" onClick={() => setReservarOpen(true)}>Fazer Reserva</Button>
                     </div>
                 </div>
-                <div className={styles.detailsGrid}>
-                    <p><strong>ID:</strong> {ambiente.id}</p>
-                    <p><strong>Tipo:</strong> {ambiente.tipo}</p>
-                    <p><strong>Status:</strong> {ambiente.status}</p>
+
+                <div className={layout.detailsGrid}>
+                    <p><strong>ID:</strong></p> <p>{ambiente.id}</p>
+                    <p><strong>Tipo:</strong></p> <p>{ambiente.tipo}</p>
+                    <p><strong>Status:</strong></p> <p>{ambiente.status}</p>
                 </div>
                 <hr />
-                <div className={styles.equipamentosSection}>
-                    <div className={styles.equipamentosHeader}>
-                        <h2>Equipamentos neste Ambiente</h2>
-                        <button className={styles.addButton} onClick={() => setAdicionarEquipamentoOpen(true)}>+ Inserir Equipamento</button>
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Equipamentos</h2>
+                        <Button variant="primary" onClick={() => setAdicionarEquipamentoOpen(true)}>+ Inserir Equipamento</Button>
                     </div>
                     {equipamentos.length > 0 ? (
-                    <table className={styles.equipamentosTable}>
-                         <thead><tr><th>Nome</th><th>Marca</th><th>Modelo</th><th>Quantidade</th><th>Adicionado Por</th><th>Editar</th></tr></thead>
+                    <table className={table.table}>
+                        <thead><tr><th>Nome</th><th>Marca</th><th>Modelo</th><th>Ações</th></tr></thead>
                         <tbody>
                             {equipamentos.map(eq => (
                                 <tr key={eq.id}>
                                     <td>{eq.nome}</td><td>{eq.marca || 'N/A'}</td><td>{eq.modelo || 'N/A'}</td>
-                                    <td>{eq.quantidade_total || 1}</td><td>{eq.criado_por_nome || 'N/A'}</td> 
-                                    <td><button onClick={() => handleOpenEditModal(eq)} className={styles.iconButton} title="Editar Equipamento"><EditIcon/></button></td>
+                                    <td><Button variant="primary" onClick={() => handleOpenEditModal(eq)}><EditIcon/></Button></td>
                                 </tr>
                             ))}
                         </tbody>                        
                     </table>) : ( <p>Nenhum equipamento cadastrado para este ambiente.</p> )}
                 </div>
                 <hr />
-                <div className={styles.solicitacoesSection}>
-                    <h2>Solicitações de Reserva Pendentes</h2>
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Solicitações Pendentes</h2>
+                    </div>
                     {solicitacoesReserva.length > 0 ? (
-                        <ul className={styles.solicitacoesList}>
+                        <ul className={list.list}>
                             {solicitacoesReserva.map((reserva, index) => (
-                                <li key={reserva.id} className={styles.solicitacaoItem}>
-                                    <div className={styles.reservaInfo}>
-                                        <strong>{reserva.titulo}</strong> por: {reserva.usuario_nome}<br/>
-                                        <small>{new Date(reserva.data_inicio).toLocaleString()} até {new Date(reserva.data_fim).toLocaleString()}</small>
+                                <li key={reserva.id} className={`${list.listItem} ${list['listItem--pending']}`}>
+                                    <div className={list.listItemInfo}>
+                                        <strong>{reserva.titulo}</strong>
+                                        <small> por: {reserva.usuario_nome}</small>
                                     </div>
-                                    <div className={styles.actionButtons}>
-                                        <button onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0} className={styles.approveButton}>Aprovar</button>
-                                        <button onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0} className={styles.rejectButton}>Rejeitar</button>
+                                    <div className={list.listItemActions}>
+                                        <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
+                                        <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
                                     </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : (<p>Nenhuma solicitação de reserva pendente para este ambiente.</p>)}
+                    ) : (<p>Nenhuma solicitação pendente.</p>)}
                 </div>
                 <hr />
-                <div className={styles.agendaSection}>
-                    <h2>Agenda de Reservas</h2>
+                <div className={layout.section}>
+                    <div className={layout.sectionHeader}><h2>Agenda de Reservas</h2></div>
                     <AgendaAmbiente ambienteId={id} key={refreshKey} userRole={user?.tipo} />
                 </div>
             </div>
             {isAdicionarEquipamentoOpen && (<AdicionarEquipamentoModal ambienteId={id} onClose={() => setAdicionarEquipamentoOpen(false)} onSuccess={handleEquipamentoAdicionado}/>)}
             {isEditEquipamentoOpen && (<EditarEquipamentoModal equipamento={equipamentoParaEditar} onClose={() => setEditEquipamentoOpen(false)} onSuccess={handleEquipamentoAtualizado} onDelete={handleEquipamentoDeletado} />)}
-            {isEditAmbienteOpen && (<EditarAmbienteModal ambiente={ambiente} onClose={() => setEditAmbienteOpen(false)} onSuccess={handleAmbienteAtualizado} />)}
+            {isEditAmbienteOpen && (<EditarAmbienteModal ambiente={ambiente} onClose={() => setEditAmbienteOpen(false)} onSuccess={handleAmbienteAtualizado} onDelete={handleAmbienteDeletado}/>)}
             {isReservarOpen && (<ReservarModal ambiente={ambiente} onClose={() => setReservarOpen(false)} onSuccess={handleReservaSuccess} />)}
         </>
     );

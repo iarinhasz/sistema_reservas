@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
 import api from '../../services/api';
-import modalStyles from '../css/modal.module.css';
-import { SaveIcon } from '../icons/index';
+import modalStyles from '../../styles/modal.module.css';
+import { SaveIcon, DeleteIcon } from '../icons/index';
 import Button from '../shared/Button';
 
 const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
@@ -22,7 +22,21 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
     };
-
+    const handleDelete = async () => {
+        // Pede confirmação ao usuário para evitar exclusões acidentais
+        if (window.confirm(`Tem certeza que deseja deletar o ambiente "${ambiente.identificacao}"? Esta ação não pode ser desfeita.`)) {
+            try {
+                // Chama a rota DELETE da API para o ambiente específico
+                await api.delete(`/ambientes/${ambiente.id}`);
+                
+                // Avisa o componente pai que a deleção foi um sucesso
+                onDelete(ambiente.id);
+                onClose(); // Fecha o modal
+            } catch (error) {
+                setErrorMessage(error.response?.data?.message || 'Erro ao deletar o ambiente.');
+            }
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -71,6 +85,11 @@ const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
                     </div>
 
                     <div className={modalStyles.modalActions}>
+                        <Button onClick={handleDelete} variant="danger" icon={DeleteIcon}>
+                            Deletar
+                        </Button>
+                        <div style={{ flex: 1 }}></div>
+
                         <Button onClick={onClose} variant="cancel">
                             Cancelar
                         </Button>

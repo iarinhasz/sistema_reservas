@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import api from '../../services/api';
 import formStyles from '../../pages/adm/css/FormPage.module.css'; // Reutilizando o estilo dos formulários
-import modalStyles from '../css/modal.module.css'
+import modalStyles from '../../styles/modal.module.css'
 
 const AdicionarEquipamentoModal = ({ ambienteId, onClose, onSuccess }) => {
     const [nome, setNome] = useState('');
@@ -67,10 +67,18 @@ const AdicionarEquipamentoModal = ({ ambienteId, onClose, onSuccess }) => {
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                        <button type="button" onClick={onClose} className={modalStyles.cancelButton}>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className={`${modalStyles.modalButton} ${modalStyles.cancel}`}
+                        >
                             Cancelar
                         </button>
-                        <button type="submit" disabled={isSubmitting}>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className={`${modalStyles.modalButton} ${modalStyles.confirm} ${isSubmitting ? modalStyles.disabled : ''}`}
+                        >
                             {isSubmitting ? 'Adicionando...' : 'Adicionar'}
                         </button>
                     </div>

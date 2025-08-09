@@ -1,10 +1,10 @@
 // frontend/src/components/admin/EditarEquipamentoModal.jsx
 
-import React, { useState, useEffect } from 'react';
-import api from '../../services/api';
+import { useState } from 'react';
 import formStyles from '../../pages/adm/css/FormPage.module.css';
-import modalStyles from '../css/modal.module.css'
-import { MenuIcon, ProfileIcon, DeleteIcon, SaveIcon } from '../icons/index';
+import api from '../../services/api';
+import modalStyles from '../../styles/modal.module.css';
+import { DeleteIcon, SaveIcon } from '../icons/index';
 import Button from '../shared/Button';
 
 const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) => {
@@ -79,17 +79,16 @@ const EditarEquipamentoModal = ({ equipamento, onClose, onSuccess, onDelete}) =>
                     </div>
 
                     <div className={modalStyles.modalActions}>
-                        <button onClick={handleDelete} variant="danger" icon={DeleteIcon}>
-                            <DeleteIcon/>
-                        </button>
+                        <Button onClick={handleDelete} variant="danger" icon={DeleteIcon}>
+                            
+                        </Button>
                         <div style={{ flex: 1 }}></div>
-                            <button onClick={onClose} variant="cancel">
+                            <Button onClick={onClose} variant="cancel">
                                 Cancelar
-                            </button>
-                            <button type="submit" disabled={isSubmitting}>
-                                <SaveIcon/>
-                                {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
-                            </button>
+                            </Button>
+                            <Button type="submit" variant="secondary" icon={SaveIcon}>
+                                Salvar Alterações
+                            </Button>
                         </div>
                     {errorMessage && <p className={formStyles.error}>{errorMessage}</p>}
                 </form>

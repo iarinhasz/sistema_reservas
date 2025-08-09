@@ -1,0 +1,66 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none; /* Para quando for usado como Link */
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.primary {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+.primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.secondary {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+.secondary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.danger {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+.danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.cancel {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+.cancel:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}

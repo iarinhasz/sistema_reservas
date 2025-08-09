@@ -136,7 +136,7 @@ class ReservaModel{
             SELECT * FROM reservas 
             WHERE recurso_id = $1 
             AND recurso_tipo = $2 
-            AND data_inicio > NOW() 
+            AND data_fim > NOW() 
             AND status = 'aprovada';
         `;
         const { rows } = await this.pool.query(query, [recurso_id, recurso_tipo]);
