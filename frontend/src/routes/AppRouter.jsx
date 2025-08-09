@@ -22,6 +22,7 @@ import GerenciarUsuariosPage from '../pages/adm/GerenciarUsuariosPage.jsx';
 import AlunoHomePage from '../pages/user/aluno/alunoHomePage.jsx';
 import ProfessorHomePage from '../pages/user/professor/professorHomePage.jsx';
 import ReservarAmbientePage from '../pages/user/professor/reservarAmbientePage.jsx';
+import PaginaReview from '../pages/user/PaginaReview.jsx';
 
 // PÁGINAS COMPARTILHADAS (CAMINHOS CORRIGIDOS CONFORME SUA ESTRUTURA)
 import MinhasReservasPage from '../components/shared/MinhasReservasPage.jsx';
@@ -35,7 +36,7 @@ const AppRouter = () => {
       <Route element={<AppLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
-      
+        <Route path="/review/ambiente/:id" element={<PaginaReview />} />
     </Route>
       {/* Rotas de Autenticação */}
       <Route path="/login" element={<LoginPage />} />

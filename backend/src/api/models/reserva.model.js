@@ -78,17 +78,35 @@ class ReservaModel{
         }
     }
 
-    async findByUser(cpf){
-        const query = `
+    async findByUser(cpf, filters = {}) {
+        let query = `
             SELECT r.*,
                 COALESCE(a.identificacao, eq.nome) as recurso_nome
             FROM reservas r
             LEFT JOIN ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
             LEFT JOIN equipamentos eq ON r.recurso_id = eq.id AND r.recurso_tipo = 'equipamento'
             WHERE r.usuario_cpf = $1
-            ORDER BY r.data_inicio DESC;
         `;
-        const { rows } = await this.pool.query(query, [cpf]);
+        const values = [cpf];
+
+        // A lógica que adiciona os filtros à query
+        if (filters && filters.recursoId && filters.recursoTipo) {
+            // Se os filtros existem, eles são registrados aqui
+            console.log('MODEL: Filtros recebidos para aplicar na query:', filters);
+            query += ` AND r.recurso_id = $2 AND LOWER(r.recurso_tipo) = LOWER($3)`;
+            values.push(filters.recursoId, filters.recursoTipo);
+        } else {
+            // Se nenhum filtro foi recebido, isso será registrado
+            console.log('MODEL: Nenhum filtro de recurso recebido, buscando todas as reservas.');
+        }
+
+        query += ` ORDER BY r.data_inicio DESC;`;
+
+        // O log mais importante: mostra a query final antes de ser executada
+        console.log('MODEL: Query FINAL que será executada:', query);
+        console.log('MODEL: VALORES para a query:', values);
+
+        const { rows } = await this.pool.query(query, values);
         return rows;
     }
 

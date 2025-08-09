@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import axios from 'axios';
 import api from '../../services/api';
 import styles from '../css/MinhasReservasPage.module.css';
 import Button from '../shared/Button.jsx';
@@ -10,6 +12,11 @@ const MinhasReservasPage = () => {
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    const [searchParams] = useSearchParams();
+    
+    const recursoId = searchParams.get('recursoId');
+    const recursoTipo = searchParams.get('recursoTipo');
 
     // Estados para o modal de review
     const [isReviewModalOpen, setReviewModalOpen] = useState(false);
@@ -22,7 +29,13 @@ const MinhasReservasPage = () => {
     const fetchMinhasReservas = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await api.get('/reservas/mine');
+            const params = {};
+
+            if (recursoId) params.recursoId = recursoId;
+            if (recursoTipo) params.recursoTipo = recursoTipo;
+
+            const response = await api.get('/reservas/mine', { params });
+            
             const reservasData = response.data.data;
             setReservas(Array.isArray(reservasData) ? reservasData : []);
         
@@ -34,9 +47,8 @@ const MinhasReservasPage = () => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [recursoId, recursoTipo]);
 
-    // Usamos APENAS UM useEffect para chamar a função
     useEffect(() => {
         if (!authLoading && user) {
             fetchMinhasReservas();
@@ -115,7 +127,9 @@ const MinhasReservasPage = () => {
                 )}
 
             <div className={styles.container}>
-                <h1>Minhas Reservas</h1>
+                <h1>
+                    {recursoId ? `Meu Histórico para ${recursoTipo}` : 'Minhas Reservas'}
+                </h1>
 
                 <div className={styles.filterContainer}>
                     <span>Filtrar por:</span>
@@ -123,6 +137,8 @@ const MinhasReservasPage = () => {
                     <Button variant={filtroStatus === 'pendente' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('pendente')}>Pendentes</Button>
                     <Button variant={filtroStatus === 'concluida' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('concluida')}>Concluídas</Button>
                     <Button variant={filtroStatus === 'cancelada' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('cancelada')}>Canceladas</Button>
+                    <Button variant={filtroStatus === 'rejeitada' ? 'primary' : 'secondary'} onClick={() => setFiltroStatus('rejeitada')}>Rejeitadas</Button>
+
                 </div>
 
                 {sortedAndFilteredReservas.length === 0 ? (

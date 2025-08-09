@@ -82,7 +82,10 @@ const PublicAmbienteDetalhesPage = () => {
 
         return (
             <div className={styles.actions}>
-                <Link to={`/${user.tipo}/minhas-reservas`} className={styles.actionButton}>
+                <Link
+                    to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`}
+                    className={styles.actionButton}
+                >
                     Minhas Reservas
                 </Link>
 

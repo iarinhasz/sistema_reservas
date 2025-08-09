@@ -36,7 +36,7 @@ const ProfessorLayout = () => {
         <nav className={styles.nav}>
           {/* Os links agora chamam 'closeMenu' que usa 'setIsPanelOpen' */}
           <Link to="/professor" onClick={() => setIsPanelOpen(false)}>Página Inicial</Link>
-          <Link to="/professor/buscar-recursos"  onClick={() => setIsPanelOpen(false)}>Reservar Recursos</Link>
+          <Link to="/professor/reservar-ambiente"  onClick={() => setIsPanelOpen(false)}>Reservar Ambiente</Link>
           <Link to="/professor/minhas-reservas"  onClick={() => setIsPanelOpen(false)}>Minhas Reservas</Link>
         </nav>
         <div className={styles.panelFooter}>
