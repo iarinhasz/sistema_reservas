@@ -1,0 +1,177 @@
+/* --- TEMA CLARO (PÚBLICO) --- */
+.lightTheme {
+    background-color: #f8f9fa; /* Fundo cinza claro */
+    min-height: 100vh;
+}
+/* O conteúdo principal no tema claro */
+.lightTheme .mainContent {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 
+    2rem;
+}
+/* --- TEMA ESCURO/GLASSMORPHISM (LOGADO) --- */
+.darkTheme {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: white;
+}
+/* O conteúdo principal no tema escuro */
+.darkTheme .content {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+/* Container principal do layout */
+.layoutContainer {
+    display: flex;
+    min-height: 100vh; /* Garante que o layout ocupe a tela toda */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* --- CABEÇALHO SUPERIOR --- */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 60px;
+    
+    /* Estilo Glassmorphism */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    
+    color: white; /* Cor do texto no header */
+}
+
+.headerTitle {
+    font-weight: bold;
+}
+
+.profileButton {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+/* Estilo do botão sanduíche (as três barrinhas) */
+.hamburgerButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: white;
+}
+
+.hamburgerButton span {
+    width: 24px;
+    height: 2px;
+    background: #333; /* Cor das barrinhas */
+    border-radius: 10px;
+}
+
+/* --- PAINEL DE NAVEGAÇÃO LATERAL (QUE ABRE E FECHA) --- */
+.sidePanel {
+    position: fixed; /* Fica fixo na tela */
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+
+    background: rgba(248, 249, 250, 0.85); /* Um branco semi-transparente */
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil para definir o limite */
+
+    color: #2c3e50; 
+
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%); /* Começa escondido à esquerda */
+    transition: transform 0.3s ease-in-out; /* Efeito suave de deslizar */
+    z-index: 1000; /* Garante que fique por cima de tudo */
+}
+
+/* Quando o painel tiver a classe 'open', ele desliza para a tela */
+.sidePanel.open { transform: translateX(0); }
+.panelHeader, .panelFooter {
+    padding: 1rem;
+    text-align: center;
+}
+
+.panelHeader { 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Borda mais sutil */
+}
+
+.panelHeader h3, .panelHeader p {
+    color: #2c3e50;
+}
+.nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; flex-grow: 1; }
+.nav a { 
+    color: #34495e;
+    text-decoration: none; 
+    padding: 0.75rem 1rem; 
+    
+    /* Aumente o valor aqui para deixar mais redondo */
+    border-radius: 20px; /* Exemplo: valor para um formato de pílula */
+    
+    transition: background-color 0.2s, color 0.2s; 
+    border: 1px solid transparent;
+}
+.nav a:hover { 
+    background-color: rgba(0, 0, 0, 0.05); /* Um cinza bem claro no hover */
+    border-radius: 40px; 
+}
+.nav a.active {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #0056b3;
+    font-weight: 600;
+    border: 1px solid rgba(0, 123, 255, 0.2);
+    border-radius: 20px; 
+}
+.panelFooter { padding: 1rem; }
+.logoutButton { 
+    width: 100%; 
+    padding: 0.75rem; 
+    border: none; 
+    border-radius: 5px; 
+    background-color: #e74c3c; 
+    color: white; 
+    cursor: pointer; 
+    font-weight: 600;
+}
+.logoutButton:hover { background-color: #c0392b; }
+
+/* --- CONTEÚDO PRINCIPAL E OVERLAY --- */
+.mainContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.content {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+/* O overlay escurece o fundo quando o menu está aberto */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Fica abaixo do painel, mas acima do conteúdo */
+}

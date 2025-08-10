@@ -3,102 +3,177 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f4f7f6;
-    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: sans-serif;
+    padding: 1rem;
 }
 
-.formContainer {
+.requestCard {
     width: 100%;
-    max-width: 450px;
-    background-color: white;
-    padding: 2rem 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 450px; /* Um pouco mais largo para os campos extras */
+    padding: 2.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: white;
 }
 
-.formContainer h2 {
-    text-align: center;
-    margin-bottom: 0.5rem;
-    color: #333;
-}
-
-.formContainer p {
+.header {
     text-align: center;
     margin-bottom: 2rem;
-    color: #666;
+}
+.header h2 {
+    margin: 0;
+    font-size: 2rem;
+}
+.header p {
+    margin-top: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .formGroup {
-    margin-bottom: 1.25rem;
-    border: none;
-    padding: 0;
+    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .formGroup label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    transition: all 0.2s ease;
 }
 
-.formGroup input[type="text"],
-.formGroup input[type="email"],
-.formGroup input[type="password"] {
+.formGroup input {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 1rem;
     box-sizing: border-box;
 }
-
-.radioGroup {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
+.formGroup input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
-.radioGroup label {
+.formGroup input:focus + label,
+.formGroup input:not(:placeholder-shown) + label {
+    top: -0.75rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    background-color: #715bbf;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+}
+
+/* Estilos para os botões de rádio */
+.radioGroup {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+.radioLabel {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: normal;
+    cursor: pointer;
+}
+.radioLabel input[type="radio"] {
+    display: none; /* Esconde o rádio padrão */
+}
+.radioCircle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    transition: all 0.2s ease;
+}
+.radioCircle::after { /* Círculo interno */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4facfe;
+    transition: all 0.2s ease;
+}
+.radioLabel input[type="radio"]:checked + .radioCircle {
+    border-color: #4facfe;
+}
+.radioLabel input[type="radio"]:checked + .radioCircle::after {
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .submitButton {
     width: 100%;
-    padding: 0.8rem;
+    padding: 0.9rem;
     border: none;
-    border-radius: 4px;
-    background-color: #28a745;
+    border-radius: 10px;
+    background: #28a745; /* Verde para consistência com o tema de "solicitação" */
     color: white;
     font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
 .submitButton:hover {
     background-color: #218838;
 }
-
 .submitButton:disabled {
-    background-color: #aaa;
+    opacity: 0.7;
     cursor: not-allowed;
 }
 
-.errorMessage {
-    color: #d93025;
+.signInText {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+.signInText a {
+    color: #4facfe;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.errorMessage {
+    color: #ff8a8a;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .successMessage {
     text-align: center;
-    color: #218838;
 }
-
-.backLink {
+.successMessage h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+.successMessage p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+.backButton {
     display: inline-block;
-    margin-top: 1rem;
-    color: #007bff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
     text-decoration: none;
+    font-weight: bold;
 }

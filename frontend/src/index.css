@@ -1,7 +1,4 @@
 body {
-    background-color: #f0f2f5; 
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     margin: 0;
-    font-family: sans-serif;
+    font-family: sans-serif; /* Define a cor padrão do texto para branco */
 }

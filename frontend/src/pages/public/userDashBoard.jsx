@@ -1,7 +1,7 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import styles from './UserLayout.module.css'; 
-import { MenuIcon, ProfileIcon, LogoutIcon } from '../icons/index';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import styles from './UserLayout.module.css'; // O CSS dele
+import { MenuIcon, ProfileIcon, LogoutIcon } from '../components/icons';
 import { useState } from 'react';
 
 const UserLayout = ({ panelTitle, navLinks = [] }) => {
@@ -15,22 +15,18 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
     };
 
     return (
-        <div className={`${styles.layoutContainer}`}>
+        <div className={styles.layoutContainer}>
             <aside className={`${styles.sidePanel} ${isPanelOpen ? styles.open : ''}`}>
                 <div className={styles.panelHeader}>
-                    <h3>{panelTitle}</h3>
+                    <h3>{panelTitle}</h3> {/* Título dinâmico */}
                     <p>Bem-vindo, {user?.nome}</p>
                 </div>
                 <nav className={styles.nav}>
+                    {/* Mapeia os links recebidos via props */}
                     {navLinks.map((link) => (
-                        // 2. Mude a tag <Link> para <NavLink>
-                        <NavLink 
-                            key={link.to} 
-                            to={link.to} 
-                            onClick={() => setIsPanelOpen(false)}
-                        >
+                        <Link key={link.to} to={link.to} onClick={() => setIsPanelOpen(false)}>
                             {link.label}
-                        </NavLink>
+                        </Link>
                     ))}
                 </nav>
                 <div className={styles.panelFooter}>
@@ -48,9 +44,9 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
                         <MenuIcon />
                     </button>
                     <div className={styles.headerTitle}>Sistema de Reservas</div>
-                    <NavLink to={`/${user?.tipo}/perfil`} className={styles.profileButton}>
+                    <Link to={`/${user?.tipo}/perfil`} className={styles.profileButton}>
                         <ProfileIcon /> Ver Perfil
-                    </NavLink>
+                    </Link>
                 </header>
                 
                 <main className={styles.content}>

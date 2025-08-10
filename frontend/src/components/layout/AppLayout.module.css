@@ -1,0 +1,11 @@
+.appLayout {
+    background-color: #f0f2f5; /* Fundo cinza claro */
+    min-height: 100vh;
+}
+
+.mainContent {
+    width: 100%;
+    max-width: 1200px; /* Limita a largura do conteúdo principal */
+    margin: 0 auto;
+    padding: 2rem;
+}

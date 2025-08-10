@@ -4,13 +4,16 @@ import {
     AiOutlineDelete, 
     AiOutlineUser, 
     AiOutlineSave, 
-    AiOutlineMail 
+    AiOutlineMail,
+    AiOutlineEye,
+    AiOutlineEyeInvisible
 } from 'react-icons/ai';
 
 import { 
     HiBars4, 
     HiMiniArrowRightOnRectangle 
 } from 'react-icons/hi2'; // Nota: A versão mais recente usa 'hi2'
+import { FcGoogle } from 'react-icons/fc'; 
 
 export const EditIcon = AiFillEdit;
 export const DeleteIcon = AiOutlineDelete;
@@ -19,3 +22,7 @@ export const SaveIcon = AiOutlineSave;
 export const EmailIcon = AiOutlineMail;
 export const MenuIcon = HiBars4;
 export const LogoutIcon = HiMiniArrowRightOnRectangle;
+
+export const EyeIcon = AiOutlineEye;
+export const EyeSlashIcon = AiOutlineEyeInvisible;
+export const GoogleIcon = FcGoogle;

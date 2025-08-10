@@ -1,11 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Para os botões de navegação
-//import './HomePage.css'; // Arquivo de estilos que vamos criar
 import { useAuth } from '../../context/AuthContext';
 import styles from '../public/HomePage.module.css';
 import { useNavigate } from 'react-router-dom';
-import AmbientesList from '../../components/shared/AmbientesList.jsx';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros

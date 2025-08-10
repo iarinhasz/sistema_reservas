@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'; // Importante para criar links de navegação
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './css/admHomePage.module.css';
+import styles from '../public/userDashBoard.module.css';
 import { useAuth } from '../../context/AuthContext';
 import AmbientesList from '../../components/shared/AmbientesList.jsx';
 import Button from '../../components/shared/Button.jsx';
@@ -50,7 +50,6 @@ const AdmHomePage = () => {
                 </Button>
 
             </div>
-                <hr className={styles.divider} />
 
                 <div className={styles.listSectionHeader}>
                     <h2>Visão Geral dos Ambientes</h2>

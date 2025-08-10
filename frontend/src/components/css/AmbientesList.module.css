@@ -1,23 +1,59 @@
 .ambientesGrid {
-    display: flex;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem; /* Espaço entre as colunas */
     align-items: flex-start;
-    width: 100%;
+}
+
+/* --- ESTILOS PARA O TEMA CLARO --- */
+:global(.lightTheme) .ambienteColuna {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    color: #343a40; /* Texto escuro */
+}
+:global(.lightTheme) .ambienteColuna h2 {
+    color: #343a40;
+}
+:global(.lightTheme) .ambienteBotao {
+    background-color: #f8f9fa;
+    color: #212529; /* Texto escuro */
+}
+
+/* --- ESTILOS PARA O TEMA ESCURO (GLASSMORPHISM) --- */
+:global(.darkTheme) .ambienteColuna {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white; /* Texto claro */
+}
+:global(.darkTheme) .ambienteColuna h2 {
+    color: white;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+:global(.darkTheme) .ambienteBotao {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .ambienteColuna {
-    flex: 1;
-    background-color: #ffffff;
+    /* Estilo Glassmorphism para a coluna */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: white; /* Garante que o texto dentro seja branco */
 }
 
 .ambienteColuna h2 {
     margin-top: 0;
-    color: #444;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 0.75rem;
     text-transform: capitalize;
 }
 
@@ -25,20 +61,21 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    margin-top: 1rem;
 }
 
+
 .ambienteBotao {
-    width: 100%;
-    padding: 1rem;
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
     font-size: 1rem;
     text-align: left;
-    background-color: #124b85;
+    background: none; /* Remove o fundo do botão */
     color: white;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
 }
+
 
 .ambienteBotao:hover {
     background-color: #0056b3;
@@ -98,29 +135,18 @@
 
 .iconActions {
     display: flex;
-    padding-right: 0.5rem;
-    opacity: 1;
-    transition: opacity 0.2s;
 }
-
 .iconButton {
     background: transparent;
     border: none;
     cursor: pointer;
-    color: white;
-    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
     padding: 0.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
 }
 
 
-
 .iconButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 /* Estilo específico para o botão de deletar */
@@ -142,17 +168,20 @@
 .ambienteBotaoContainer {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Garante espaço entre o botão e os ícones */
-    background-color: #124b85;
-    border-radius: 5px;
-    padding: 0.5rem; /* Padding geral */
-    transition: background-color 0.2s;
+    justify-content: space-between;
+    
+    /* Estilo Glassmorphism para os botões internos */
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    border-radius: 10px;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .ambienteBotaoContainer:hover {
-    background-color: #0056b3;
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
 }
-
 /* Animação de pulso amarela */
 @keyframes pulse-yellow {
     0% {

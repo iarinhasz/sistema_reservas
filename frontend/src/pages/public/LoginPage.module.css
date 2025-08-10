@@ -1,49 +1,219 @@
-/* src/pages/LoginPage.module.css */
-
-.loginContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
+/* LoginPage Styles - Traduzido para CSS Modules */
+.loginPage {
+    font-family: sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 
-.loginForm {
-  padding: 2rem;
-  border-radius: 8px;
-  background-color: #2f2f2f;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 400px;
+.loginCard {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: white;
+}
+.loginCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-.loginForm h2 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
+.loginHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.loginHeader h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+}
+
+.loginHeader p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .formGroup {
-  margin-bottom: 1rem;
+    margin-bottom: 1.75rem;
+    position: relative;
+}
+.inputWrapper {
+    position: relative;
+}
+.inputWrapper input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.inputWrapper label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+.inputWrapper input:focus + label,
+.inputWrapper input:not(:placeholder-shown) + label {
+    top: -0.6rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    background-color: #715bbf;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+    font-weight: 600;
 }
 
-.formGroup label {
-  display: block;
-  margin-bottom: 0.5rem;
+.passwordWrapper {
+    position: relative;
 }
 
-.formGroup input {
-  width: 100%;
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: #3f3f3f;
-  color: white;
-  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+.passwordWrapper input {
+    padding-right: 48px;
+}
+.passwordToggle {
+    position: absolute;
+    right: 1rm;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.error {
-  color: #ff6b6b;
-  text-align: center;
-  margin-top: 1rem;
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 2rem; /* Mais espaço antes do botão principal */
+}
+
+.formOptions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+.rememberWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.rememberWrapper input[type="checkbox"] {
+    display: none;
+}
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.9);
+}
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+.forgotPassword {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+}
+
+.signInButton {
+    width: 100%;
+    padding: 1rem; /* Botão maior */
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.rememberWrapper input[type="checkbox"]:checked ~ .checkboxLabel .checkmark {
+    background: #06b6d4;
+    border-color: #06b6d4;
+}
+.rememberWrapper input[type="checkbox"]:checked ~ .checkboxLabel .checkmark::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+}
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 2rem 0;
+    font-size: 0.8rem;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.divider:not(:empty)::before { margin-right: .5em; }
+.divider:not(:empty)::after { margin-left: .5em; }
+
+
+.socialLogin {
+    display: flex;
+    gap: 1rem;
+}
+
+.socialButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.signUpText {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+.signUpText a {
+    color: #4facfe;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.errorMessage {
+    color: #ff8a8a;
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }

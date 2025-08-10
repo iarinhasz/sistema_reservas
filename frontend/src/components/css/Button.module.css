@@ -3,64 +3,79 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.95rem;
+    padding: 0.7rem 1.3rem; /* Padding ajustado */
     font-weight: 600;
-    border-radius: 6px;
-    border: 1px solid transparent;
+    border-radius: 10px; /* Bordas mais arredondadas */
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    text-decoration: none; /* Para quando for usado como Link */
+    text-decoration: none;
+    
+    /* A base do efeito Glassmorphism */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
 }
-
 .button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-
 .primary {
-    background-color: #007bff;
+    background: rgba(67, 56, 202, 0.6); /* Azul/Roxo mais forte */
     color: white;
-    border-color: #007bff;
 }
 .primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background: rgba(67, 56, 202, 0.8);
 }
 
 .secondary {
-    background-color: #28a745;
+    background: rgba(22, 163, 74, 0.6); /* Verde */
     color: white;
-    border-color: #28a745;
 }
 .secondary:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+    background: rgba(22, 163, 74, 0.8);
 }
 
 .danger {
-    background-color: #dc3545;
+    background: rgba(220, 38, 38, 0.6); /* Vermelho */
     color: white;
-    border-color: #dc3545;
 }
 .danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
+    background: rgba(220, 38, 38, 0.8);
 }
 
 .cancel {
-    background-color: #6c757d;
-    color: white;
-    border-color: #6c757d;
+    background: rgba(107, 114, 128, 0.4); /* Cinza */
+    color: #f0f0f0;
 }
 .cancel:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
+    background: rgba(107, 114, 128, 0.6);
 }
 
 .disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+} 
+.signIn {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.9rem;
+    border-radius: 10px;
+    width: 100%;
+    position: relative; /* Para o loader */
+}
+.signIn:hover {
+    transform: scale(1.02);
+}
+
+.social {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 0.7rem;
+}
+.social:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
