@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
-import styles from '../css/ReservarModal.module.css';
 
-const gerarHorarios = (inicio = 8, fim = 22, intervalo = 60) => {
+import formStyles from '../../styles/Form.module.css';
+import modalStyles from '../../styles/modal.module.css';
+import Button from './Button';
+
+const gerarHorarios = (inicio = 8, fim = 22) => {
     const horarios = [];
     for (let i = inicio; i < fim; i++) {
         horarios.push(`${String(i).padStart(2, '0')}:00`);
@@ -10,15 +14,11 @@ const gerarHorarios = (inicio = 8, fim = 22, intervalo = 60) => {
     return horarios;
 };
 
-const getTodayString = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses são de 0 a 11
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+const getTodayString = () => new Date().toISOString().split('T')[0];
 
-const ReservarModal = ({ recurso, user,onClose, onSuccess }) => {
+
+const ReservarModal = ({ recurso, onClose, onSuccess }) => {
+    const { user } = useAuth(); // Pegamos o usuário para saber se é admin
     const [titulo, setTitulo] = useState('');
     const [selectedDate, setSelectedDate] = useState(getTodayString());
     const [startTime, setStartTime] = useState('');
@@ -56,6 +56,7 @@ const ReservarModal = ({ recurso, user,onClose, onSuccess }) => {
 
     useEffect(() => {
         if (!selectedDate) return;
+
         const todosHorarios = gerarHorarios();
         const horariosOcupados = reservasDoDia.flatMap(reserva => {
             const inicio = new Date(reserva.data_inicio).getHours();
@@ -66,7 +67,26 @@ const ReservarModal = ({ recurso, user,onClose, onSuccess }) => {
             }
             return horarios;
         });
-        const disponiveis = todosHorarios.filter(h => !horariosOcupados.includes(h));
+
+        const hojeString = getTodayString();
+        const horaAtual = new Date().getHours();
+
+        const disponiveis = todosHorarios.filter(h => {
+            // Regra 1: O horário não pode estar ocupado
+            const horarioJaOcupado = horariosOcupados.includes(h);
+            if (horarioJaOcupado) return false;
+            
+            // Regra 2: Se a data selecionada for hoje, o horário não pode ter passado
+            if (selectedDate === hojeString) {
+                const horaDoSlot = parseInt(h.split(':')[0]);
+                // A hora do slot deve ser MAIOR OU IGUAL à hora atual
+                return horaDoSlot >= horaAtual;
+            }
+            
+            // Se for uma data futura, o horário é válido
+            return true;
+        });
+
         setHorariosInicioDisponiveis(disponiveis);
         setStartTime('');
         setEndTime('');
@@ -77,40 +97,44 @@ const ReservarModal = ({ recurso, user,onClose, onSuccess }) => {
             setHorariosFimDisponiveis([]);
             return;
         }
-        const todosHorarios = gerarHorarios(parseInt(startTime.split(':')[0]) + 1, 23);
+        // Gera horários a partir da hora seguinte à hora de início
+        const todosHorariosFim = gerarHorarios(parseInt(startTime.split(':')[0]) + 1, 23);
+        
+        // Encontra o início da próxima reserva já agendada
         const proximaReserva = reservasDoDia
             .map(r => new Date(r.data_inicio).getHours())
             .filter(h => h > parseInt(startTime.split(':')[0]))
             .sort((a, b) => a - b)[0];
+        
+        // O limite para o fim da reserva é o início da próxima ou o final do dia
         const limite = proximaReserva || 22;
-        const disponiveis = todosHorarios.filter(h => parseInt(h.split(':')[0]) <= limite);
+        
+        const disponiveis = todosHorariosFim.filter(h => parseInt(h.split(':')[0]) <= limite);
         setHorariosFimDisponiveis(disponiveis);
         setEndTime('');
     }, [startTime, reservasDoDia]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError('');
         if (!titulo || !selectedDate || !startTime || !endTime) {
             setError('Todos os campos são obrigatórios.');
+            setLoading(false);
             return;
         }
-        setLoading(true);
+
         try {
             const data_inicio = new Date(`${selectedDate}T${startTime}:00`).toISOString();
             const data_fim = new Date(`${selectedDate}T${endTime}:00`).toISOString();
-            
             const reservaData = { 
                 recurso_id: recurso.id, 
                 recurso_tipo: recurso.recurso_tipo, 
-                titulo, 
-                data_inicio, 
-                data_fim 
+                titulo, data_inicio, data_fim 
             };
-            let endpoint = '/reservas/'; // Rota padrão para usuários
-            if (user && user.tipo === 'admin') {
-                endpoint = '/reservas/admin-create'; // Rota especial para admins
-            }
+            
+            // O endpoint muda se o usuário for admin
+            const endpoint = user?.tipo === 'admin' ? '/reservas/admin-create' : '/reservas/solicitar';
             await api.post(endpoint, reservaData);
 
             onSuccess();
@@ -123,43 +147,55 @@ const ReservarModal = ({ recurso, user,onClose, onSuccess }) => {
     };
 
     return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-                <div className={styles.modalHeader}>
-                    <h2>Fazer Reserva para: {recurso.nome || recurso.identificacao}</h2>
-                    <button onClick={onClose} className={styles.closeButton}>&times;</button>
+        <div className={modalStyles.modalBackdrop} onClick={onClose}>
+            <div className={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
+                <div className={modalStyles.modalHeader}>
+                    <h2>Fazer Reserva para: {recurso.identificacao}</h2>
+                    <button onClick={onClose} className={modalStyles.closeButton}>&times;</button>
                 </div>
+
                 <form onSubmit={handleSubmit}>
-                    <div className={styles.formGroup}>
+                    <div className={formStyles.formGroup}>
                         <label htmlFor="titulo">Título da Reserva</label>
                         <input type="text" id="titulo" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
                     </div>
-                    <div className={styles.timeGrid}>
-                        <div className={styles.formGroup}>
+                    <div className={modalStyles.timeGrid}>
+                        <div className={formStyles.formGroup}>
                             <label htmlFor="data">Dia</label>
-                            <input type="date" id="data" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} required />
+                            <input
+                                type="date"
+                                id="data"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                min={getTodayString()}
+                                required
+                            />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="startTime">Horário de Início</label>
-                            <select id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required disabled={horariosInicioDisponiveis.length === 0}>
+                        <div className={formStyles.formGroup}>
+                            <label htmlFor="startTime">Início</label>
+                            <select id="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required>
                                 <option value="" disabled>Selecione</option>
                                 {horariosInicioDisponiveis.map(h => <option key={h} value={h}>{h}</option>)}
                             </select>
                         </div>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="endTime">Horário de Fim</label>
-                            <select id="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required disabled={horariosFimDisponiveis.length === 0}>
+                        <div className={formStyles.formGroup}>
+                            <label htmlFor="endTime">Fim</label>
+                            <select id="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required disabled={!startTime}>
                                 <option value="" disabled>Selecione</option>
                                 {horariosFimDisponiveis.map(h => <option key={h} value={h}>{h}</option>)}
                             </select>
                         </div>
                     </div>
-                    {error && <p className={styles.errorMessage}>{error}</p>}
-                    <div className={styles.modalActions}>
-                        <button type="button" onClick={onClose} className={styles.cancelButton}>Cancelar</button>
-                        <button type="submit" className={styles.confirmButton} disabled={loading}>
+                    
+                    {error && <p className={formStyles.error}>{error}</p>}
+                    
+                    <div className={modalStyles.modalActions}>
+                        <Button type="button" onClick={onClose} variant="cancel">
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={loading} variant="primary">
                             {loading ? 'Reservando...' : 'Confirmar Reserva'}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

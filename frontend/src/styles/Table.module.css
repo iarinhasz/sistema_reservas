@@ -6,22 +6,20 @@
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden; /* Garante que o border-radius funcione nas tabelas */
+    font-size: 0.95rem;
 }
 
 .table th,
 .table td {
     border-bottom: 1px solid #e0e0e0;
-    padding: 1rem;
+    padding: 0.8rem 1rem;
     text-align: left;
     vertical-align: middle;
+    color: #333; /* Texto escuro para fundo claro */
 }
 
 .table th {
-    background-color: #f9fafb;
-    font-weight: 600;
-    color: #4a5568;
-    text-transform: uppercase;
-    font-size: 0.85rem;
+    background-color: #f8f9fa;
 }
 
 .table tbody tr:nth-child(even) {
@@ -95,3 +93,36 @@
     font-size: 0.9rem;
     white-space: nowrap; /* Impede que o texto quebre a linha */
 }
+/* --- TEMA ESCURO / GLASSMORPHISM --- */
+/* Estes estilos só serão aplicados se a tabela estiver dentro de um elemento com a classe .darkTheme */
+
+:global(.darkTheme) .table {
+    /* Removemos a borda e sombra padrão e usamos o estilo de vidro */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+:global(.darkTheme) .table th,
+:global(.darkTheme) .table td {
+    color: white; /* Texto claro para fundo escuro */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Remove a borda da última linha */
+:global(.darkTheme) .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+:global(.darkTheme) .table th {
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: 600;
+}
+
+/* O EFEITO HOVER CORRIGIDO */
+:global(.darkTheme) .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro */
+}
+

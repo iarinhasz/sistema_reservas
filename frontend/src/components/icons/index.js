@@ -6,7 +6,8 @@ import {
     AiOutlineSave, 
     AiOutlineMail,
     AiOutlineEye,
-    AiOutlineEyeInvisible
+    AiOutlineEyeInvisible,
+    AiOutlinePlus
 } from 'react-icons/ai';
 
 import { 
@@ -22,6 +23,7 @@ export const SaveIcon = AiOutlineSave;
 export const EmailIcon = AiOutlineMail;
 export const MenuIcon = HiBars4;
 export const LogoutIcon = HiMiniArrowRightOnRectangle;
+export const AddIcon = AiOutlinePlus;
 
 export const EyeIcon = AiOutlineEye;
 export const EyeSlashIcon = AiOutlineEyeInvisible;

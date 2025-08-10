@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+import api from '../../services/api';
+import { EditIcon, AddIcon } from '../../components/icons/index';
+import { useAuth } from '../../context/AuthContext';
+
 import AdicionarEquipamentoModal from '../../components/adm/adicionarEquipamentoModal.jsx';
 import EditarAmbienteModal from '../../components/adm/editarAmbienteModal.jsx';
 import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.jsx';
-import ReservarModal from '../../components/adm/ReservarModal.jsx';
-import api from '../../services/api';
-//import styles from './css/AmbienteDetalhesPage.module.css';
-import { EditIcon } from '../../components/icons/index';
-import { useAuth } from '../../context/AuthContext';
+import ReservarModal from '../../components/shared/ReservarModal.jsx';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
+import EquipamentosList from '../../components/shared/EquipamentoList.jsx';
 
 //estilos refatorados
-import layout from '../../styles/Layout.module.css';
-import table from '../../styles/Table.module.css';
-import list from '../../styles/List.module.css';
-import Button from '../../components/shared/Button.jsx'; 
+import layout from '../../components/layout/UserLayout.module.css';
+import list from '../../styles/List.module.css'
+import Button from '../../components/shared/Button.jsx';
 
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
     const { user } = useAuth();
+
     const [ambiente, setAmbiente] = useState(null);
     const [equipamentos, setEquipamentos] = useState([]);
     const [solicitacoesReserva, setSolicitacoesReserva] = useState([]);
@@ -80,7 +82,7 @@ const AmbienteDetalhesPage = () => {
     const handleAmbienteAtualizado = (ambienteAtualizado) => { setAmbiente(ambienteAtualizado) };
 
     if (loading) return <p>Carregando...</p>;
-    if (error) return <p className={styles.error}>{error}</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
     if (!ambiente) return <p>Ambiente não encontrado.</p>;
 
     return (
@@ -94,32 +96,28 @@ const AmbienteDetalhesPage = () => {
                     </div>
                 </div>
 
-                <div className={layout.detailsGrid}>
+            <div className={`${layout.card} ${layout.cardCompact} ${layout.detailsGrid}`}>
                     <p><strong>ID:</strong></p> <p>{ambiente.id}</p>
                     <p><strong>Tipo:</strong></p> <p>{ambiente.tipo}</p>
                     <p><strong>Status:</strong></p> <p>{ambiente.status}</p>
                 </div>
-                <hr />
-                <div className={layout.section}>
+                <div className={`${layout.section}  ${layout.card}`}>
                     <div className={layout.sectionHeader}>
                         <h2>Equipamentos</h2>
-                        <Button variant="primary" onClick={() => setAdicionarEquipamentoOpen(true)}>+ Inserir Equipamento</Button>
+                        <Button 
+                            variant="secondary" 
+                            onClick={() => setAdicionarEquipamentoOpen(true)} 
+                            icon={AddIcon} 
+                        >
+                            Inserir Equipamento
+                        </Button>
                     </div>
-                    {equipamentos.length > 0 ? (
-                    <table className={table.table}>
-                        <thead><tr><th>Nome</th><th>Marca</th><th>Modelo</th><th>Ações</th></tr></thead>
-                        <tbody>
-                            {equipamentos.map(eq => (
-                                <tr key={eq.id}>
-                                    <td>{eq.nome}</td><td>{eq.marca || 'N/A'}</td><td>{eq.modelo || 'N/A'}</td>
-                                    <td><Button variant="primary" onClick={() => handleOpenEditModal(eq)}><EditIcon/></Button></td>
-                                </tr>
-                            ))}
-                        </tbody>                        
-                    </table>) : ( <p>Nenhum equipamento cadastrado para este ambiente.</p> )}
+                    <div className={layout.card}>
+                        <EquipamentosList ambienteId={id} userRole="admin" onEditEquipamento={handleOpenEditModal} />
+                    </div>
                 </div>
-                <hr />
-                <div className={layout.section}>
+                
+                <div className={`${layout.section} ${layout.card}`}>
                     <div className={layout.sectionHeader}>
                         <h2>Solicitações Pendentes</h2>
                     </div>
@@ -140,16 +138,25 @@ const AmbienteDetalhesPage = () => {
                         </ul>
                     ) : (<p>Nenhuma solicitação pendente.</p>)}
                 </div>
-                <hr />
-                <div className={layout.section}>
-                    <div className={layout.sectionHeader}><h2>Agenda de Reservas</h2></div>
+                
+                <div className={`${layout.section} ${layout.card}`}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Agenda de Reservas</h2>
+                    </div>
                     <AgendaAmbiente ambienteId={id} key={refreshKey} userRole={user?.tipo} />
                 </div>
             </div>
+            
             {isAdicionarEquipamentoOpen && (<AdicionarEquipamentoModal ambienteId={id} onClose={() => setAdicionarEquipamentoOpen(false)} onSuccess={handleEquipamentoAdicionado}/>)}
             {isEditEquipamentoOpen && (<EditarEquipamentoModal equipamento={equipamentoParaEditar} onClose={() => setEditEquipamentoOpen(false)} onSuccess={handleEquipamentoAtualizado} onDelete={handleEquipamentoDeletado} />)}
             {isEditAmbienteOpen && (<EditarAmbienteModal ambiente={ambiente} onClose={() => setEditAmbienteOpen(false)} onSuccess={handleAmbienteAtualizado} onDelete={handleAmbienteDeletado}/>)}
-            {isReservarOpen && (<ReservarModal ambiente={ambiente} onClose={() => setReservarOpen(false)} onSuccess={handleReservaSuccess} />)}
+            {isReservarOpen && (
+                <ReservarModal 
+                    recurso={{...ambiente, recurso_tipo: 'ambiente'}}
+                    onClose={() => setReservarOpen(false)} 
+                    onSuccess={handleReservaSuccess} 
+                />
+            )}
         </>
     );
 };

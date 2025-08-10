@@ -1,0 +1,45 @@
+.calendarWrapper {
+    height: 70vh; /* Mantém a altura que já tínhamos */
+    color: #333; /* Define a cor do texto padrão para escuro */
+    background-color: #f7faff; /* Um fundo de fallback muito claro */
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* --- SOBRESCREVENDO OS ESTILOS DA BIBLIOTECA --- */
+
+/* Fundo principal da grade da agenda */
+.calendarWrapper :global(.rbc-time-content) {
+    background-color: #f0f8ff; /* AliceBlue - um azul muito claro, similar ao da imagem */
+}
+
+/* Coluna do "dia de hoje" - a deixamos um pouco mais escura para ainda ter destaque */
+.calendarWrapper :global(.rbc-today) {
+    background-color: #e6f2ff;
+}
+
+/* Fundo do cabeçalho dos dias */
+.calendarWrapper :global(.rbc-time-header-content) {
+    background-color: #f0f8ff;
+    border-left: none;
+}
+
+/* Cor dos textos dos dias e horas */
+.calendarWrapper :global(.rbc-header),
+.calendarWrapper :global(.rbc-time-gutter) {
+    color: #34495e;
+}
+
+/* Cor das linhas da grade */
+.calendarWrapper :global(.rbc-time-content > * > * > .rbc-time-slot),
+.calendarWrapper :global(.rbc-time-header-content > .rbc-row > .rbc-header),
+.calendarWrapper :global(.rbc-time-content > .rbc-time-gutter) {
+    border-color: #d6eaff;
+}
+
+/* --- ESTILO DAS RESERVAS (EVENTOS) --- */
+.calendarWrapper :global(.rbc-event) {
+    background-color: #007bff; /* Azul forte para as reservas */
+    border-color: #0056b3;
+    color: white; /* Texto branco na reserva */
+}

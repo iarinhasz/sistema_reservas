@@ -10,6 +10,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import ReservaDetalhesModal from './ReservaDetalhesModal';
 import { useAuth } from '../../context/AuthContext';
 
+import styles from './AgendaAmbiente.module.css'
+
 const locales = { 'pt-BR': ptBR };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
@@ -63,7 +65,7 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
 
     return (
         <>
-            <div style={{ height: '70vh', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+            <div className={styles.calendarWrapper}>
                 <Calendar
                     localizer={localizer}
                     culture='pt-BR'

@@ -9,7 +9,7 @@ import tableStyles from '../../styles/Table.module.css';
 import listStyles from '../../styles/List.module.css';
 
 // O componente agora recebe o ID do ambiente e a "função" do usuário
-const EquipamentosList = ({ ambienteId, userRole }) => {
+const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -59,7 +59,10 @@ const EquipamentosList = ({ ambienteId, userRole }) => {
                                     <td>{eq.marca || 'N/A'}</td>
                                     <td>{eq.modelo || 'N/A'}</td>
                                     <td>
-                                        <Button variant="primary" onClick={() => {/* Lógica para editar */}}>
+                                        <Button 
+                                            variant="primary" 
+                                            onClick={() => onEditEquipamento(eq)} // Chama a função passando o equipamento
+                                        >
                                             <EditIcon />
                                         </Button>
                                     </td>

@@ -1,11 +1,36 @@
+/* --- TEMA CLARO (PÁGINAS PÚBLICAS) --- */
 .appLayout {
-    background-color: #f0f2f5; /* Fundo cinza claro */
+    background-color: #f8f9fa; /* Fundo cinza claro */
     min-height: 100vh;
+    color: #343a40; /* Cor de texto padrão escura */
+}
+
+/* Header para o tema claro */
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .mainContent {
     width: 100%;
-    max-width: 1200px; /* Limita a largura do conteúdo principal */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+}
+
+/* Cabeçalho de seção para o tema claro */
+.sectionHeader h2 {
+    color: #343a40;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+}
+
+/* Cards para o tema claro */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }

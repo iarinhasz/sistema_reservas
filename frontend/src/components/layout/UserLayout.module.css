@@ -174,3 +174,62 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999; /* Fica abaixo do painel, mas acima do conteúdo */
 }
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+.cardCompact {
+    padding: 0.75rem 1.25rem;
+}
+
+/* E remova o fundo da classe .detailsGrid para evitar conflitos */
+.detailsGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 1rem;
+    align-items: center;
+    max-width: 400px;
+    
+    /* Cor de texto escura para legibilidade no fundo claro do card */
+    color: #2c3e50; 
+}
+/*classe p cabecalho das paginas*/
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.pageHeader h1, .pageHeader h2 {
+    margin: 0;
+    font-size: 2.2rem;
+    color: white;
+}
+.pageHeaderActions {
+    display: flex;
+    gap: 1rem;
+}
+/*cada secao da pagina de*/
+.section {
+    margin-top: 1.5rem;
+}
+/* O cabeçalho de cada seção */
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+}
+.sectionHeader h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: white;
+}
