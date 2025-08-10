@@ -85,7 +85,6 @@ const AppRouter = () => {
           <Route index element={<ProfessorHomePage />} />
           <Route path="minhas-reservas" element={<MinhasReservasPage />} />
           <Route path="perfil" element={<UserProfilePage />} />
-          {/* 4. CAMINHOS CORRIGIDOS PARA SEREM RELATIVOS */}
           <Route path="ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
           <Route path="buscar-recursos" element={<ReservarAmbientePage />} />
         </Route>

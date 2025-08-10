@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../css/AmbientesList.module.css'; //
+import styles from './AmbientesList.module.css'; //
 
 import {DeleteIcon, EditIcon } from '../icons/index';
 

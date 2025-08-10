@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx'; // Importa a biblioteca clsx
-import styles from '../css/Button.module.css';
+import styles from './Button.module.css';
 
 const Button = ({
     children,

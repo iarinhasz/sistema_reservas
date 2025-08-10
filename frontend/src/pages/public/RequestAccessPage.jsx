@@ -33,7 +33,7 @@ const RequestAccessPage = () => {
         setError('');
 
         try {
-            await api.post('/usuarios/solicitar-cadastro', {
+            await api.post('/usuarios/solicitar', {
                 nome: formData.nome,
                 cpf: formData.cpf,
                 email: formData.email,

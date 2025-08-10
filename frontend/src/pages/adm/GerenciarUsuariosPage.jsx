@@ -140,7 +140,7 @@ const GerenciarUsuariosPage = () => {
         } catch (err) {
             setDeleteError(err.response?.data?.message || 'Erro ao deletar usuário.');
         } finally {
-            setLoading(false);
+            setLoadingUsuarios(false);
         }
     };
 
