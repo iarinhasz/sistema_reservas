@@ -1,9 +1,9 @@
 // src/pages/user/professor/professorLayout.jsx
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { LogoutIcon, MenuIcon } from '../../../components/icons/index';
-import { useAuth } from '../../../context/AuthContext';
-import styles from '../css/userPages.module.css';
+import { LogoutIcon, MenuIcon } from '../icons/index';
+import { useAuth } from '../../context/AuthContext.jsx';
+import styles from './userPages.module.css';
 
 const ProfessorLayout = () => {
   const { user, logout, loading } = useAuth();

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import AmbientesList from '../../../components/shared/AmbientesList';
-import { useAuth } from '../../../context/AuthContext';
-import styles from '../css/userPages.module.css';
+import { useAuth } from '../../../context/AuthContext.jsx';
+import styles from '../../../components/layout/userPages.module.css';
 
 const ProfessorHomePage = () => {
     const { user } = useAuth();

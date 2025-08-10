@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import styles from './css/UserLayout.module.css';
+import styles from './UserLayout.module.css';
 import { MenuIcon, ProfileIcon, LogoutIcon } from '../../components/icons';
 
 const UserLayout = () => {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import styles from './css/admLayout.module.css';
-import { LogoutIcon, EditIcon, MenuIcon} from '../../components/icons/index';
+import { LogoutIcon, MenuIcon } from '../icons/index';
+import styles from './admLayout.module.css';
 
 const AdminLayout = () => {
     const { user, logout } = useAuth();

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext'; // Ajuste o caminho conforme seu projeto
-import styles from '../css/userPages.module.css';
+import { useAuth } from '../../../context/AuthContext.jsx';
+import styles from '../../../components/layout/userPages.module.css';
 import AmbientesList from '../../../components/shared/AmbientesList.jsx';
 
 const AlunoHomePage = () => {
