@@ -121,15 +121,14 @@
     text-decoration: none; 
     padding: 0.75rem 1rem; 
     
-    /* Aumente o valor aqui para deixar mais redondo */
-    border-radius: 20px; /* Exemplo: valor para um formato de pílula */
+    border-radius: 20px; 
     
     transition: background-color 0.2s, color 0.2s; 
     border: 1px solid transparent;
 }
 .nav a:hover { 
     background-color: rgba(0, 0, 0, 0.05); /* Um cinza bem claro no hover */
-    border-radius: 40px; 
+    border-radius: 20px; 
 }
 .nav a.active {
     background-color: rgba(0, 123, 255, 0.1);
