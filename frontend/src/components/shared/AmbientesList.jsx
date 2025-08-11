@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from './AmbientesList.module.css'; //
+import styles from './AmbientesList.module.css';
+import Button from './Button.jsx';
 
 import {DeleteIcon, EditIcon } from '../icons/index';
 
@@ -11,8 +12,8 @@ const AmbientesList = ({ userRole }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { user } = useAuth(); // Pega o usuário logado do contexto
-    const navigate = useNavigate(); // Hook para redirecionar
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     //permissoes de acesso aos usuarios que clicam no ambiente
     const handleAmbienteClick = (ambienteId) => {
@@ -86,7 +87,8 @@ const AmbientesList = ({ userRole }) => {
                                 <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
                                     <button
                                         onClick={() => handleAmbienteClick(ambiente.id)}
-                                        className={`${styles.ambienteBotao} ${temAlerta ? styles.ambienteBotaoAlert : ''}`}
+                                        variant={temAlerta ? 'alertaAmbiente' : 'primary'}
+                                        className="flex-grow justify-start"
                                     >
                                         {ambiente.identificacao}
                                     </button>

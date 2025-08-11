@@ -1,0 +1,57 @@
+.adminPage {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.actionPanel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.listSectionHeader {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 1.5rem; 
+}
+.actionButtonAlert {
+    position: relative;
+    overflow: hidden;
+}
+
+.actionButtonAlert::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 300%;
+    
+    
+    background: linear-gradient(
+        to right,
+        rgba(220, 53, 69, 0) 0%,      /* Começa transparente */
+        rgba(220, 53, 69, 0.5) 50%,   /* Fica vermelho no meio */
+        rgba(220, 53, 69, 0) 100%     /* Termina transparente */
+    );
+    
+    /* Inclinação da faixa */
+    transform: rotate(-45deg);
+    
+    /* Animação que faz a faixa se mover */
+    animation: scanline 2.5s linear infinite;
+}
+
+/* Definição da animação "scanline" */
+@keyframes scanline {
+    0% {
+        left: -150%; /* Começa totalmente à esquerda */
+    }
+    100% {
+        left: 150%;  /* Termina totalmente à direita */
+    }
+}

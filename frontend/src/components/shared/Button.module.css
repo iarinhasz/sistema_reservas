@@ -3,9 +3,9 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.3rem; /* Padding ajustado */
+    padding: 0.7rem 1.3rem;
     font-weight: 600;
-    border-radius: 10px; /* Bordas mais arredondadas */
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     text-decoration: none;
@@ -19,7 +19,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .primary {
-    background: rgba(67, 56, 202, 0.6); /* Azul/Roxo mais forte */
+    background: rgba(67, 56, 202, 0.6);
     color: white;
 }
 .primary:hover {
@@ -27,7 +27,7 @@
 }
 
 .secondary {
-    background: rgba(22, 163, 74, 0.6); /* Verde */
+    background: rgba(22, 163, 74, 0.6);
     color: white;
 }
 .secondary:hover {
@@ -35,7 +35,7 @@
 }
 
 .danger {
-    background: rgba(220, 38, 38, 0.6); /* Vermelho */
+    background: rgba(220, 38, 38, 0.6);
     color: white;
 }
 .danger:hover {
@@ -43,7 +43,7 @@
 }
 
 .cancel {
-    background: rgba(107, 114, 128, 0.4); /* Cinza */
+    background: rgba(107, 114, 128, 0.4);
     color: #f0f0f0;
 }
 .cancel:hover {
@@ -78,4 +78,77 @@
 }
 .social:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.dangerOutline {
+    background: rgba(220, 38, 38, 0.6);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.dangerOutline:hover {
+    background: rgba(220, 38, 38, 0.8);
+}
+
+.dangerOutline::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -150%;
+    width: 200%; height: 300%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(-45deg);
+    animation: scanline 2.5s linear infinite;
+}
+
+@keyframes scanline {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.alertaAmbiente {
+    background-color: #ffc107; /* Laranja/Amarelo */
+    color: #212529; /* Texto escuro para melhor contraste */
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+}
+
+.alertaAmbiente:hover {
+    background-color: #e0a800;
+}
+
+/* Animação de varredura com brilho branco */
+.alertaAmbiente::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 300%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(-45deg);
+    animation: scanline 2.5s linear infinite;
+}
+
+/* A animação 'scanline' continua a mesma */
+@keyframes scanline {
+    0% { left: -150%; }
+    100% { left: 150%; }
 }

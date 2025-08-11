@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'; // Importante para criar links de navegação
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../public/userDashBoard.module.css';
+import styles from './css/admHomePage.module.css';
 import { useAuth } from '../../context/AuthContext';
 import AmbientesList from '../../components/shared/AmbientesList.jsx';
 import Button from '../../components/shared/Button.jsx';
@@ -40,7 +40,7 @@ const AdmHomePage = () => {
                 <Button 
                     as={Link}
                     to="/admin/solicitacoes-cadastro" 
-                    variant={hasPendingRequests ? 'danger' : 'primary'} // Fica vermelho se houver alertas
+                    variant={hasPendingRequests ? 'dangerOutline' : 'primary'}
                 >
                     Gerencia de Usuários
                 </Button>
