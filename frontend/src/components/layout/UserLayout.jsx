@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import styles from './UserLayout.module.css'; 
 import { MenuIcon, ProfileIcon, LogoutIcon } from '../icons/index';
 import { useState } from 'react';
+import Button from '../shared/Button';
 
 const UserLayout = ({ panelTitle, navLinks = [] }) => {
     const { user, logout } = useAuth();
@@ -32,9 +33,9 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
                     ))}
                 </nav>
                 <div className={styles.panelFooter}>
-                    <button onClick={handleLogout} className={styles.logoutButton}>
-                        <LogoutIcon /> Sair
-                    </button>
+                    <Button onClick={handleLogout} variant="danger" icon={LogoutIcon}>
+                        Sair
+                    </Button>
                 </div>
             </aside>
 

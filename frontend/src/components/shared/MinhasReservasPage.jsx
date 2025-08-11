@@ -7,7 +7,6 @@ import Button from '../shared/Button.jsx';
 import ReviewModal from './reviewModal.jsx';
 
 import styles from '../css/MinhasReservasPage.module.css';
-import layout from '../../styles/Layout.module.css';
 import table from '../../styles/Table.module.css';
 
 const MinhasReservasPage = () => {

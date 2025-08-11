@@ -5,7 +5,7 @@ import AgendaAmbiente from '../../components/shared/AgendaAmbiente'; // Importe 
 import { useAuth} from '../../context/AuthContext';
 import ReservarModal from '../../components/shared/ReservarModal';
 
-import layout from '../../styles/Layout.module.css';
+import layout from '../../components/layout/UserLayout.module.css';
 import EquipamentosList from '../../components/shared/EquipamentoList'; 
 import Button from '../../components/shared/Button'; 
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import layout from '../../styles/Layout.module.css';
+import layout from '../layout/UserLayout.module.css';
 import styles from './css/visualizarReview.module.css';
 
 const StarRating = ({ rating }) => {
