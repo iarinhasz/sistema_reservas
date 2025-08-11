@@ -147,7 +147,6 @@
     animation: scanline 2.5s linear infinite;
 }
 
-/* A animação 'scanline' continua a mesma */
 @keyframes scanline {
     0% { left: -150%; }
     100% { left: 150%; }

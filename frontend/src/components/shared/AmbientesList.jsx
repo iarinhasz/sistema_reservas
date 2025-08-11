@@ -17,15 +17,11 @@ const AmbientesList = ({ userRole }) => {
 
     //permissoes de acesso aos usuarios que clicam no ambiente
     const handleAmbienteClick = (ambienteId) => {
-        if (!user) {
-            // Cenário 3: Visitante não logado
-            navigate('/login');
-        } else if (user.tipo === 'admin') {
-            // Cenário 1: Administrador
+        if (userRole === 'admin') {
             navigate(`/admin/ambientes/${ambienteId}`);
         } else {
-            // Cenário 2: Professor ou Aluno
-            navigate(`/${user.tipo}/ambientes/${ambienteId}`);
+            // Se for aluno, professor ou visitante, vai para a página pública de detalhes
+            navigate(`/ambientes/${ambienteId}`);
         }
     };
 
@@ -85,13 +81,14 @@ const AmbientesList = ({ userRole }) => {
                             return (
                             
                                 <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
-                                    <button
+                                    <Button
                                         onClick={() => handleAmbienteClick(ambiente.id)}
                                         variant={temAlerta ? 'alertaAmbiente' : 'primary'}
-                                        className="flex-grow justify-start"
+                                        
+                                        className={styles.ambienteBotao}
                                     >
                                         {ambiente.identificacao}
-                                    </button>
+                                    </Button>
 
 
 
