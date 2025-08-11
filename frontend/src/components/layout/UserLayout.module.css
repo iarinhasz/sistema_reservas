@@ -22,8 +22,7 @@
 .profileButton { text-decoration: none; color: white; font-weight: 500; }
 .hamburgerButton { background: transparent; border: none; cursor: pointer; padding: 0; color: white; }
 
-/* --- PAINEL LATERAL --- */
-/* (Seus estilos de .sidePanel, .nav, etc. continuam aqui, sem alterações) */
+
 .sidePanel {
     position: fixed;
     top: 0;
