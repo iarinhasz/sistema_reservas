@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import styles from './userProfilePage.module.css';
+import Button from '../../components/shared/Button';
 
 const UserProfilePage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  // Inicializa os estados com os dados do usuário (nome, email)
   const [nome, setNome] = useState(user?.nome || '');
   const [email, setEmail] = useState(user?.email || '');
   const [senhaAtual, setSenhaAtual] = useState('');
@@ -16,15 +18,14 @@ const UserProfilePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Sempre que o user for atualizado, atualiza o nome e email local para garantir sincronia
   useEffect(() => {
     setNome(user?.nome || '');
     setEmail(user?.email || '');
   }, [user]);
 
-  if (!user) {
-    return <p>Usuário não autenticado.</p>;
-  }
+  const handleBack = () => {
+    navigate(`/${user.tipo}`);
+  };
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -66,9 +67,18 @@ const UserProfilePage = () => {
     }
   };
 
+  if (!user) {
+    return <p>Usuário não autenticado.</p>;
+  }
+
   return (
     <div className={styles.profileContainer}>
-      <h1>Meu Perfil</h1>
+      <div className={styles.pageHeader}>
+        <h1>Meu Perfil</h1>
+        <Button onClick={handleBack} variant="cancel">
+          Voltar
+        </Button>
+      </div>
 
       {successMessage && <p className={styles.success}>{successMessage}</p>}
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
@@ -78,25 +88,11 @@ const UserProfilePage = () => {
           <h2>Dados Pessoais</h2>
           <div className={styles.formGroup}>
             <label htmlFor="nome">Nome Completo</label>
-            <input
-              id="nome"
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              disabled
-              required
-            />
+            <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} disabled required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled
-              required
-            />
+            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled required />
           </div>
           <div className={styles.formGroup}>
             <label>CPF</label>
@@ -111,33 +107,15 @@ const UserProfilePage = () => {
           <h2>Alterar Senha</h2>
           <div className={styles.formGroup}>
             <label htmlFor="senhaAtual">Senha Atual</label>
-            <input
-              id="senhaAtual"
-              type="password"
-              value={senhaAtual}
-              onChange={(e) => setSenhaAtual(e.target.value)}
-              required
-            />
+            <input id="senhaAtual" type="password" value={senhaAtual} onChange={(e) => setSenhaAtual(e.target.value)} required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="novaSenha">Nova Senha</label>
-            <input
-              id="novaSenha"
-              type="password"
-              value={novaSenha}
-              onChange={(e) => setNovaSenha(e.target.value)}
-              required
-            />
+            <input id="novaSenha" type="password" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="confirmarNovaSenha">Confirmar Nova Senha</label>
-            <input
-              id="confirmarNovaSenha"
-              type="password"
-              value={confirmarNovaSenha}
-              onChange={(e) => setConfirmarNovaSenha(e.target.value)}
-              required
-            />
+            <input id="confirmarNovaSenha" type="password" value={confirmarNovaSenha} onChange={(e) => setConfirmarNovaSenha(e.target.value)} required />
           </div>
           <button type="submit" disabled={loading}>
             {loading ? 'Alterando...' : 'Alterar Senha'}
