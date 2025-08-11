@@ -4,7 +4,7 @@ import Header from '../shared/header';
 
 const AppLayout = () => {
     return (
-        <div className={styles.lightTheme}>
+        <div className={styles.appLayout}>
             <Header />
             <main className={styles.mainContent}>
                 <Outlet />

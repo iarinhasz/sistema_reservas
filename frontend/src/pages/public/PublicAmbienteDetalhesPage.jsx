@@ -59,70 +59,76 @@ const PublicAmbienteDetalhesPage = () => {
 
     return (
         <>
-            {isModalOpen && (
-                <ReservarModal
-                    recurso={{...ambiente, recurso_tipo: 'ambiente'}}
-                    user={user}
-                    onClose={() => setIsModalOpen(false)}
-                    onSuccess={handleReservationSuccess}
-                />
-            )}
+        {isModalOpen && (
+            <ReservarModal
+            recurso={{ ...ambiente, recurso_tipo: 'ambiente' }}
+            user={user}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={handleReservationSuccess}
+            />
+        )}
 
-            {/* 4. Aplicando os novos estilos de layout e os componentes reutilizáveis */}
-            <div className={layout.container}>
-                <div className={layout.pageHeader}>
-                    <div>
-                        <h1>{ambiente.identificacao}</h1>
-                        <p>Veja a agenda de horários e solicite sua reserva.</p>
-                    </div>
-                    <Button as={Link} to="/" variant="cancel">Voltar para Início</Button>
-                </div>
-                
-                {user && (
-                    <div className={layout.actionsBar}>
-                        <Button as={Link}     to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
-                            Minhas Reservas
-                        </Button>
+        {/* Cabeçalho padronizado */}
+        <div className={layout.pageHeader}>
+            <h1>{ambiente.identificacao}</h1>
 
-                        {user.tipo === 'professor' && (
-                            <Button onClick={handleOpenReserveModal} variant="secondary">
-                                + Fazer Nova Reserva
-                            </Button>
-                        )}
+            {/* Troca layout.actionsBar -> layout.pageHeaderActions */}
+            <div className={layout.pageHeaderActions}>
+            {/* mantém exatamente os mesmos links */}
+            <Button as={Link} to="/" variant="cancel">Voltar para Início</Button>
 
-                        {user.tipo === 'aluno' && (
-                            <Button as={Link} to={`/aluno/reservar-equipamento/${id}`} variant="secondary">
-                                Reservar Equipamento
-                            </Button>
-                        )}
-                    </div>
+            {user && (
+                <>
+                <Button
+                    as={Link}
+                    to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`}
+                    variant="primary"
+                >
+                    Minhas Reservas
+                </Button>
+
+                {user.tipo === 'professor' && (
+                    <Button onClick={handleOpenReserveModal} variant="secondary">
+                    + Fazer Nova Reserva
+                    </Button>
                 )}
 
-                <div className={layout.section}>
-                    <div className={layout.sectionHeader}>
-                        <h2>Detalhes do Ambiente</h2>
-                    </div>
-                    <p><strong>Tipo:</strong> {ambiente.tipo}</p>
-                    <p><strong>Capacidade:</strong> {ambiente.capacidade} pessoas</p>
-                    <p><strong>Descrição:</strong> {ambiente.descricao}</p>
-                </div>
-                                
-                <div className={layout.section}>
-                    <div className={layout.sectionHeader}>
-                        <h2>Equipamentos neste Ambiente</h2>
-                    </div>
-                    {/* 5. Usando o componente EquipamentosList para exibir a lista */}
-                    <EquipamentosList ambienteId={id} userRole={user?.tipo} />
-                </div>
-                
-                <div className={layout.section}>
-                    <div className={layout.sectionHeader}>
-                        <h2>Agenda de Reservas</h2>
-                    </div>
-                    <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} />
-                </div>
+                {user.tipo === 'aluno' && (
+                    <Button as={Link} to={`/aluno/reservar-equipamento/${id}`} variant="secondary">
+                    Reservar Equipamento
+                    </Button>
+                )}
+                </>
+            )}
             </div>
+        </div>
+
+        {/* Card de detalhes (grid igual das telas internas) */}
+        <div className={`${layout.card} ${layout.cardCompact} ${layout.detailsGrid}`}>
+            <p><strong>ID:</strong></p> <p>{ambiente.id}</p>
+            <p><strong>Tipo:</strong></p> <p>{ambiente.tipo || '—'}</p>
+            {ambiente.status && (<><p><strong>Status:</strong></p> <p>{ambiente.status}</p></>)}
+            <p><strong>Capacidade:</strong></p> <p>{ambiente.capacidade ?? '—'} pessoas</p>
+            <p><strong>Descrição:</strong></p> <p>{ambiente.descricao || '—'}</p>
+        </div>
+
+        {/* Equipamentos em card */}
+        <div className={layout.section}>
+            <div className={layout.sectionHeader}><h2>Equipamentos neste Ambiente</h2></div>
+            <div className={layout.card}>
+            <EquipamentosList ambienteId={id} userRole={user?.tipo} />
+            </div>
+        </div>
+
+        {/* Agenda em card */}
+        <div className={layout.section}>
+            <div className={layout.sectionHeader}><h2>Agenda de Reservas</h2></div>
+            <div className={layout.card}>
+            <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} />
+            </div>
+        </div>
         </>
+
     );
 };
 

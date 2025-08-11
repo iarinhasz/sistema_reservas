@@ -47,6 +47,10 @@ const AppRouter = () => {
         {/* Rotas Públicas (sem login) */}
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomePage />} />
+        </Route>
+
+        {/* Detalhes de ambiente (público) usando o "skin" roxo do UserLayout */}
+        <Route element={<UserLayout panelTitle="Ambiente" navLinks={[]} />}>
           <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
