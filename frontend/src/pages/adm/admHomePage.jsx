@@ -31,7 +31,7 @@ const AdmHomePage = () => {
     
     return (
         <div className={styles.adminPage}>
-            <h1>Pagina Inicial do Administrador</h1>
+            <h1>Página Inicial do Administrador</h1>
             <p></p>
             
             <hr />

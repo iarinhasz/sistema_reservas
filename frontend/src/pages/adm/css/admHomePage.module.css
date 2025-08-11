@@ -1,5 +1,7 @@
 .adminPage {
-    padding: 2rem;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+    padding-right: 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -34,9 +36,9 @@
     
     background: linear-gradient(
         to right,
-        rgba(220, 53, 69, 0) 0%,      /* Começa transparente */
-        rgba(220, 53, 69, 0.5) 50%,   /* Fica vermelho no meio */
-        rgba(220, 53, 69, 0) 100%     /* Termina transparente */
+        rgba(220, 53, 69, 0) 0%, 
+        rgba(220, 53, 69, 0.5) 50%,   
+        rgba(220, 53, 69, 0) 100%   
     );
     
     /* Inclinação da faixa */
