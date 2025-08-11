@@ -30,4 +30,11 @@ router.post('/admin-create', authMiddleware, adminMiddleware, reservaController.
 router.get('/review-all', authMiddleware, adminMiddleware, (req, res, next) => 
     reservaController.findAllWithReviews(req, res, next)
 );
+
+router.get(
+    '/:recurso_tipo/:recurso_id/reviews',
+    authMiddleware,       // 1. Verifica se o usuário está logado
+    adminMiddleware,      // 2. Verifica se o usuário é um admin
+    reservaController.getReviewsByRecurso
+);
 export default router;

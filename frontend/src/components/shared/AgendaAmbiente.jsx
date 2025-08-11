@@ -1,3 +1,5 @@
+// frontend/src/components/shared/AgendaAmbiente.jsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
@@ -7,57 +9,118 @@ import ptBR from 'date-fns/locale/pt-BR';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+// Importe os dois tipos de modais que a agenda pode abrir
 import ReservaDetalhesModal from './ReservaDetalhesModal';
+import ReviewModal from './reviewModal';
 import { useAuth } from '../../context/AuthContext';
 
-import styles from './AgendaAmbiente.module.css'
+import styles from './AgendaAmbiente.module.css';
 
 const locales = { 'pt-BR': ptBR };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
-// O componente recebe o ID do ambiente como uma propriedade (prop)
 const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
     const { user } = useAuth();
-    const userRole = user?.tipo 
     const [reservas, setReservas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [date, setDate] = useState(new Date());
-    const [modalAberta, setModalAberta] = useState(false);
+    
+    // Estados para controlar qual reserva foi clicada e qual modal abrir
     const [reservaSelecionada, setReservaSelecionada] = useState(null);
+    const [modalAdminAberto, setModalAdminAberto] = useState(false);
+    const [modalReviewAberto, setModalReviewAberto] = useState(false);
 
-    const handleNavigate = useCallback((newDate) => setDate(newDate), [setDate]);
+    // Busca as reservas da API
+    const fetchReservas = useCallback(async () => {
+        if (!ambienteId) return;
+        setLoading(true);
+        try {
+            const response = await api.get(`/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`);
+            setReservas(response.data.data || []);
+        } catch (err) {
+            setError('Não foi possível carregar a agenda.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }, [ambienteId]);
 
     useEffect(() => {
-        const fetchReservas = async () => {
-            if (!ambienteId) return;
-            try {
-                const response = await api.get(`/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`);
-                setReservas(response.data.data || []);
-            } catch (err) {
-                setError('Não foi possível carregar a agenda.');
-                console.error(err);
-            } finally {
-                if (loading) setLoading(false);
-            }
-        };
         fetchReservas();
-    }, [ambienteId, refreshKey]); // Re-executa se o ID do ambiente mudar
+    }, [fetchReservas, refreshKey]);
 
-    const handleSelectEvent = useCallback((evento) => {
-        // Lógica para abrir o modal de detalhes apenas para admins
-        if (userRole === 'admin') {
-            setReservaSelecionada(evento.resource);
-            setModalAberta(true);
+    // Função para lidar com o envio de um novo review
+    const handleReviewSubmit = async ({ rating, comment, reservaId }) => {
+        try {
+            await api.post(`/reservas/${reservaId}/review`, { nota: rating, comentario: comment });
+            alert('Avaliação enviada com sucesso!');
+            setModalReviewAberto(false);
+            fetchReservas(); // Atualiza a agenda para que a cor do evento mude
+        } catch (err) {
+            alert(err.response?.data?.message || 'Erro ao enviar a avaliação.');
         }
-    }, [userRole]);
+    };
 
+    // Função que decide o que fazer quando um evento é clicado
+    const handleSelectEvent = useCallback((evento) => {
+        const reserva = evento.resource;
+        const agora = new Date();
+        const dataFim = new Date(reserva.data_fim);
+
+        // Lógica para Administradores
+        if (user?.tipo === 'admin') {
+            setReservaSelecionada(reserva);
+            setModalAdminAberto(true);
+            return;
+        }
+
+        // Lógica para Professores e Alunos
+        const isMinhaReserva = reserva.usuario_cpf === user?.cpf;
+        const jaTerminou = agora > dataFim;
+        const naoFoiAvaliada = reserva.nota === null;
+
+        if (isMinhaReserva && jaTerminou && naoFoiAvaliada) {
+            setReservaSelecionada(reserva);
+            setModalReviewAberto(true);
+        }
+    }, [user]);
+
+    // Função que define a cor de cada evento no calendário
+    const eventPropGetter = useCallback((evento) => {
+        const reserva = evento.resource;
+        const agora = new Date();
+        const dataFim = new Date(reserva.data_fim);
+        
+        if (user?.tipo === 'admin') {
+            return {}; // Cor padrão para admin
+        }
+
+        const isMinhaReserva = reserva.usuario_cpf === user?.cpf;
+        
+        if (isMinhaReserva) {
+            const jaTerminou = agora > dataFim;
+            const naoFoiAvaliada = reserva.nota === null;
+
+            if (jaTerminou && naoFoiAvaliada) {
+                return { className: 'evento-avaliar' }; // Verde
+            }
+            return { className: 'minha-reserva' }; // Azul/Ciano
+        }
+        
+        return { className: 'reserva-outros' }; // Cinza
+
+    }, [user]);
+
+    
+    // Mapeia os dados das reservas para o formato que o calendário entende
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
-        title: reserva.status === 'aprovada' ? `Reservado - ${reserva.titulo}` : `Pendente - ${reserva.titulo}`,
+        title: reserva.titulo,
         start: new Date(reserva.data_inicio),
         end: new Date(reserva.data_fim),
         allDay: false,
-        resource: reserva,
+        resource: reserva, // Guarda o objeto original completo da reserva
     })) : [];
 
     if (loading) return <p>Carregando agenda...</p>;
@@ -76,27 +139,31 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
                     views={[Views.WEEK]}
                     toolbar={true}
                     date={date}
-                    onNavigate={handleNavigate}
+                    onNavigate={setDate}
                     onSelectEvent={handleSelectEvent}
-                    eventPropGetter={() => ({ style: { cursor: userRole === 'admin' ? 'pointer' : 'default' } })}
+                    eventPropGetter={eventPropGetter}
                     messages={{ next: "Próxima", previous: "Anterior", today: "Hoje" }}
                     formats={{
                         timeGutterFormat: (date, culture, localizer) => localizer.format(date, 'HH:mm', culture),
-                        eventTimeRangeFormat: ({ start, end }, culture, localizer) => `${localizer.format(start, 'HH:mm', culture)} – ${localizer.format(end, 'HH:mm', culture)}`,
-                        headerFormat: (date, culture, localizer) => localizer.format(date, 'MMMM yyyy', culture).replace(/^\w/, (c) => c.toUpperCase()),
-                        dayRangeHeaderFormat: ({ start, end }, culture, localizer) => {
-                            const startMonth = localizer.format(start, 'MMMM', culture).replace(/^\w/, c => c.toUpperCase());
-                            const endMonth = localizer.format(end, 'MMMM', culture).replace(/^\w/, c => c.toUpperCase());
-                            if (startMonth !== endMonth) return `${localizer.format(start, 'dd')} de ${startMonth} – ${localizer.format(end, 'dd')} de ${endMonth}`;
-                            return `${localizer.format(start, 'dd')} – ${localizer.format(end, 'dd')} de ${startMonth}`;
-                        }
+                        eventTimeRangeFormat: ({ start, end }, culture, localizer) => `${localizer.format(start, 'HH:mm', culture)} – ${localizer.format(end, 'HH:mm', culture)}`
                     }}
                 />
             </div>
-            {modalAberta && (
+            
+            {/* Modal de detalhes para o Admin */}
+            {modalAdminAberto && (
                 <ReservaDetalhesModal 
                     reserva={reservaSelecionada} 
-                    onClose={() => setModalAberta(false)} 
+                    onClose={() => setModalAdminAberto(false)} 
+                />
+            )}
+
+            {/* Modal de review para Alunos/Professores */}
+            {modalReviewAberto && (
+                <ReviewModal
+                    reserva={reservaSelecionada}
+                    onClose={() => setModalReviewAberto(false)}
+                    onSubmit={handleReviewSubmit}
                 />
             )}
         </>

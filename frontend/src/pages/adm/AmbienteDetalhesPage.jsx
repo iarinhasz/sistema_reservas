@@ -11,6 +11,7 @@ import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.
 import ReservarModal from '../../components/shared/ReservarModal.jsx';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
 import EquipamentosList from '../../components/shared/EquipamentoList.jsx';
+import ReviewList from '../../components/shared/ReviewList.jsx';
 
 //estilos refatorados
 import layout from '../../components/layout/UserLayout.module.css';
@@ -42,7 +43,8 @@ const AmbienteDetalhesPage = () => {
                 const [ambienteRes, equipamentosRes, solicitacoesRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`),
-                    api.get(`/reservas?recurso_id=${id}&recurso_tipo=ambiente&status=pendente`)
+                    api.get(`/reservas?recurso_id=${id}&recurso_tipo=ambiente&status=pendente`),
+                    api.get(`/reservas/ambiente/${id}/reviews`)
                 ]);
                 setAmbiente(ambienteRes.data);
                 setEquipamentos(equipamentosRes.data);

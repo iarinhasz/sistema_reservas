@@ -107,4 +107,8 @@ export default class ReservaService {
         console.log(`--- RESERVA SERVICE: Encontrados ${reviews.length} reviews.`);
         return reviews;
     }
+
+    async findReviewsByRecurso(recurso_id, recurso_tipo) {
+        return this.reservaModel.findReviewsByRecurso(recurso_id, recurso_tipo);
+    }
 }

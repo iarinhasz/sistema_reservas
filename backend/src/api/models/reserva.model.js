@@ -201,6 +201,31 @@ class ReservaModel{
         const { rows } = await this.pool.query(query);
         return rows;
     }
+
+    async findReviewsByRecurso(recurso_id, recurso_tipo) {
+        const query = `
+            SELECT
+                r.id,
+                r.nota,
+                r.comentario,
+                r.data_fim,
+                u.nome AS usuario_nome
+            FROM
+                reservas r
+            JOIN
+                usuarios u ON r.usuario_cpf = u.cpf
+            WHERE
+                r.recurso_id = $1 AND
+                r.recurso_tipo = $2 AND
+                r.nota IS NOT NULL AND
+                r.comentario IS NOT NULL
+            ORDER BY
+                r.data_fim DESC;
+        `;
+        const { rows } = await this.pool.query(query, [recurso_id, recurso_tipo]);
+        return rows;
+    }
+
 }
 
 export default ReservaModel;

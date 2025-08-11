@@ -64,6 +64,16 @@ export default class ReservaController {
             res.status(500).json({ message: "Erro interno do servidor" });
         }
     }
+
+    getReviewsByRecurso = async (req, res, next) => {
+        try {
+            const { recurso_tipo, recurso_id } = req.params;
+            const reviews = await this.reservaService.findReviewsByRecurso(recurso_id, recurso_tipo);
+            res.status(200).json({ data: reviews });
+        } catch (error) {
+            next(error); // Passa o erro para o próximo middleware de tratamento
+        }
+    }
     
     criarReservaAdmin = async (req, res) => {
         try {
