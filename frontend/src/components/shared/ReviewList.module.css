@@ -1,6 +1,6 @@
 .reviewsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
@@ -12,6 +12,12 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reviewCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
 }
 
 .cardHeader {
@@ -19,18 +25,18 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #f0f0f0;
     padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.recursoNome {
+.userName {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #050b20;
+    color: #333;
 }
 
 .starRating {
-    color: #ffc107; /* Cor das estrelas */
+    font-size: 1.1rem;
 }
 
 .starFilled {
@@ -41,17 +47,16 @@
     color: #e0e0e0;
 }
 
-.comentario {
+.comment {
     font-style: italic;
     color: #555;
-    flex-grow: 1; /* Faz o comentário ocupar o espaço disponível */
+    flex-grow: 1;
     margin-bottom: 1rem;
+    line-height: 1.6;
 }
 
 .cardFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: right;
     color: #888;
     font-size: 0.9rem;
 }

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './UserLayout.module.css'; 
 import { MenuIcon, ProfileIcon, LogoutIcon } from '../icons/index';
@@ -7,6 +7,7 @@ import { useState } from 'react';
 const UserLayout = ({ panelTitle, navLinks = [] }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [isPanelOpen, setIsPanelOpen] = useState(false);
 
     const handleLogout = () => {
@@ -14,8 +15,10 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
         navigate('/login');
     };
 
+    const naPaginaDePerfil = location.pathname.endsWith('/perfil');
+
     return (
-        <div className={`${styles.layoutContainer}`}>
+        <div className={styles.layoutContainer}>
             <aside className={`${styles.sidePanel} ${isPanelOpen ? styles.open : ''}`}>
                 <div className={styles.panelHeader}>
                     <h3>{panelTitle}</h3>
@@ -23,12 +26,7 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
                 </div>
                 <nav className={styles.nav}>
                     {navLinks.map((link) => (
-                        // 2. Mude a tag <Link> para <NavLink>
-                        <NavLink 
-                            key={link.to} 
-                            to={link.to} 
-                            onClick={() => setIsPanelOpen(false)}
-                        >
+                        <NavLink key={link.to} to={link.to} onClick={() => setIsPanelOpen(false)}>
                             {link.label}
                         </NavLink>
                     ))}
@@ -44,13 +42,23 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
 
             <div className={styles.mainContent}>
                 <header className={styles.header}>
-                    <button className={styles.hamburgerButton} onClick={() => setIsPanelOpen(true)}>
-                        <MenuIcon />
-                    </button>
-                    <div className={styles.headerTitle}>Sistema de Reservas</div>
-                    <NavLink to={`/${user?.tipo}/perfil`} className={styles.profileButton}>
-                        <ProfileIcon /> Ver Perfil
-                    </NavLink>
+                    <div className={styles.headerStart}>
+                        <button className={styles.hamburgerButton} onClick={() => setIsPanelOpen(true)}>
+                            <MenuIcon />
+                        </button>
+                    </div>
+
+                    <div className={styles.headerTitle}>
+                        Sistema de Reservas
+                    </div>
+                    
+                    <div className={styles.headerEnd}>
+                        {!naPaginaDePerfil && (
+                            <NavLink to={`/${user?.tipo}/perfil`} className={styles.profileButton}>
+                                <ProfileIcon /> Ver Perfil
+                            </NavLink>
+                        )}
+                    </div>
                 </header>
                 
                 <main className={styles.content}>

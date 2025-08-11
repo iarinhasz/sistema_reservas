@@ -159,10 +159,50 @@
 
 .divider { margin: 2rem 0; }
 .section { margin-bottom: 2rem; }
-.filters { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 8px; }
-.filters input[type="text"] { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
-.radioGroup { display: flex; gap: 1rem; align-items: center; }
-.radioGroup label { display: flex; gap: 0.25rem; align-items: center; }
+.filters {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
+    gap: 1.5rem; /* Aumenta o espaço entre os elementos */
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #291ca1; /* Um fundo claro para destacar a área de filtros */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.filters input[type="text"] {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    min-width: 200px; /* Garante um tamanho mínimo */
+}
+
+.filters input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.radioGroup {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding-left: 1rem; /* Adiciona um espaço à esquerda */
+}
+
+.radioGroup span {
+    font-weight: 600;
+}
+
+.radioGroup label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+}
+
 .tableContainer { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }

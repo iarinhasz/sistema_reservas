@@ -70,15 +70,8 @@
     padding: 0.8rem 1rem;
     font-size: 1rem;
     text-align: left;
-    background: none; /* Remove o fundo do botão */
-    color: white;
     border: none;
     cursor: pointer;
-}
-
-
-.ambienteBotao:hover {
-    background-color: #0056b3;
 }
 
 .message, .errorMessage {
@@ -155,14 +148,14 @@
 }
 
 .ambienteBotaoAlert {
-    background-color: #ffc107; /* Amarelo */
+    background-color: #d16923; /* Amarelo */
     color: #212529; /* Texto escuro para melhor contraste */
     font-weight: bold;
     animation: pulse-yellow 2s infinite;
 }
 
 .ambienteBotaoAlert:hover {
-    background-color: #e0a800;
+    background-color: #e66903;
 }
 
 .ambienteBotaoContainer {

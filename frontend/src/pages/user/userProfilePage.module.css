@@ -1,13 +1,23 @@
+/* frontend/src/pages/user/userProfilePage.module.css */
+
 .profileContainer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
 
-.profileContainer h1 {
-    text-align: center;
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
-    color: #333;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Adequado para o tema escuro */
+}
+
+.pageHeader h1 {
+    margin: 0;
+    color: white; /* Garante que o texto seja visível no tema escuro */
 }
 
 .formWrapper {
@@ -17,18 +27,20 @@
 }
 
 .profileForm {
-    background-color: #ffffff;
+    /* Usando o estilo de card do layout para consistência */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    color: white;
 }
 
 .profileForm h2 {
     margin-top: 0;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 0.5rem;
-    color: #444;
 }
 
 .formGroup {
@@ -39,23 +51,23 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #555;
 }
 
 .formGroup input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
     font-size: 1rem;
     box-sizing: border-box;
-    background-color: #ffffff;
-    color: #333;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 .formGroup input:disabled {
-    background-color: #e9ecef;
+    background-color: rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .profileForm button {
@@ -76,26 +88,25 @@
 }
 
 .profileForm button:disabled {
-    background-color: #ccc;
+    background-color: #6c757d;
     cursor: not-allowed;
 }
 
-.success {
-    color: #28a745;
-    background-color: #e9f7ef;
+.success, .error {
     padding: 1rem;
     border-radius: 5px;
     text-align: center;
     margin-bottom: 1.5rem;
 }
 
+.success {
+    color: #d4edda;
+    background-color: rgba(21, 87, 36, 0.5);
+}
+
 .error {
-    color: #dc3545;
-    background-color: #f8d7da;
-    padding: 1rem;
-    border-radius: 5px;
-    text-align: center;
-    margin-bottom: 1.5rem;
+    color: #f8d7da;
+    background-color: rgba(114, 28, 36, 0.5);
 }
 
 @media (max-width: 768px) {

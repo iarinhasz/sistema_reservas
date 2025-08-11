@@ -178,29 +178,61 @@ class ReservaModel{
         }
     }
     async findAllWithReviews() {
+    // SUBSTITUA A QUERY ANTIGA POR ESTA
+    const query = `
+        SELECT
+            r.id,
+            r.titulo,
+            r.nota,
+            r.comentario,
+            r.data_inicio, -- Adicionado para ter a data de início
+            r.data_fim,
+            u.nome AS usuario_nome,
+            -- A MÁGICA ACONTECE AQUI:
+            -- Pega o nome do ambiente, se não houver, pega o nome do equipamento
+            COALESCE(a.identificacao, eq.nome) AS recurso_nome
+        FROM
+            reservas r
+        LEFT JOIN
+            usuarios u ON r.usuario_cpf = u.cpf
+        LEFT JOIN
+            ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
+        LEFT JOIN
+            equipamentos eq ON r.recurso_id = eq.id AND r.recurso_tipo = 'equipamento'
+        WHERE
+            r.nota IS NOT NULL AND r.comentario IS NOT NULL
+        ORDER BY
+            r.data_fim DESC;
+    `;
+    const { rows } = await this.pool.query(query);
+    return rows;
+}
+
+
+    async findReviewsByRecurso(recurso_id, recurso_tipo) {
         const query = `
             SELECT
                 r.id,
-                r.titulo,
                 r.nota,
                 r.comentario,
                 r.data_fim,
-                u.nome AS usuario_nome,
-                a.identificacao AS recurso_nome
+                u.nome AS usuario_nome
             FROM
                 reservas r
-            LEFT JOIN
+            JOIN
                 usuarios u ON r.usuario_cpf = u.cpf
-            LEFT JOIN
-                ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
             WHERE
-                r.nota IS NOT NULL AND r.comentario IS NOT NULL
+                r.recurso_id = $1 AND
+                r.recurso_tipo = $2 AND
+                r.nota IS NOT NULL AND
+                r.comentario IS NOT NULL
             ORDER BY
                 r.data_fim DESC;
         `;
-        const { rows } = await this.pool.query(query);
+        const { rows } = await this.pool.query(query, [recurso_id, recurso_tipo]);
         return rows;
     }
+
 }
 
 export default ReservaModel;

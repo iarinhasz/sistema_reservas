@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import styles from './css/GerenciarUsuariosPage.module.css';
+import tableStyles from '../../styles/Table.module.css';
 import { useDebounce } from '../../hooks/useDebounce';
 
 const GerenciarUsuariosPage = () => {
@@ -187,7 +188,7 @@ const GerenciarUsuariosPage = () => {
                     </div>
                 </div>
                 <div className={styles.tableContainer}>
-                    <table>
+                    <table className={tableStyles.table}>
                         <thead><tr><th>Nome</th><th>CPF</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
                         <tbody>
                             {loadingUsuarios ? (

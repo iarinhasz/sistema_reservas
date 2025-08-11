@@ -1,13 +1,13 @@
 import React from 'react';
-import clsx from 'clsx'; // Importa a biblioteca clsx
+import clsx from 'clsx';
 import styles from './Button.module.css';
 
 const Button = ({
     children,
     onClick,
     type = 'button',
-    variant = 'primary', // 'primary', 'secondary', 'danger', etc.
-    className = '', // Para adicionar classes extras, se necessário
+    variant = 'primary',
+    className = '',
     disabled = false,
     icon: Icon, // Prop para receber um componente de ícone
     as: Component = 'button',

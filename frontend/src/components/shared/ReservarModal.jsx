@@ -134,7 +134,7 @@ const ReservarModal = ({ recurso, onClose, onSuccess }) => {
             };
             
             // O endpoint muda se o usuário for admin
-            const endpoint = user?.tipo === 'admin' ? '/reservas/admin-create' : '/reservas/solicitar';
+            const endpoint = user?.tipo === 'admin' ? '/reservas/admin-create' : '/reservas';
             await api.post(endpoint, reservaData);
 
             onSuccess();

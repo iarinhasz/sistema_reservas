@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-
 import layout from '../../styles/Layout.module.css';
 import styles from './css/visualizarReview.module.css';
 
@@ -25,9 +24,8 @@ const VisualizarReviewsPage = () => {
         const fetchReviews = async () => {
             setLoading(true);
             try {
-                // Chamada para a nova rota do backend
                 const response = await api.get('reservas/review-all');
-                setReviews(response.data.data || []); // Assumindo que os dados vêm em response.data.data
+                setReviews(response.data.data || []);
             } catch (err) {
                 setError('Não foi possível carregar os reviews.');
                 console.error(err);
@@ -54,13 +52,15 @@ const VisualizarReviewsPage = () => {
                     {reviews.map(review => (
                         <div key={review.id} className={styles.reviewCard}>
                             <div className={styles.cardHeader}>
-                                <span className={styles.recursoNome}>{review.recurso_nome}</span>
+                                
+                                <span className={styles.recursoNome}>{review.recurso_nome || 'Recurso Indisponível'}</span>
                                 <StarRating rating={review.nota} />
                             </div>
                             <p className={styles.comentario}>"{review.comentario}"</p>
                             <div className={styles.cardFooter}>
                                 <span>- {review.usuario_nome}</span>
-                                <small>{new Date(review.data_fim).toLocaleDateString()}</small>
+                                {/* Exibindo a data da reserva de forma mais clara */}
+                                <small>Reserva de: {new Date(review.data_inicio).toLocaleDateString()}</small>
                             </div>
                         </div>
                     ))}
