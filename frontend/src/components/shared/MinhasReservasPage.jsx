@@ -146,54 +146,56 @@ const MinhasReservasPage = () => {
                 {sortedAndFilteredReservas.length === 0 ? (
                     <p>Você não tem nenhuma reserva para o filtro selecionado.</p>
                 ) : (
-                    <table className={styles.reservasTable}>
-                        <thead>
-                            <tr>
-                                <th>Recurso</th>
-                                <th>Data</th>
-                                <th className={table.statusColumn} >Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sortedAndFilteredReservas.map(reserva => {
-                                const { statusCalculado, motivo_rejeicao } = reserva;
-                                const canCancel = ['pendente', 'aprovada', 'andamento'].includes(statusCalculado);
-                                const isClickable = ['cancelada', 'rejeitada'].includes(statusCalculado) && motivo_rejeicao;
+                    <div className={table.tableWrapper}>
+                        <table className={`${table.table} ${table.reservasTable}`}>
+                            <thead>
+                                <tr>
+                                    <th>Recurso</th>
+                                    <th>Data</th>
+                                    <th className={table.statusColumn} >Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sortedAndFilteredReservas.map(reserva => {
+                                    const { statusCalculado, motivo_rejeicao } = reserva;
+                                    const canCancel = ['pendente', 'aprovada', 'andamento'].includes(statusCalculado);
+                                    const isClickable = ['cancelada', 'rejeitada'].includes(statusCalculado) && motivo_rejeicao;
 
-                                return (
-                                    <tr key={reserva.id}>
-                                        <td>{reserva.recurso_nome || reserva.titulo}</td>
-                                        <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
-                                        <td className={table.statusColumn}>
-                                            <span 
-                                                className={`${table.status} ${table[statusCalculado]} ${isClickable ? table.statusClickable : ''}`}
-                                                onClick={() => isClickable && handleShowRejectionReason(motivo_rejeicao)}
-                                                title={isClickable ? 'Clique para ver o motivo' : ''}
-                                            >
-                                                {statusCalculado}
-                                            </span>
-                                        </td>
-                                        <td className={styles.actionsCell}>
-                                            {canCancel && (
-                                                <Button variant="danger" onClick={() => handleCancelReserva(reserva.id)}>
-                                                    Cancelar
+                                    return (
+                                        <tr key={reserva.id}>
+                                            <td>{reserva.recurso_nome || reserva.titulo}</td>
+                                            <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
+                                            <td className={table.statusColumn}>
+                                                <span 
+                                                    className={`${table.status} ${table[statusCalculado]} ${isClickable ? table.statusClickable : ''}`}
+                                                    onClick={() => isClickable && handleShowRejectionReason(motivo_rejeicao)}
+                                                    title={isClickable ? 'Clique para ver o motivo' : ''}
+                                                >
+                                                    {statusCalculado}
+                                                </span>
+                                            </td>
+                                            <td className={styles.actionsCell}>
+                                                {canCancel && (
+                                                    <Button variant="danger" onClick={() => handleCancelReserva(reserva.id)}>
+                                                        Cancelar
+                                                    </Button>
+                                                )}
+                                            {statusCalculado === 'concluida' && !reserva.nota && (
+                                                <Button variant="secondary" onClick={() => handleOpenReviewModal(reserva)}>
+                                                    Fazer Review
                                                 </Button>
                                             )}
-                                        {statusCalculado === 'concluida' && !reserva.nota && (
-                                            <Button variant="secondary" onClick={() => handleOpenReviewModal(reserva)}>
-                                                Fazer Review
-                                            </Button>
-                                        )}
-                                        {reserva.nota && statusCalculado === 'concluida' && (
-                                            <span className={styles.reviewedMessage}>Já Avaliado ({reserva.nota} ★)</span>
-                                        )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                            {reserva.nota && statusCalculado === 'concluida' && (
+                                                <span className={styles.reviewedMessage}>Já Avaliado ({reserva.nota} ★)</span>
+                                            )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </>

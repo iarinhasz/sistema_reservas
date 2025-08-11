@@ -126,3 +126,35 @@
     background-color: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro */
 }
 
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Cabeçalho fixo ao rolar */
+.reservasTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Tema roxo (darkTheme): cabeçalho legível */
+:global(.darkTheme) .reservasTable thead th {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Tema roxo: linhas e hover mais suaves */
+:global(.darkTheme) .reservasTable tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+:global(.darkTheme) .reservasTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+
+/* Larguras sugeridas para melhor alinhamento */
+.statusColumn { width: 160px; }
+.actionsCell  { width: 200px; }
+
