@@ -122,7 +122,14 @@ const AmbienteDetalhesPage = () => {
                         <ul className={list.list}>
                             {solicitacoesReserva.map((reserva, index) => (
                                 <li key={reserva.id} className={`${list.listItem} ${list['listItem--pending']}`}>
-                                    {/* ... conteúdo do item da lista ... */}
+                                    <div className={list.listItemInfo}>
+                                    <strong>{reserva.titulo}</strong>
+                                    <small> por: {reserva.usuario_nome}</small>
+                                </div>
+                                <div className={list.listItemActions}>
+                                    <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
+                                    <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
+                                </div>
                                 </li>
                             ))}
                         </ul>

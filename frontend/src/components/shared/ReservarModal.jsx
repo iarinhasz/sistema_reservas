@@ -4,6 +4,7 @@ import api from '../../services/api';
 
 import formStyles from '../../styles/Form.module.css';
 import modalStyles from '../../styles/modal.module.css';
+
 import Button from './Button';
 
 const gerarHorarios = (inicio = 8, fim = 22) => {

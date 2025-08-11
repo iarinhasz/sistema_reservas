@@ -79,7 +79,6 @@ const GerenciarUsuariosPage = () => {
     const handleAction = async (action, cpf, body = {}) => {
         try {
             await api.post(`/usuarios/${cpf}/${action}`, body);
-            // Remove da lista de solicitações
             setSolicitacoes(prev => prev.filter(s => s.cpf !== cpf));
         } catch (err) {
             setError(`Erro ao ${action}r solicitação.`);
@@ -189,7 +188,7 @@ const GerenciarUsuariosPage = () => {
                 </div>
                 <div className={styles.tableContainer}>
                     <table className={tableStyles.table}>
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
                         <tbody>
                             {loadingUsuarios ? (
                                 <tr><td colSpan="6">Buscando...</td></tr>
@@ -198,7 +197,7 @@ const GerenciarUsuariosPage = () => {
                             ) : (
                                 usuarios.map(user => (
                                     <tr key={user.cpf}>
-                                        <td>{user.nome}</td><td>{user.cpf}</td><td>{user.email}</td><td>{user.tipo}</td>
+                                        <td>{user.nome}</td><td>{user.email}</td><td>{user.tipo}</td>
                                         <td><span className={`${styles.status} ${styles[user.status]}`}>{user.status}</span></td>
                                         <td><button onClick={() => openDeleteModal(user)} className={styles.deleteActionBtn}>Deletar</button></td>
                                     </tr>
