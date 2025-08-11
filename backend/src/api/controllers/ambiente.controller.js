@@ -1,3 +1,5 @@
+import { validationResult } from 'express-validator';
+
 class AmbienteController{
 
     constructor(ambienteService) {
@@ -16,15 +18,17 @@ class AmbienteController{
     }
 
     create = async (req, res)=>{
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ message: "Erro de validação", errors: errors.array() });
+        }
+
         try {
             const novoAmbiente = await this.ambienteService.create(req.body);
             res.status(201).json({ message: "Ambiente criado com sucesso!", ambiente: novoAmbiente });
         } catch (error) {
             if (error.message === "Identificador já cadastrado") {
                 return res.status(409).json({ message: error.message });
-            }
-            if (error.message === "Identificador obrigatório") {
-                return res.status(400).json({ message: error.message });
             }
             console.error('Erro ao criar ambiente:', error);
             res.status(500).json({ message: "Erro interno do servidor." });

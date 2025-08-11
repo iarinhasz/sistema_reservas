@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/shared/Button.jsx';
 import api from '../../services/api.js';
 import styles from '../../styles/FormPage.module.css';
-import Button from '../../components/shared/Button.jsx';
 
 const CadastrarAmbientePage = () => {
     // Estados para controlar os campos do formulário
@@ -15,21 +15,18 @@ const CadastrarAmbientePage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [validationErrors, setValidationErrors] = useState({});
 
     // Hook do React Router para navegar entre páginas
     const navigate = useNavigate();
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Impede o recarregamento padrão da página
         setIsSubmitting(true);
         setSuccessMessage('');
         setErrorMessage('');
-
-        if (!identificacao || !tipo) {
-            setErrorMessage('O identificador e o tipo são obrigatórios.');
-            setIsSubmitting(false);
-            return;
-        }
+        setValidationErrors({});
 
         try {
             // Envia os dados para a API do backend
@@ -43,7 +40,18 @@ const CadastrarAmbientePage = () => {
             }, 2000);  
 
         } catch (error) {
-            setErrorMessage(error.response?.data?.message || 'Ocorreu um erro inesperado.');
+            const res = error.response;
+            // Verifica se é um erro de validação do express-validator (status 400)
+            if (res && res.status === 400 && res.data.errors) {
+                const errorsObj = {};
+                res.data.errors.forEach(err => {
+                    errorsObj[err.path] = err.msg;
+                });
+                setValidationErrors(errorsObj);
+                setErrorMessage('Por favor, corrija os erros no formulário.'); // Mensagem genérica
+            } else {
+                setErrorMessage(res?.data?.message || 'Ocorreu um erro inesperado.');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -63,6 +71,9 @@ const CadastrarAmbientePage = () => {
                         placeholder="Ex: Sala A014, Laboratório de Hardware"
                         required
                     />
+                    {validationErrors.identificacao && (
+                        <p className={styles.fieldError}>{validationErrors.identificacao}</p>
+                    )}
                 </div>
 
                 <div className={styles.formGroup}>

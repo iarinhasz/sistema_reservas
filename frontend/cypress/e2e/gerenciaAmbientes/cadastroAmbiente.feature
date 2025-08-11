@@ -16,6 +16,15 @@ Scenario: Cadastrar um novo ambiente com sucesso
     And eu sou redirecionado para a página inicial do administrador
     And na seção "Visão Geral dos Ambientes", eu devo ver "Sala de Conferências 101" sob a categoria "Salas de Reunião"
 
+Scenario: Cadastrar um ambiente com espaços extras no início e no fim
+    Given eu estou na página de cadastro de ambiente
+    When eu preencho o campo "Identificador do Ambiente" com "  Laboratório de Robótica  "
+    And eu seleciono "Laboratórios" no campo "Tipo de Ambiente"
+    And eu clico no botão "Cadastrar Ambiente"
+    Then eu sou redirecionado para a página inicial do administrador
+    And na seção "Visão Geral dos Ambientes", eu devo ver o novo ambiente "Laboratório de Robótica"
+
+
 Scenario: Tentar cadastrar um ambiente com identificador já existente
     Given que já existe um ambiente com o identificador "Laboratório de Hardware"
     When eu clico no botão "Cadastrar Novo Ambiente"
@@ -31,3 +40,22 @@ Scenario: Tentar cadastrar um ambiente sem preencher o identificador
     And eu clico no botão "Cadastrar Ambiente"
     Then eu devo ver a mensagem de validação "Preencha este campo." associada ao campo "Identificador do Ambiente"
     And eu devo continuar na página de cadastro de ambiente
+
+Scenario: Tentar cadastrar um ambiente com identificador muito curto
+    Given eu estou na página de cadastro de ambiente
+    When eu preencho o campo "Identificador do Ambiente" com "A1"
+    And eu seleciono "Salas de Aula" no campo "Tipo de Ambiente"
+    And eu clico no botão "Cadastrar Ambiente"
+    Then eu devo ver uma mensagem de erro "O identificador deve ter no mínimo 3 caracteres."
+    And o ambiente "A1" não deve ser criado
+    And eu devo continuar na página de cadastro de ambiente
+
+Scenario: Tentar cadastrar um ambiente com caracteres especiais no identificador
+    Given eu estou na página de cadastro de ambiente
+    When eu preencho o campo "Identificador do Ambiente" com "Sala #Final!"
+    And eu seleciono "Salas de Aula" no campo "Tipo de Ambiente"
+    And eu clico no botão "Cadastrar Ambiente"
+    Then eu devo ver uma mensagem de erro "O identificador pode conter apenas letras, números, espaços e hífens."
+    And o ambiente "Sala #Final!" não deve ser criado
+    And eu devo continuar na página de cadastro de ambiente
+

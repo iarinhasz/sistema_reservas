@@ -90,3 +90,9 @@
     text-align: center;
     margin-top: 1rem;
 }
+.fieldError {
+    color: #c82333;      /* Um tom de vermelho para indicar erro */
+    font-size: 0.85rem;   /* Fonte um pouco menor que o texto normal */
+    font-weight: 500;     /* Um peso de fonte semi-negrito para dar destaque */
+    margin-top: 0.5rem;   /* Um pequeno espaço acima da mensagem de erro */
+}
