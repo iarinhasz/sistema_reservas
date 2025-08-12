@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useNotificacao } from '../../hooks/useNotificacao.js';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './AmbientesList.module.css';
 import Button from './Button.jsx';
 import { DeleteIcon, EditIcon } from '../icons/index';
@@ -12,9 +12,23 @@ const AmbientesList = ({ userRole }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { alertasReserva = new Set() } = useNotificacao() || {};
-
     const { user } = useAuth();
     const navigate = useNavigate();
+
+    const handleAmbienteClick = (ambienteId) => {
+
+        if (userRole === 'admin') {
+            navigate(`/admin/ambientes/${ambienteId}`);
+        } 
+ 
+        else if (userRole === 'professor' || userRole === 'aluno') {
+            navigate(`/${userRole}/ambientes/${ambienteId}`);
+        } 
+
+        else {
+            navigate(`/ambientes/${ambienteId}`);
+        }
+    };
 
     useEffect(() => {
         const fetchAmbientes = async () => {
@@ -68,7 +82,7 @@ const AmbientesList = ({ userRole }) => {
                             return (
                                 <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
                                     <Button
-                                        onClick={() => navigate(userRole === 'admin' ? `/admin/ambientes/${ambiente.id}` : `/ambientes/${ambiente.id}`)}
+                                        onClick={() => handleAmbienteClick(ambiente.id)}
                                         variant={temAlerta ? 'alertaAmbiente' : 'primary'}
                                         className={styles.ambienteBotao}
                                         title={temAlerta ? `Solicitações pendentes` : `Ver detalhes de ${ambiente.identificacao}`}

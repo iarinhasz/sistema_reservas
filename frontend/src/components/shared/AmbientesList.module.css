@@ -103,9 +103,7 @@
 .iconButton:hover {
     background-color: #e0e0e0;
 }
-/* ... (seus estilos existentes) ... */
 
-/* Novo container para o botão e os ícones */
 .ambienteItem {
     display: flex;
     justify-content: space-between;
