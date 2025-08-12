@@ -22,8 +22,8 @@ const AlunoHomePage = () => {
                 </Link>
             </div>
             <h2>Ambientes Disponíveis</h2>
-            <AmbientesList />
             
+            <AmbientesList userRole={user?.tipo} />
         </div>
     );
 };

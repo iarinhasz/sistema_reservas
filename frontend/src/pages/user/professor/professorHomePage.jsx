@@ -8,8 +8,6 @@ const ProfessorHomePage = () => {
 
     return (
         <div className={styles.userPage}>
-
-            
             <h1>Minha Página Inicial</h1>
             <p>Bem-vindo{user?.nome ? `, ${user.nome}` : ''}! Aqui você pode gerenciar suas reservas de ambientes e equipamentos.</p>
             
@@ -23,7 +21,8 @@ const ProfessorHomePage = () => {
                     + Fazer Nova Reserva
                 </Link>
             </div>
-            <AmbientesList />
+
+            <AmbientesList userRole={user?.tipo} />
         </div>
     );
 };

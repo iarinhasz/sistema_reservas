@@ -1,5 +1,3 @@
-// src/pages/user/professor/reservarAmbientePage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
