@@ -13,7 +13,6 @@ import api from '../../services/api';
 import list from '../../styles/List.module.css';
 import styles from '../../components/layout/UserLayout.module.css';
 
-
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
     const { user } = useAuth();
@@ -34,7 +33,6 @@ const AmbienteDetalhesPage = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                
                 const [ambienteRes, equipamentosRes, solicitacoesRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`),
@@ -87,11 +85,9 @@ const AmbienteDetalhesPage = () => {
                 <h1>{ambiente.identificacao}</h1>
                 <div className={styles.pageHeaderActions}>
                     <Button variant="primary" onClick={() => setEditAmbienteOpen(true)}><EditIcon /> Editar Ambiente</Button>
-                    
                     <Button as={Link} to={`/admin/ambientes/${id}/avaliacoes`} variant="primary">
                         Ver Avaliações
                     </Button>
-                    
                     <Button variant="primary" onClick={() => setReservarOpen(true)}>Fazer Reserva</Button>
                 </div>
             </div>
@@ -114,30 +110,30 @@ const AmbienteDetalhesPage = () => {
                 </div>
             </div>
             
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Solicitações Pendentes</h2>
-                </div>
-                <div className={styles.card}>
-                    {solicitacoesReserva.length > 0 ? (
+            {solicitacoesReserva.length > 0 && (
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2>Solicitações Pendentes</h2>
+                    </div>
+                    <div className={styles.card}>
                         <ul className={list.list}>
                             {solicitacoesReserva.map((reserva, index) => (
                                 <li key={reserva.id} className={`${list.listItem} ${list['listItem--pending']}`}>
                                     <div className={list.listItemInfo}>
-                                    <strong>{reserva.titulo}</strong>
-                                    <small> por: {reserva.usuario_nome}</small>
-                                </div>
-                                <div className={list.listItemActions}>
-                                    <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
-                                    <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
-                                </div>
+                                        <strong>{reserva.titulo}</strong>
+                                        <small> por: {reserva.usuario_nome}</small>
+                                    </div>
+                                    <div className={list.listItemActions}>
+                                        <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
+                                        <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : (<p>Nenhuma solicitação pendente.</p>)}
+                    </div>
                 </div>
-            </div>
-
+            )}
+            
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <h2>Agenda de Reservas</h2>
