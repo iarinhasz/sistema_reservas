@@ -1,12 +1,13 @@
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotificacao } from '../../hooks/useNotificacao.js';
 import styles from './UserLayout.module.css'; 
 import { MenuIcon, ProfileIcon, LogoutIcon } from '../icons/index';
 import { useState } from 'react';
-import Button from '../shared/Button';
 
 const UserLayout = ({ panelTitle, navLinks = [] }) => {
     const { user, logout } = useAuth();
+    const { temNovoCadastro } = useNotificacao(); 
     const navigate = useNavigate();
     const location = useLocation();
     const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -26,16 +27,24 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
                     <p>Bem-vindo, {user?.nome}</p>
                 </div>
                 <nav className={styles.nav}>
-                    {navLinks.map((link) => (
-                        <NavLink key={link.to} to={link.to} onClick={() => setIsPanelOpen(false)}>
-                            {link.label}
-                        </NavLink>
-                    ))}
+                    {navLinks.map((link) => {
+                        const temAlerta = link.to === "/admin/solicitacoes-cadastro" && temNovoCadastro;
+                        return (
+                            <NavLink 
+                                key={link.to} 
+                                to={link.to} 
+                                onClick={() => setIsPanelOpen(false)}
+                                className={temAlerta ? styles.notification : ''}
+                            >
+                                {link.label}
+                            </NavLink>
+                        );
+                    })}
                 </nav>
                 <div className={styles.panelFooter}>
-                    <Button onClick={handleLogout} variant="danger" icon={LogoutIcon}>
-                        Sair
-                    </Button>
+                    <button onClick={handleLogout} className={styles.logoutButton}>
+                        <LogoutIcon /> Sair
+                    </button>
                 </div>
             </aside>
 
@@ -48,11 +57,9 @@ const UserLayout = ({ panelTitle, navLinks = [] }) => {
                             <MenuIcon />
                         </button>
                     </div>
-
                     <div className={styles.headerTitle}>
                         Sistema de Reservas
                     </div>
-                    
                     <div className={styles.headerEnd}>
                         {!naPaginaDePerfil && (
                             <NavLink to={`/${user?.tipo}/perfil`} className={styles.profileButton}>

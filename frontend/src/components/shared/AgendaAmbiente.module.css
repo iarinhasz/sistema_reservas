@@ -76,3 +76,26 @@
     opacity: 0.7; /* Um pouco transparente para dar menos destaque */
     border-color: #5a6268;
 }
+
+.eventoPersonalizado {
+    padding: 2px 5px; /* Adiciona um pequeno espaçamento interno */
+    font-size: 0.8em; /* Reduz um pouco o tamanho da fonte para caber melhor */
+    height: 100%;
+    overflow: hidden; /* Esconde qualquer texto que transborde */
+    display: flex;
+    flex-direction: column;
+}
+
+.eventoPersonalizado strong {
+    font-weight: 600; /* Deixa o título em negrito */
+    display: block; /* Garante que o título ocupe a sua própria linha */
+    white-space: nowrap; /* Impede que o título quebre a linha */
+    overflow: hidden; /* Esconde o excesso de texto */
+    text-overflow: ellipsis; /* Adiciona "..." se o título for muito longo */
+}
+
+.eventoPersonalizado p {
+    margin: 0;
+    font-size: 0.9em; /* Tamanho da fonte para o horário */
+    white-space: nowrap; /* Impede que o horário quebre a linha */
+}

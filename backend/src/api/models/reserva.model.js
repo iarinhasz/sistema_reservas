@@ -233,6 +233,31 @@ class ReservaModel{
         return rows;
     }
 
+    async findReviewsByAmbienteCompleto(ambiente_id) {
+        const query = `
+            SELECT
+                r.id, r.nota, r.comentario, r.data_inicio, r.data_fim,
+                u.nome as usuario_nome,
+                COALESCE(a.identificacao, eq.nome) as recurso_nome
+            FROM reservas r
+            JOIN usuarios u ON r.usuario_cpf = u.cpf
+            LEFT JOIN ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
+            LEFT JOIN equipamentos eq ON r.recurso_id = eq.id AND r.recurso_tipo = 'equipamento'
+            WHERE
+                r.nota IS NOT NULL
+                AND (
+                    -- Ou o review é do próprio ambiente
+                    (r.recurso_tipo = 'ambiente' AND r.recurso_id = $1)
+                    OR
+                    -- Ou o review é de um equipamento que PERTENCE a este ambiente
+                    (r.recurso_tipo = 'equipamento' AND eq.ambiente_id = $1)
+                )
+            ORDER BY r.data_fim DESC;
+        `;
+        const { rows } = await this.pool.query(query, [ambiente_id]);
+        return rows;
+    }
+
 }
 
 export default ReservaModel;

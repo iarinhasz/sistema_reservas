@@ -1,29 +1,20 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useNotificacao } from '../../hooks/useNotificacao.js';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './AmbientesList.module.css';
 import Button from './Button.jsx';
-
-import {DeleteIcon, EditIcon } from '../icons/index';
+import { DeleteIcon, EditIcon } from '../icons/index';
 
 const AmbientesList = ({ userRole }) => {
     const [ambientes, setAmbientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { alertasReserva = new Set() } = useNotificacao() || {};
 
     const { user } = useAuth();
     const navigate = useNavigate();
-
-    //permissoes de acesso aos usuarios que clicam no ambiente
-    const handleAmbienteClick = (ambienteId) => {
-        if (userRole === 'admin') {
-            navigate(`/admin/ambientes/${ambienteId}`);
-        } else {
-            // Se for aluno, professor ou visitante, vai para a página pública de detalhes
-            navigate(`/ambientes/${ambienteId}`);
-        }
-    };
 
     useEffect(() => {
         const fetchAmbientes = async () => {
@@ -49,26 +40,19 @@ const AmbientesList = ({ userRole }) => {
         return acc;
     }, {});
 
-    if (loading) return <p className={styles.message}>Carregando ambientes...</p>;
-    if (error) return <p className={styles.errorMessage}>{error}</p>;
-
     const handleDelete = async (ambienteId, ambienteNome) => {
-        // Pede confirmação ao usuário
-        if (window.confirm(`Tem certeza que deseja deletar o ambiente "${ambienteNome}"? Esta ação não pode ser desfeita.`)) {
+        if (window.confirm(`Tem certeza que deseja deletar o ambiente "${ambienteNome}"?`)) {
             try {
-                // Faz a chamada DELETE para a API do backend
                 await api.delete(`/ambientes/${ambienteId}`);
-                
-                // Remove o ambiente da lista na tela para feedback instantâneo
                 setAmbientes(listaAtual => listaAtual.filter(amb => amb.id !== ambienteId));
-
             } catch (err) {
-                // Exibe a mensagem de erro da API (ex: "Não é possível excluir...")
                 alert(err.response?.data?.message || 'Erro ao deletar o ambiente.');
-                console.error(err);
             }
         }
     };
+    
+    if (loading) return <p className={styles.message}>Carregando ambientes...</p>;
+    if (error) return <p className={styles.errorMessage}>{error}</p>;
 
     return (
         <main className={styles.ambientesGrid}>
@@ -77,30 +61,34 @@ const AmbientesList = ({ userRole }) => {
                     <h2>{tipo}</h2>
                     <div className={styles.botoesContainer}>
                         {listaDeAmbientes.map(ambiente => {
-                            const temAlerta = userRole === 'admin' && ambiente.pending_reservations_count > 0;
+                            const temAlertaPendente = userRole === 'admin' && ambiente.pending_reservations_count > 0;
+                            const temAlertaTempoReal = userRole === 'admin' && alertasReserva.has(ambiente.id);
+                            const temAlerta = temAlertaPendente || temAlertaTempoReal;
+
                             return (
-                            
                                 <div key={ambiente.id} className={styles.ambienteBotaoContainer}>
                                     <Button
-                                        onClick={() => handleAmbienteClick(ambiente.id)}
+                                        onClick={() => navigate(userRole === 'admin' ? `/admin/ambientes/${ambiente.id}` : `/ambientes/${ambiente.id}`)}
                                         variant={temAlerta ? 'alertaAmbiente' : 'primary'}
-                                        
                                         className={styles.ambienteBotao}
+                                        title={temAlerta ? `Solicitações pendentes` : `Ver detalhes de ${ambiente.identificacao}`}
                                     >
                                         {ambiente.identificacao}
                                     </Button>
 
-
-
-                                    {user?.tipo === 'admin' && (
+                                    {userRole === 'admin' && (
                                         <div className={styles.iconActions}>
-                                            <Link to={`/admin/ambientes/${ambiente.id}`} className={styles.iconButton} title="Editar Ambiente">
+                                            <button 
+                                                onClick={() => navigate(`/admin/ambientes/${ambiente.id}`)}
+                                                className={styles.iconButton} 
+                                                title="Editar Ambiente"
+                                            >
                                                 <EditIcon />
-                                            </Link>
+                                            </button>
                                             <button 
                                                 onClick={() => handleDelete(ambiente.id, ambiente.identificacao)}
-                                            className={`${styles.iconButton} ${styles.deleteButton}`}
-                                            title="Deletar Ambiente"
+                                                className={`${styles.iconButton} ${styles.deleteButton}`}
+                                                title="Deletar Ambiente"
                                             >
                                                 <DeleteIcon />
                                             </button>

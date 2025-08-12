@@ -1,25 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import AdicionarEquipamentoModal from '../../components/adm/adicionarEquipamentoModal.jsx';
 import EditarAmbienteModal from '../../components/adm/editarAmbienteModal.jsx';
 import EditarEquipamentoModal from '../../components/adm/editarEquipamentoModal.jsx';
 import { AddIcon, EditIcon } from '../../components/icons/index';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente.jsx';
+import Button from '../../components/shared/Button.jsx';
 import EquipamentosList from '../../components/shared/EquipamentoList.jsx';
 import ReservarModal from '../../components/shared/ReservarModal.jsx';
-import ReviewList from '../../components/shared/ReviewList.jsx';
 import { useAuth } from '../../context/AuthContext';
+import { useNotificacao } from '../../hooks/useNotificacao.js';
 import api from '../../services/api';
-
-import styles from '../../components/layout/UserLayout.module.css';
-import Button from '../../components/shared/Button.jsx';
 import list from '../../styles/List.module.css';
+import styles from '../../components/layout/UserLayout.module.css';
 
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
     const { user } = useAuth();
+    const { limparAlertaReserva } = useNotificacao(); 
     const [ambiente, setAmbiente] = useState(null);
-    const [reviews, setReviews] = useState([]);
     const [equipamentos, setEquipamentos] = useState([]);
     const [solicitacoesReserva, setSolicitacoesReserva] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -33,23 +32,23 @@ const AmbienteDetalhesPage = () => {
     const navigate = useNavigate(); 
 
     useEffect(() => {
+
+        limparAlertaReserva(parseInt(id, 10));
+
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [ambienteRes, equipamentosRes, solicitacoesRes, reviewsRes] = await Promise.all([
+                const [ambienteRes, equipamentosRes, solicitacoesRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`),
                     api.get(`/reservas?recurso_id=${id}&recurso_tipo=ambiente&status=pendente`),
-                    api.get(`/reservas/ambiente/${id}/reviews`)
                 ]);
                 setAmbiente(ambienteRes.data);
                 setEquipamentos(equipamentosRes.data);
                 setSolicitacoesReserva(solicitacoesRes.data.data || []);
-                setReviews(reviewsRes.data.data || []);
                 setError('');
             } catch (err) {
                 setError('Falha ao carregar dados. Verifique se o ambiente existe.');
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -64,20 +63,19 @@ const AmbienteDetalhesPage = () => {
             setRefreshKey(prevKey => prevKey + 1); 
         } catch (err) {
             alert(`Erro ao ${action}r reserva.`);
-            console.error(err);
         }
     };
     
     const handleAmbienteDeletado = () => {
         alert('Ambiente deletado com sucesso!');
-        navigate('/admin'); // Redireciona para a home do admin
+        navigate('/admin');
     };
 
     const handleReservaSuccess = () => { setRefreshKey(prevKey => prevKey + 1) };
-    const handleEquipamentoAdicionado = (novoEquipamento) => { setRefreshKey(prevKey => prevKey + 1) };
+    const handleEquipamentoAdicionado = () => { setRefreshKey(prevKey => prevKey + 1) };
     const handleOpenEditModal = (equipamento) => { setEquipamentoParaEditar(equipamento); setEditEquipamentoOpen(true) };
-    const handleEquipamentoAtualizado = (equipamentoAtualizado) => { setRefreshKey(prevKey => prevKey + 1) };
-    const handleEquipamentoDeletado = (equipamentoId) => { setRefreshKey(prevKey => prevKey + 1); setEditEquipamentoOpen(false) };
+    const handleEquipamentoAtualizado = () => { setRefreshKey(prevKey => prevKey + 1) };
+    const handleEquipamentoDeletado = () => { setRefreshKey(prevKey => prevKey + 1); setEditEquipamentoOpen(false) };
     const handleAmbienteAtualizado = (ambienteAtualizado) => { setAmbiente(ambienteAtualizado) };
 
     if (loading) return <p>Carregando...</p>;
@@ -90,6 +88,9 @@ const AmbienteDetalhesPage = () => {
                 <h1>{ambiente.identificacao}</h1>
                 <div className={styles.pageHeaderActions}>
                     <Button variant="primary" onClick={() => setEditAmbienteOpen(true)}><EditIcon /> Editar Ambiente</Button>
+                    <Button as={Link} to={`/admin/ambientes/${id}/avaliacoes`} variant="primary">
+                        Ver Avaliações
+                    </Button>
                     <Button variant="primary" onClick={() => setReservarOpen(true)}>Fazer Reserva</Button>
                 </div>
             </div>
@@ -107,44 +108,34 @@ const AmbienteDetalhesPage = () => {
                         Inserir Equipamento
                     </Button>
                 </div>
-                {/* O card de vidro envolve o conteúdo da seção */}
                 <div className={styles.card}>
                     <EquipamentosList ambienteId={id} userRole="admin" onEditEquipamento={handleOpenEditModal} />
                 </div>
             </div>
             
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Solicitações Pendentes</h2>
-                </div>
-                <div className={styles.card}>
-                    {solicitacoesReserva.length > 0 ? (
+            {solicitacoesReserva.length > 0 && (
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2>Solicitações Pendentes</h2>
+                    </div>
+                    <div className={styles.card}>
                         <ul className={list.list}>
                             {solicitacoesReserva.map((reserva, index) => (
                                 <li key={reserva.id} className={`${list.listItem} ${list['listItem--pending']}`}>
                                     <div className={list.listItemInfo}>
-                                    <strong>{reserva.titulo}</strong>
-                                    <small> por: {reserva.usuario_nome}</small>
-                                </div>
-                                <div className={list.listItemActions}>
-                                    <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
-                                    <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
-                                </div>
+                                        <strong>{reserva.titulo}</strong>
+                                        <small> por: {reserva.usuario_nome}</small>
+                                    </div>
+                                    <div className={list.listItemActions}>
+                                        <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
+                                        <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
-                    ) : (<p>Nenhuma solicitação pendente.</p>)}
+                    </div>
                 </div>
-            </div>
-
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Avaliações Recebidas</h2>
-                </div>
-                <div className={styles.card}>
-                    <ReviewList reviews={reviews} />
-                </div>
-            </div>
+            )}
             
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>

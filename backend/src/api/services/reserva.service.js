@@ -1,8 +1,12 @@
+import appEmitter from "../../events/appEmitter.js";
+
 export default class ReservaService {
-    constructor(reservaModel, usuarioModel, emailService) {
+    // Adicione o appEmitter ao construtor
+    constructor(reservaModel, usuarioModel, emailService, appEmitter) {
         this.reservaModel = reservaModel;
         this.usuarioModel = usuarioModel;
         this.emailService = emailService;
+        this.appEmitter = appEmitter; // Armazene a instância do emitter
     }
 
     async aprovar(reservaId) {
@@ -52,6 +56,8 @@ export default class ReservaService {
     async solicitar(dadosSolicitacao, dadosUsuario) {
         const novaReserva = await this.reservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
 
+        this.appEmitter.emit('reserva.solicitada', novaReserva);
+
         const solicitante = await this.usuarioModel.findByCpf(dadosUsuario.cpf);
         if (solicitante) {
             await this.emailService.sendReservationRequestEmail(solicitante, novaReserva);
@@ -77,7 +83,6 @@ export default class ReservaService {
     async deixarReview(reservaId, dadosReview, usuarioLogado) {
         const { nota, comentario } = dadosReview;
         const reserva = await this.reservaModel.findById(reservaId);
-        console.log('BACKEND DEBUG: Dados da reserva encontrada no banco:', reserva);
         if (!reserva) {
             throw new Error("Reserva não encontrada.");
         }
@@ -90,7 +95,27 @@ export default class ReservaService {
         if (reserva.nota !== null && reserva.nota !== undefined) {
             throw new Error("Conflito. Esta reserva já foi avaliada.");
         }
-        return this.reservaModel.addReview(reservaId, nota, comentario);
+        const reservaAtualizada = await this.reservaModel.addReview(reservaId, nota, comentario);
+        
+        // Lógica de notificação para review
+        let ambienteIdParaNotificar = null;
+        if (reservaAtualizada.recurso_tipo === 'ambiente') {
+            ambienteIdParaNotificar = reservaAtualizada.recurso_id;
+        } else if (reservaAtualizada.recurso_tipo === 'equipamento') {
+            const equipamento = await this.equipamentoModel.findById(reservaAtualizada.recurso_id);
+            if (equipamento) {
+                ambienteIdParaNotificar = equipamento.ambiente_id;
+            }
+        }
+
+        if (ambienteIdParaNotificar && this.appEmitter) {
+            this.appEmitter.emit('avaliacao.nova', {
+                ambienteId: ambienteIdParaNotificar,
+                review: reservaAtualizada
+            });
+        }
+
+        return reservaAtualizada;
     }
 
     async listMine(usuarioCpf, queryParams) {
@@ -98,17 +123,18 @@ export default class ReservaService {
     }
 
     async findAllWithReviews() {
-        console.log(`\n--- RESERVA SERVICE: Buscando todas as reservas com reviews ---`);
-        const reviews = await this.reservaModel.findAllWithReviews();
-        if (!reviews) {
-            console.log(`--- RESERVA SERVICE: Nenhum review encontrado.`);
-            return [];
-        }
-        console.log(`--- RESERVA SERVICE: Encontrados ${reviews.length} reviews.`);
-        return reviews;
+        return this.reservaModel.findAllWithReviews();
     }
 
     async findReviewsByRecurso(recurso_id, recurso_tipo) {
         return this.reservaModel.findReviewsByRecurso(recurso_id, recurso_tipo);
+    }
+
+    async findAllByRecurso(recurso_id, recurso_tipo) {
+        return this.reservaModel.findAllByRecurso(recurso_id, recurso_tipo);
+    }
+
+    async findReviewsByAmbienteCompleto(ambiente_id) {
+        return this.reservaModel.findReviewsByAmbienteCompleto(ambiente_id);
     }
 }

@@ -31,10 +31,11 @@ router.get('/review-all', authMiddleware, adminMiddleware, (req, res, next) =>
     reservaController.findAllWithReviews(req, res, next)
 );
 
-router.get(
-    '/:recurso_tipo/:recurso_id/reviews',
-    authMiddleware,       // 1. Verifica se o usuário está logado
-    adminMiddleware,      // 2. Verifica se o usuário é um admin
+router.get('/:recurso_tipo/:recurso_id/reviews', authMiddleware, adminMiddleware,      
     reservaController.getReviewsByRecurso
+);
+
+router.get('/ambiente/:id/reviews-completos', authMiddleware, adminMiddleware,
+    reservaController.getReviewsByAmbienteCompleto
 );
 export default router;
