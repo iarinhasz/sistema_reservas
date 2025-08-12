@@ -3,54 +3,45 @@
     border-collapse: collapse;
     margin-top: 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden; /* Garante que o border-radius funcione nas tabelas */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
     font-size: 0.95rem;
 }
 
 .table th,
 .table td {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 0.8rem 1rem;
     text-align: left;
     vertical-align: middle;
-    color: #333; 
+    color: white;
 }
 
 .table th {
-    background-color: #f8f9fa;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: 600;
 }
 
-.table tbody tr:nth-child(even) {
-    background-color: #fdfdfd;
+/* Remove a borda da última linha para um visual mais limpo */
+.table tbody tr:last-child td {
+    border-bottom: none;
 }
 
+/* CORREÇÃO: Remove o efeito zebra e define um fundo padrão para todas as linhas */
+.table tbody tr {
+    background-color: transparent; /* Fundo padrão "roxo" (transparente sobre o fundo do layout) */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* CORREÇÃO: Novo efeito de hover */
 .table tbody tr:hover {
-    background-color: #f7f7f7;
-}
-.reservasTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2rem;
-    font-size: 0.95rem;
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco ao passar o mouse */
 }
 
-.reservasTable th,
-.reservasTable td {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0.8rem 1rem;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.reservasTable th {
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-.reservasTable tbody tr:hover {
-    background-color: #f1f3f5;
+/* O texto dentro da linha precisa ficar escuro no hover para ser legível */
+.table tbody tr:hover td {
+    color: #2c3e50;
 }
 
 .actionsCell {
@@ -58,7 +49,7 @@
     padding-left: 10px; 
 }
 .statusColumn {
-    text-align: center; /* Centraliza o conteúdo da célula */
+    text-align: center;
 }
 
 .status {
@@ -67,8 +58,8 @@
     font-weight: bold;
     text-transform: capitalize;
     font-size: 0.8rem;
-    display: inline-block; /* Garante que o padding seja aplicado corretamente */
-    min-width: 110px;  /* Define uma largura mínima para todos os badges */
+    display: inline-block;
+    min-width: 110px;
     text-align: center; 
 }
 .statusClickable {
@@ -79,50 +70,17 @@
     transform: scale(1.05);
 }
 
-/* Cores dos Status */
+/* CORREÇÃO: Cores dos Status restauradas e adicionado o 'ativo' */
+.ativo { background-color: #28a745; color: white; }
 .aprovada { background-color: #28a745; color: white; }
 .pendente { background-color: #ffc107; color: #333; }
 .rejeitada { background-color: #dc3545; color: white; }
 .cancelada { background-color: #6c757d; color: white; }
 .concluida { background-color: #0d6efd; color: white; }
 
-
 .reviewedMessage {
     font-style: italic;
-    color: #6c757d;
+    color: #adb5bd;
     font-size: 0.9rem;
-    white-space: nowrap; /* Impede que o texto quebre a linha */
+    white-space: nowrap;
 }
-/* --- TEMA ESCURO / GLASSMORPHISM --- */
-/* Estes estilos só serão aplicados se a tabela estiver dentro de um elemento com a classe .darkTheme */
-
-:global(.darkTheme) .table {
-    /* Removemos a borda e sombra padrão e usamos o estilo de vidro */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: none;
-    overflow: hidden;
-}
-
-:global(.darkTheme) .table th,
-:global(.darkTheme) .table td {
-    color: white; /* Texto claro para fundo escuro */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Remove a borda da última linha */
-:global(.darkTheme) .table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-:global(.darkTheme) .table th {
-    background-color: rgba(255, 255, 255, 0.15);
-    font-weight: 600;
-}
-
-/* O EFEITO HOVER CORRIGIDO */
-:global(.darkTheme) .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro */
-}
-

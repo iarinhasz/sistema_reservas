@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
+import socket from '../../services/socket.js';
 import styles from './css/GerenciarUsuariosPage.module.css';
 import tableStyles from '../../styles/Table.module.css';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useNotificacao } from '../../hooks/useNotificacao.js';
+import layout from '../../components/layout/UserLayout.module.css';
 
 const GerenciarUsuariosPage = () => {
     const { limparAlertaCadastro } = useNotificacao();
@@ -24,7 +26,7 @@ const GerenciarUsuariosPage = () => {
     const [deleteError, setDeleteError] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const fetchSolicitacoes = async () => {
+    const fetchSolicitacoes = useCallback(async () => {
         setLoadingSolicitacoes(true);
         try {
             const response = await api.get('/usuarios/pendentes');
@@ -34,12 +36,22 @@ const GerenciarUsuariosPage = () => {
         } finally {
             setLoadingSolicitacoes(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        limparAlertaCadastro(); 
+        limparAlertaCadastro();
         fetchSolicitacoes();
-    }, []);
+    }, [fetchSolicitacoes, limparAlertaCadastro]);
+
+    useEffect(() => {
+        const handleNovoCadastro = () => {
+            fetchSolicitacoes();
+        };
+        socket.on('novo_cadastro_pendente', handleNovoCadastro);
+        return () => {
+            socket.off('novo_cadastro_pendente', handleNovoCadastro);
+        };
+    }, [fetchSolicitacoes]);
 
     useEffect(() => {
         const fetchUsuarios = async () => {
@@ -49,7 +61,6 @@ const GerenciarUsuariosPage = () => {
                 if (debouncedFilters.nome) params.append('nome', debouncedFilters.nome);
                 if (debouncedFilters.cpf) params.append('cpf', debouncedFilters.cpf);
                 if (debouncedFilters.tipo !== 'todos') params.append('tipo', debouncedFilters.tipo);
-
                 const response = await api.get(`/usuarios?${params.toString()}`);
                 setUsuarios(response.data || []);
             } catch (err) {
@@ -117,15 +128,10 @@ const GerenciarUsuariosPage = () => {
         if (!userToDelete) return;
         setIsDeleting(true);
         setDeleteError('');
-
         try {
-            await api.delete(`/usuarios/${userToDelete.cpf}`, {
-                data: { password: adminPassword }
-            });
-            
+            await api.delete(`/usuarios/${userToDelete.cpf}`, { data: { password: adminPassword } });
             setUsuarios(prev => prev.filter(u => u.cpf !== userToDelete.cpf));
             closeDeleteModal();
-
         } catch (err) {
             setDeleteError(err.response?.data?.message || 'Erro ao deletar usuário.');
         } finally {
@@ -134,37 +140,40 @@ const GerenciarUsuariosPage = () => {
     };
 
     return (
-        <div className={styles.pageContainer}>
-            <h1>Gerenciar Usuários</h1>
+        <>
+            <div className={layout.pageHeader}>
+                <h1>Gerenciar Usuários</h1>
+            </div>
+
             {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
             {error && <div className={styles.errorMessage}>{error}</div>}
 
-            <section className={styles.section}>
-                <h2>Solicitações de Cadastro Pendentes</h2>
-                {loadingSolicitacoes ? <p>Carregando...</p> : solicitacoes.length === 0 ? (
-                    <p>Nenhuma solicitação pendente no momento.</p>
-                ) : (
+            {loadingSolicitacoes ? <p>Carregando solicitações...</p> : solicitacoes.length > 0 && (
+                <section className={`${layout.section} ${layout.card}`}>
+                    <div className={layout.sectionHeader}>
+                        <h2>Solicitações de Cadastro Pendentes</h2>
+                    </div>
                     <ul className={styles.solicitacoesList}>
                         {solicitacoes.map((solicitacao, index) => (
                            <li key={solicitacao.cpf} className={styles.solicitacaoItem}>
                                <div className={styles.userInfo}>
-                                    <strong>Nome:</strong> {solicitacao.nome}<br />
-                                    <strong>Email:</strong> {solicitacao.email} ({solicitacao.tipo})
+                                    <strong>{solicitacao.nome}</strong> ({solicitacao.tipo})<br />
+                                    <small>{solicitacao.email}</small>
                                 </div>
                                 <div className={styles.actionButtons}>
-                                    <button className={styles.approveButton} onClick={() => handleApprove(solicitacao.cpf)} disabled={index !== 0}>Aprovar</button>
-                                    <button className={styles.rejectButton} onClick={() => openModal(solicitacao.cpf)} disabled={index !== 0}>Rejeitar</button>
+                                    <button className={styles.approveButton} onClick={() => handleApprove(solicitacao.cpf)}>Aprovar</button>
+                                    <button className={styles.rejectButton} onClick={() => openModal(solicitacao.cpf)}>Rejeitar</button>
                                 </div>
                            </li>
                         ))}
                     </ul>
-                )}
-            </section>
+                </section>
+            )}
             
-            <hr className={styles.divider} />
-
-            <section className={styles.section}>
-                <h2>Buscar e Gerenciar Usuários</h2>
+            <section className={`${layout.section} ${layout.card}`}>
+                <div className={layout.sectionHeader}>
+                    <h2>Buscar e Gerenciar Usuários</h2>
+                </div>
                 <div className={styles.filters}>
                     <input type="text" name="nome" placeholder="Buscar por nome..." value={filters.nome} onChange={handleFilterChange} />
                     <input type="text" name="cpf" placeholder="Buscar por CPF..." value={filters.cpf} onChange={handleFilterChange} />
@@ -176,8 +185,8 @@ const GerenciarUsuariosPage = () => {
                     </div>
                 </div>
                 <div className={styles.tableContainer}>
-                    <table className={tableStyles.table}>
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+                    <table className={`${tableStyles.table} ${styles.userTable}`}>
+                        <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
                         <tbody>
                             {loadingUsuarios ? (
                                 <tr><td colSpan="6">Buscando...</td></tr>
@@ -186,8 +195,8 @@ const GerenciarUsuariosPage = () => {
                             ) : (
                                 usuarios.map(user => (
                                     <tr key={user.cpf}>
-                                        <td>{user.nome}</td><td>{user.cpf}</td><td>{user.email}</td><td>{user.tipo}</td>
-                                        <td><span className={`${styles.status} ${styles[user.status]}`}>{user.status}</span></td>
+                                        <td>{user.nome}</td><td>{user.email}</td><td>{user.tipo}</td>
+                                        <td><span className={`${tableStyles.status} ${tableStyles[user.status]}`}>{user.status}</span></td>
                                         <td><button onClick={() => openDeleteModal(user)} className={styles.deleteActionBtn}>Deletar</button></td>
                                     </tr>
                                 ))
@@ -237,7 +246,7 @@ const GerenciarUsuariosPage = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

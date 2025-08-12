@@ -1,40 +1,50 @@
-.pageContainer {
-    padding-left: 2rem;
-    padding-bottom: 2rem;
-    padding-right: 2rem;
+.successMessage, .errorMessage {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: white;
 }
-
+.successMessage {
+    background-color: rgba(22, 163, 74, 0.5); /* Verde translúcido */
+}
 .errorMessage {
-    color: #dc3545;
+    background-color: rgba(220, 38, 38, 0.5); /* Vermelho translúcido */
 }
 
+/* Lista de solicitações pendentes */
 .solicitacoesList {
     list-style: none;
     padding: 0;
-}
-.successMessage {
-    padding: 1rem;
-    background-color: #d4edda; /* Verde claro */
-    color: #155724; /* Verde escuro */
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    text-align: center;
+    margin: 0;
 }
 .solicitacaoItem {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 5px solid #ffc107; /* Amarelo para indicar pendência */
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background-color 0.2s;
+}
+.solicitacaoItem:last-child {
+    margin-bottom: 0;
+}
+.solicitacaoItem:hover {
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .userInfo {
-    line-height: 1.6;
+    line-height: 1.5;
+}
+.userInfo strong {
+    font-size: 1.1em;
+}
+.userInfo small {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .actionButtons {
@@ -43,103 +53,51 @@
 }
 
 .actionButtons button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     color: white;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
 }
+.approveButton { background-color: #28a745; }
+.approveButton:hover { background-color: #218838; }
+.rejectButton { background-color: #dc3545; }
+.rejectButton:hover { background-color: #c82333; }
 
-.approveButton {
-    background-color: #28a745;
+/* Filtros de busca */
+.filters { 
+    display: flex; 
+    gap: 1.5rem; 
+    align-items: center; 
+    margin-bottom: 2rem; 
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-.approveButton:hover:not(:disabled) {
-    background-color: #218838;
-}
-
-.rejectButton {
-    background-color: #dc3545;
-}
-.rejectButton:hover:not(:disabled) {
-    background-color: #c82333;
-}
-
-/* Estilo para botões desativados */
-.actionButtons button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modalContent {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-}
-
-.modalContent h2 {
-    margin-top: 0;
-}
-
-.justificativaTextarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 0.5rem;
+.filters input[type="text"] { 
+    padding: 0.75rem; 
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px; 
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
-    margin-top: 1rem;
 }
+.radioGroup { display: flex; gap: 1rem; align-items: center; }
+.radioGroup label { display: flex; gap: 0.25rem; align-items: center; cursor: pointer; }
 
-.modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.5rem;
+/* Tabela de usuários */
+.tableContainer { overflow-x: auto; }
+.userTable {
+    /* O tema escuro é aplicado pelo tableStyles, mas podemos adicionar ajustes */
+    background-color: transparent; /* Garante que não haja fundo branco */
 }
-
-.modalActions button {
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.cancelButton {
-    background-color: #6c757d;
-    color: white;
-}
-
-.confirmButton {
-    background-color: #dc3545;
-    color: white;
-}
-
 .deleteActionBtn {
     background-color: transparent;
     border: 1px solid #dc3545;
-    color: #dc3545;
-    padding: 0.3rem 0.6rem;
+    color: #ff8a8a;
+    padding: 0.4rem 0.8rem;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
@@ -149,67 +107,40 @@
     color: white;
 }
 
-/* Estilos para o modal de deleção */
-.confirmDeleteButton {
-    background-color: #dc3545 !important; /* !important para sobrescrever outros estilos de botão se necessário */
+/* Estilos dos Modais (mantidos, mas com cores ajustadas) */
+.modalOverlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modalContent {
+    background: #2c3e50; /* Fundo escuro para o modal */
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.modalContent h2 { margin-top: 0; }
+.justificativaTextarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    resize: vertical;
+    margin-top: 1rem;
+    background-color: rgba(0, 0, 0, 0.2);
     color: white;
 }
-.confirmDeleteButton:hover {
-    background-color: #c82333 !important;
+.modalActions {
+    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;
 }
-
-
-.divider { margin: 1rem 0; }
-.section { margin-bottom: 2rem; }
-.filters {
-    display: flex;
-    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
-    gap: 1.5rem; /* Aumenta o espaço entre os elementos */
-    align-items: center;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background-color: #291ca1; /* Um fundo claro para destacar a área de filtros */
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
+.modalActions button {
+    padding: 0.6rem 1.2rem; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
 }
-
-.filters input[type="text"] {
-    padding: 0.75rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    min-width: 200px; /* Garante um tamanho mínimo */
-}
-
-.filters input[type="text"]:focus {
-    outline: none;
-    border-color: #4c00ff;
-    box-shadow: 0 0 0 2px rgba(98, 0, 255, 0.25);
-}
-
-.radioGroup {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    padding-left: 1rem; /* Adiciona um espaço à esquerda */
-}
-
-.radioGroup span {
-    font-weight: 600;
-}
-
-.radioGroup label {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    cursor: pointer;
-}
-
-.tableContainer { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
-th { background-color: #f2f2f2; }
-.status { padding: 0.25rem 0.5rem; border-radius: 12px; color: white; font-size: 0.8rem; text-transform: capitalize; }
-.status.ativo { background-color: #28a745; }
-.status.rejeitado { background-color: #dc3545; }
-
+.cancelButton { background-color: #6c757d; color: white; }
+.confirmButton { background-color: #dc3545; color: white; }
+.confirmDeleteButton { background-color: #dc3545 !important; color: white; }
