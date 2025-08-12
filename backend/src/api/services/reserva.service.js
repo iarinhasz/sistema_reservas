@@ -51,7 +51,8 @@ export default class ReservaService {
 
     async solicitar(dadosSolicitacao, dadosUsuario) {
         const novaReserva = await this.reservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
-
+        this.appEmitter.emit('reserva.solicitada', novaReserva);
+        
         const solicitante = await this.usuarioModel.findByCpf(dadosUsuario.cpf);
         if (solicitante) {
             await this.emailService.sendReservationRequestEmail(solicitante, novaReserva);
@@ -77,6 +78,8 @@ export default class ReservaService {
     async deixarReview(reservaId, dadosReview, usuarioLogado) {
         const { nota, comentario } = dadosReview;
         const reserva = await this.reservaModel.findById(reservaId);
+        const reservaAtualizada = await this.reservaModel.addReview(reservaId, nota, comentario);
+
         console.log('BACKEND DEBUG: Dados da reserva encontrada no banco:', reserva);
         if (!reserva) {
             throw new Error("Reserva não encontrada.");
@@ -110,5 +113,9 @@ export default class ReservaService {
 
     async findReviewsByRecurso(recurso_id, recurso_tipo) {
         return this.reservaModel.findReviewsByRecurso(recurso_id, recurso_tipo);
+    }
+
+    async findReviewsByAmbienteCompleto(ambiente_id) {
+        return this.reservaModel.findReviewsByAmbienteCompleto(ambiente_id);
     }
 }
