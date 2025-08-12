@@ -1,5 +1,3 @@
-// frontend/src/components/shared/AgendaAmbiente.jsx
-
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../services/api';
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
@@ -10,7 +8,6 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// Importe os dois tipos de modais que a agenda pode abrir
 import ReservaDetalhesModal from './ReservaDetalhesModal';
 import ReviewModal from './reviewModal';
 import { useAuth } from '../../context/AuthContext';
@@ -20,6 +17,18 @@ import styles from './AgendaAmbiente.module.css';
 const locales = { 'pt-BR': ptBR };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
+
+const EventoPersonalizado = ({ event }) => {
+    const startTime = format(event.start, 'HH:mm');
+    const endTime = format(event.end, 'HH:mm');
+    return (
+        <div className={styles.eventoPersonalizado}>
+            <strong>{event.title}</strong>
+            <p>{`${startTime} - ${endTime}`}</p>
+        </div>
+    );
+};
+
 const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
     const { user } = useAuth();
     const [reservas, setReservas] = useState([]);
@@ -27,12 +36,10 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
     const [error, setError] = useState('');
     const [date, setDate] = useState(new Date());
     
-    // Estados para controlar qual reserva foi clicada e qual modal abrir
     const [reservaSelecionada, setReservaSelecionada] = useState(null);
     const [modalAdminAberto, setModalAdminAberto] = useState(false);
     const [modalReviewAberto, setModalReviewAberto] = useState(false);
 
-    // Busca as reservas da API
     const fetchReservas = useCallback(async () => {
         if (!ambienteId) return;
         setLoading(true);
@@ -41,7 +48,6 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
             setReservas(response.data.data || []);
         } catch (err) {
             setError('Não foi possível carregar a agenda.');
-            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -51,32 +57,28 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
         fetchReservas();
     }, [fetchReservas, refreshKey]);
 
-    // Função para lidar com o envio de um novo review
     const handleReviewSubmit = async ({ rating, comment, reservaId }) => {
         try {
             await api.post(`/reservas/${reservaId}/review`, { nota: rating, comentario: comment });
             alert('Avaliação enviada com sucesso!');
             setModalReviewAberto(false);
-            fetchReservas(); // Atualiza a agenda para que a cor do evento mude
+            fetchReservas();
         } catch (err) {
             alert(err.response?.data?.message || 'Erro ao enviar a avaliação.');
         }
     };
 
-    // Função que decide o que fazer quando um evento é clicado
     const handleSelectEvent = useCallback((evento) => {
         const reserva = evento.resource;
         const agora = new Date();
         const dataFim = new Date(reserva.data_fim);
 
-        // Lógica para Administradores
         if (user?.tipo === 'admin') {
             setReservaSelecionada(reserva);
             setModalAdminAberto(true);
             return;
         }
 
-        // Lógica para Professores e Alunos
         const isMinhaReserva = reserva.usuario_cpf === user?.cpf;
         const jaTerminou = agora > dataFim;
         const naoFoiAvaliada = reserva.nota === null;
@@ -87,14 +89,13 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
         }
     }, [user]);
 
-    // Função que define a cor de cada evento no calendário
     const eventPropGetter = useCallback((evento) => {
         const reserva = evento.resource;
         const agora = new Date();
         const dataFim = new Date(reserva.data_fim);
         
         if (user?.tipo === 'admin') {
-            return {}; // Cor padrão para admin
+            return {};
         }
 
         const isMinhaReserva = reserva.usuario_cpf === user?.cpf;
@@ -104,23 +105,21 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
             const naoFoiAvaliada = reserva.nota === null;
 
             if (jaTerminou && naoFoiAvaliada) {
-                return { className: 'evento-avaliar' }; // Verde
+                return { className: 'evento-avaliar' };
             }
-            return { className: 'minha-reserva' }; // Azul/Ciano
+            return { className: 'minha-reserva' };
         }
         
-        return { className: 'reserva-outros' }; // Cinza
+        return { className: 'reserva-outros' };
 
     }, [user]);
 
-    
-    // Mapeia os dados das reservas para o formato que o calendário entende
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({
         title: reserva.titulo,
         start: new Date(reserva.data_inicio),
         end: new Date(reserva.data_fim),
         allDay: false,
-        resource: reserva, // Guarda o objeto original completo da reserva
+        resource: reserva,
     })) : [];
 
     if (loading) return <p>Carregando agenda...</p>;
@@ -147,10 +146,13 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
                         timeGutterFormat: (date, culture, localizer) => localizer.format(date, 'HH:mm', culture),
                         eventTimeRangeFormat: ({ start, end }, culture, localizer) => `${localizer.format(start, 'HH:mm', culture)} – ${localizer.format(end, 'HH:mm', culture)}`
                     }}
+                    
+                    components={{
+                        event: EventoPersonalizado,
+                    }}
                 />
             </div>
             
-            {/* Modal de detalhes para o Admin */}
             {modalAdminAberto && (
                 <ReservaDetalhesModal 
                     reserva={reservaSelecionada} 
@@ -158,7 +160,6 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
                 />
             )}
 
-            {/* Modal de review para Alunos/Professores */}
             {modalReviewAberto && (
                 <ReviewModal
                     reserva={reservaSelecionada}
