@@ -1,31 +1,18 @@
 // cypress/e2e/equipamentos/gerenciar_equipamentos.js
 
 import { Before, Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
+
 const API_URL = "http://localhost:3000";
 
 Before(() => {
     cy.request({ method: 'POST', url: `${API_URL}/api/testing/reset` });
 });
 
-Given('eu estou autenticado como {string}', (perfil) => {
-    
-    const users = {
-        admin: { email: 'admin@email.com', senha: 'senha_segura' },
-        aluno: { email: 'aluno@email.com', senha: 'senha_segura' }
-    };
-
-    const credentials = users[perfil.toLowerCase()];
-
-    cy.request({
-        method: 'POST',
-        url: 'http://localhost:3000/api/auth/login',
-        body: credentials,
-        failOnStatusCode: false
-    }).then((response) => {
-        expect(response.status).to.eq(200);
-        Cypress.env('authToken', response.body.token);
-    });
+Given('eu estou autenticado como um administrador', () => {
+    cy.login('admin@email.com', 'senha_segura');
 });
+
+
 
 Given('um ambiente com o identificador {string} é criado', (identificador) => {
     const authToken = Cypress.env('authToken');
@@ -94,16 +81,13 @@ Given('um equipamento com uma reserva futura é criado', () => {
             method: 'POST',
             url: `http://localhost:3000/api/equipamentos`,
             headers: { 'Authorization': `Bearer ${authToken}` },
-            body: { nome: 'Projetor Reserva', quantidade_total: 1, ambiente_id: ambienteId }
+            body: { nome: 'Projetor Reservado', quantidade_total: 1, ambiente_id: ambienteId }
         }).then(equipamentoResponse => {
             const equipamentoId = equipamentoResponse.body.equipamento.id;
             Cypress.env('equipamentoId', equipamentoId); // Salva o ID para o passo DELETE
 
-            //debug
-            cy.log('ID do Equipamento Criado:', equipamentoId);
-
             const dataInicio = new Date();
-            dataInicio.setDate(dataInicio.getDate() + 10);
+            dataInicio.setDate(dataInicio.getDate() + 10); 
             const dataFim = new Date(dataInicio);
             dataFim.setHours(dataFim.getHours() + 1);
 
@@ -113,15 +97,25 @@ Given('um equipamento com uma reserva futura é criado', () => {
                 headers: { 'Authorization': `Bearer ${authToken}` },
                 body: {
                     recurso_id: equipamentoId,
-                    recurso_tipo: 'equipamento',
+                    recurso_tipo: 'equipamento', 
                     titulo: 'Reserva de Equipamento de Teste',
                     data_inicio: dataInicio.toISOString(),
                     data_fim: dataFim.toISOString()
                 }
-            }).its('status').should('eq', 201);
+            }).then(reservaResponse => {
+                const reservaId = reservaResponse.body.data.id;
+
+                //APROVAR a reserva para criar o bloqueio
+                cy.request({
+                    method: 'PUT',
+                    url: `http://localhost:3000/api/reservas/${reservaId}/aprovar`,
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).its('status').should('eq', 200);
+            });
         });
     });
 });
+
 
 Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, numEquipamentos) => {
     const authToken = Cypress.env('authToken');
@@ -162,82 +156,6 @@ Given('o ambiente {string} tem {int} equipamentos cadastrados', (nomeAmbiente, n
         }
     });
 });
-
-Given('um equipamento é reservado por um "aluno" e aprovado por um "admin"', () => {
-    let adminAuthToken;
-    let alunoAuthToken;
-    let equipamentoId;
-
-    const users = {
-        admin: { email: "admin@email.com", senha: "senha_segura" },
-        aluno: { email: "aluno@email.com", senha: "senha_segura" }
-    };
-
-    cy.request({
-        method: 'POST',
-        url: 'http://localhost:3000/api/auth/login',
-        body: users.admin
-    }).then(response => {
-        adminAuthToken = response.body.token;
-
-        // 2. Login como Aluno para obter o token
-        return cy.request({
-            method: 'POST',
-            url: 'http://localhost:3000/api/auth/login',
-            body: users.aluno
-        });
-    }).then(response => {
-        alunoAuthToken = response.body.token;
-
-        // 3. Como Admin, criar o ambiente e o equipamento
-        return cy.request({
-            method: 'POST',
-            url: `http://localhost:3000/api/ambientes`,
-            headers: { 'Authorization': `Bearer ${adminAuthToken}` },
-            body: { identificacao: 'Lab-Reservado-Por-Aluno', tipo: 'Laboratório' }
-        });
-    }).then(ambienteResponse => {
-        const ambienteId = ambienteResponse.body.ambiente.id;
-        return cy.request({
-            method: 'POST',
-            url: `http://localhost:3000/api/equipamentos`,
-            headers: { 'Authorization': `Bearer ${adminAuthToken}` },
-            body: { nome: 'Projetor Para Aluno', quantidade_total: 1, ambiente_id: ambienteId }
-        });
-    }).then(equipamentoResponse => {
-        equipamentoId = equipamentoResponse.body.equipamento.id;
-        Cypress.env('equipamentoId', equipamentoId);
-
-        const dataInicio = new Date();
-        dataInicio.setDate(dataInicio.getDate() + 15);
-        const dataFim = new Date(dataInicio);
-        dataFim.setHours(dataFim.getHours() + 1);
-
-        // 4. Como Aluno, criar a reserva (ela ficará pendente)
-        return cy.request({
-            method: 'POST',
-            url: `http://localhost:3000/api/reservas/`,
-            headers: { 'Authorization': `Bearer ${alunoAuthToken}` },
-            body: {
-                recurso_id: equipamentoId,
-                recurso_tipo: 'equipamento',
-                titulo: 'Reserva feita por Aluno',
-                data_inicio: dataInicio.toISOString(),
-                data_fim: dataFim.toISOString()
-            }
-        });
-    }).then(reservaResponse => {
-        const reservaId = reservaResponse.body.data.id;
-
-        // 5. Como Admin, aprovar a reserva do aluno
-        return cy.request({
-            method: 'PUT',
-            url: `http://localhost:3000/api/reservas/${reservaId}/aprovar`,
-            headers: { 'Authorization': `Bearer ${adminAuthToken}` }
-        });
-    }).its('status').should('eq', 200);
-});
-
 
 When('eu envio uma requisição POST para {string} para adicionar o equipamento {string} ao ambiente de teste', (apiUrl, nomeEquipamento) => {
     const authToken = Cypress.env('authToken');
@@ -383,8 +301,6 @@ When('eu envio uma requisição DELETE para remover o equipamento de teste', () 
         failOnStatusCode: false
     }).as('apiResponse');
 });
-
-
 
 Then('a resposta da requisição deve ter o status {int}', (statusCode) => {
     cy.get('@apiResponse').its('status').should('eq', statusCode);

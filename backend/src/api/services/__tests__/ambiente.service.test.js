@@ -62,8 +62,7 @@ describe('AmbienteService', () => {
             const ambienteId = 1;
             const dadosUpdate = { identificacao: 'Laboratório de Robótica' };
             const ambienteAtualizado = { id: ambienteId, ...dadosUpdate };
-            // Simula que o ambiente a ser atualizado existe
-            AmbienteModel.findById.mockResolvedValue({ id: ambienteId, identificacao: 'Lab Antigo' });
+
             // Simula que não há conflito de identificador
             AmbienteModel.findByIdentificador.mockResolvedValue(null);
             // Simula o retorno do model de update
@@ -80,9 +79,6 @@ describe('AmbienteService', () => {
             const dadosUpdate = { identificacao: 'Lab Conflitante' };
             const ambienteConflitante = { id: 2, identificacao: 'Lab Conflitante' }; // Outro ambiente já tem esse nome
 
-            // Simula que o ambiente a ser atualizado existe
-            AmbienteModel.findById.mockResolvedValue({ id: ambienteId, identificacao: 'Lab Original' });
-    
             AmbienteModel.findByIdentificador.mockResolvedValue(ambienteConflitante);
 
             await expect(AmbienteService.update(ambienteId, dadosUpdate))
@@ -96,8 +92,6 @@ describe('AmbienteService', () => {
         test('deve deletar um ambiente com sucesso quando não há reservas futuras', async () => {
             // Arrange
             const ambienteId = 1;
-            // Simula que o ambiente a ser deletado existe
-            AmbienteModel.findById.mockResolvedValue({ id: ambienteId, identificacao: 'Lab Antigo' });
             // Simula que a busca por reservas futuras retorna um array vazio
             ReservaModel.findFutureByResourceId.mockResolvedValue([]);
             // Simula que a remoção no model funciona
@@ -111,8 +105,6 @@ describe('AmbienteService', () => {
         });
         test('deve lançar um erro ao tentar deletar um ambiente que possui reservas futuras', async () => {
             const ambienteId = 1;
-            // Simula que o ambiente a ser deletado existe
-            AmbienteModel.findById.mockResolvedValue({ id: ambienteId, identificacao: 'Lab Com Reserva' });
             ReservaModel.findFutureByResourceId.mockResolvedValue([{ id: 100, data_inicio: '2025-10-10' }]);
 
             await expect(AmbienteService.delete(ambienteId))

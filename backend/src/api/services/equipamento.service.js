@@ -1,42 +1,31 @@
-class EquipamentoService {
-    constructor(EquipamentoModel, ReservaModel, AmbienteModel) {
-        // As instâncias dos models agora são propriedades da classe
-        this.equipamentoModel = EquipamentoModel;
-        this.reservaModel = ReservaModel;
-        this.ambienteModel = AmbienteModel;
-    }
 
+import EquipamentoModel from '../models/equipamento.model.js';
+import ReservaModel from '../models/reserva.model.js';
+
+const EquipamentoService = {
     /**
      * Valida e cria um novo equipamento.
      */
-    async create(dadosEquipamento, usuarioLogado) {
-        const { nome, marca, modelo, quantidade_total, ambiente_id } = dadosEquipamento;
+    async create(dadosEquipamento) {
+        const { nome, quantidade_total, ambiente_id} = dadosEquipamento;
+        console.log('[DEBUG create] dadosEquipamento:', dadosEquipamento);
 
-        if (!nome || !nome.trim() || !quantidade_total || !ambiente_id) {
-            throw new Error("Os campos 'nome', 'quantidade_total' e 'ambiente_id' são obrigatórios.");
+        if (nome === undefined || quantidade_total === undefined) {
+            throw new Error("Os campos 'nome' e 'quantidade_total' são obrigatórios.");
         }
-    
-        
-        const ambienteExistente = await this.ambienteModel.findById(ambiente_id);
-        if (!ambienteExistente) {
-            throw new Error("O ambiente especificado não foi encontrado.");
-        }
-        
-        const existente = await this.equipamentoModel.findByNomeEAmbiente(nome, ambiente_id);
+        console.log('[DEBUG create] checando duplicidade para:', { nome, ambiente_id });
+
+        const existente = await EquipamentoModel.findByNomeEAmbiente(nome, ambiente_id);
+
+        console.log('[DEBUG create] existente encontrado:', existente);
+
         if (existente) {
+            // Lança erro que será tratado no controller
             throw new Error("Já existe um equipamento com esse nome neste ambiente");
         }
-        
-        const dadosParaSalvar = {
-            nome: nome.trim(),
-            marca,
-            modelo,
-            quantidade_total,
-            ambiente_id,
-            criado_por_cpf: usuarioLogado.cpf 
-        };
-        return this.equipamentoModel.create(dadosParaSalvar);
-    }
+
+        return EquipamentoModel.create(dadosEquipamento);
+    },
 
     /**
      * Atualiza um equipamento.
@@ -46,56 +35,48 @@ class EquipamentoService {
             throw new Error('Nenhum campo fornecido para atualização.');
         }
 
-        const equipamentoAtualizado = await this.equipamentoModel.update(id, dadosParaAtualizar);
+        const equipamentoAtualizado = await EquipamentoModel.update(id, dadosParaAtualizar);
         if (!equipamentoAtualizado) {
             throw new Error('Equipamento não encontrado ou nenhum campo válido foi fornecido.');
         }
         return equipamentoAtualizado;
-    }
+    },
 
     /**
      * Deleta um equipamento após verificar se não há reservas futuras.
-    */
+     */
     async remove(id) {
-
-        const equipamento = await this.equipamentoModel.findById(id);
-        
-        console.log("Equipamento encontrado:", equipamento); // LOG 1
-
-        if (!equipamento) {
-            throw new Error('Equipamento não encontrado para deletar.');
-        }
-
-        const reservasFuturas = await this.reservaModel.findFutureByResourceId({
+        // Regra de Negócio: Não pode deletar se tiver reservas futuras
+        const reservasFuturas = await ReservaModel.findFutureByResourceId({
             recurso_id: id,
             recurso_tipo: 'equipamento'
         });
-        console.log("Reservas futuras encontradas:", reservasFuturas);
+
         if (reservasFuturas && reservasFuturas.length > 0) {
             throw new Error("Não é possível excluir o equipamento pois ele possui reservas futuras");
         }
 
-        console.log("Nenhuma reserva futura. Prosseguindo para a deleção..."); // LOG 3
-        const resultado = await this.equipamentoModel.remove(id);
-        console.log("Resultado da deleção no banco:", resultado);
+        const equipamentoDeletado = await EquipamentoModel.remove(id);
+        if (!equipamentoDeletado) {
+            throw new Error('Equipamento não encontrado para deletar.');
+        }
+        return equipamentoDeletado;
+    },
 
-        return equipamento;
-    }
     /**
      * Funções simples que apenas repassam a chamada para o Model.
      */
     async findAll(filters = {}) {
-        return this.equipamentoModel.findAll(filters);
-    }
+        return EquipamentoModel.findAll(filters);
+    },
 
     async findById(id) {
-        const equipamento = await this.equipamentoModel.findById(id);
+        const equipamento = await EquipamentoModel.findById(id);
         if (!equipamento) {
             throw new Error('Equipamento não encontrado.');
         }
         return equipamento;
     }
-}
+};
 
-// Exporta a classe, e não mais um objeto.
 export default EquipamentoService;

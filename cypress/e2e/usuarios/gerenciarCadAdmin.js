@@ -74,14 +74,12 @@ Then('recebo a mensagem {string}', (mensagem) => {
 
 Then('o corpo da resposta deve ser uma lista contendo {int} usuários', (quantidade) => {
     cy.get('@adminResponse').its('body').then((body) => {
-        
-        const listaDeUsuarios = body.usuarios;
+        const listaDeUsuarios = Array.isArray(body) ? body : body.usuarios;
 
-        // Agora sim, as verificações são feitas na lista correta
-        expect(listaDeUsuarios).to.be.an('array');
-        expect(listaDeUsuarios).to.have.lengthOf(quantidade);
+        expect(listaDeUsuarios).to.be.an('array').and.to.have.lengthOf(quantidade);
     });
 });
+
 Then('a lista de usuários deve conter o email {string}', (email) => {
     cy.get('@adminResponse').its('body').then((body) => {
         const listaDeUsuarios = Array.isArray(body) ? body : body.usuarios;
@@ -93,11 +91,13 @@ Then('a lista de usuários deve conter o email {string}', (email) => {
     });
 });
 
-Then('a lista de usuários deve conter o email {string}', (email) => {
-    cy.get('@adminResponse').its('body').then((body) => {
-        const listaDeUsuarios = body.usuarios;
-
-        const emails = listaDeUsuarios.map(u => u.email);
-        expect(emails).to.include(email);
-    });
+Then('o usuário com email {string} consegue fazer login com sucesso', (email) => {
+    cy.request({
+        method: 'POST',
+        url: `${API_URL}/api/auth/login`,
+        body: {
+            email: email,
+            senha: 'senha_padrao_pendente'
+        }
+    }).its('status').should('eq', 200);
 });

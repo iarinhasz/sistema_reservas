@@ -1,39 +1,27 @@
-class AmbienteService {
+import AmbienteModel from '../models/ambiente.model.js';
+import ReservaModel from '../models/reserva.model.js';
 
-    constructor(ambienteModel, reservaModel) {
-        this.ambienteModel = ambienteModel;
-        this.reservaModel = reservaModel;
-    }
-
+const AmbienteService = {
     async create({ tipo, identificacao }) {
         if (!identificacao || identificacao.trim() === '') {
         throw new Error("Identificador obrigatório");
         }
 
-        const existente = await this.ambienteModel.findByIdentificador(identificacao);
+        const existente = await AmbienteModel.findByIdentificador(identificacao);
         if (existente) {
         throw new Error("Identificador já cadastrado");
         }
 
-        const novoAmbiente = await this.ambienteModel.create({
+        const novoAmbiente = await AmbienteModel.create({
         identificacao,
         tipo
         });
 
         return novoAmbiente;
-    }
+    },
 
     // Exclusão com verificação de reservas futuras
     async delete(ambienteId) {
-        
-        const ambienteParaDeletar = await this.ambienteModel.findById(ambienteId);
-
-        if (!ambienteParaDeletar) {
-            // Se não existir, lança o erro "não encontrado" imediatamente.
-            throw new Error("Ambiente não encontrado para deletar.");
-        }
-
-        
         console.log(`\n--- AMBIENTE SERVICE: Iniciando deleção do ambiente ID: ${ambienteId} ---`);
 
         const params = {
@@ -42,7 +30,7 @@ class AmbienteService {
         };
         console.log('--- AMBIENTE SERVICE: Buscando reservas futuras com os parâmetros:', params);
 
-        const reservasFuturas = await this.reservaModel.findFutureByResourceId(params);
+        const reservasFuturas = await ReservaModel.findFutureByResourceId(params);
 
         console.log('--- AMBIENTE SERVICE: Resultado da busca por reservas futuras:', reservasFuturas);
         
@@ -52,41 +40,29 @@ class AmbienteService {
         }
 
         console.log('--- AMBIENTE SERVICE: Nenhuma reserva encontrada. Prosseguindo para a deleção.');
-        return this.ambienteModel.remove(ambienteId);
-    }
+        return AmbienteModel.remove(ambienteId);
+    },
 
     // Atualização com verificação de duplicidade
     async update(id, dadosParaAtualizar) {
-
-        const ambienteParaAtualizar = await this.ambienteModel.findById(id);
-
-        if (!ambienteParaAtualizar) {
-            // Se não existir, lança o erro "não encontrado" imediatamente.
-            throw new Error("Ambiente não encontrado.");
-        }
-
         const { identificacao } = dadosParaAtualizar;
 
         if (identificacao) {
-            const existente = await this.ambienteModel.findByIdentificador(identificacao);
-            if (existente && existente.id !== id) {
-                throw new Error("Identificador já cadastrado em outro ambiente.");
-            }
-            }
+        const existente = await AmbienteModel.findByIdentificador(identificacao);
+        if (existente && existente.id !== id) {
+            throw new Error("Identificador já cadastrado em outro ambiente.");
+        }
+        }
 
-        return this.ambienteModel.update(id, dadosParaAtualizar);
-    }
+        return AmbienteModel.update(id, dadosParaAtualizar);
+    },
 
     async findAll(filters = {}) {
-        return this.ambienteModel.findAll(filters);
-    }
+        return AmbienteModel.findAll(filters);
+    },
 
     async findById(id) {
-        const ambiente = await this.ambienteModel.findById(id);
-        if (!ambiente) {
-            throw new Error('Ambiente não encontrado.');
-        }
-    return ambiente;
+        return AmbienteModel.findById(id);
     }
 };
 
