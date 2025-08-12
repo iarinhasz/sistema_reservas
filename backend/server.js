@@ -46,6 +46,8 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
+
+
 appEmitter.on('reserva.solicitada', (reserva) => {
   console.log('[Socket.IO Listener] Evento "reserva.solicitada" capturado.');
   io.emit('nova_reserva_pendente', {
@@ -56,7 +58,11 @@ appEmitter.on('reserva.solicitada', (reserva) => {
 
 appEmitter.on('usuario.solicitado', (data) => {
   console.log('[Socket.IO Listener] Evento "usuario.solicitado" capturado.');
+  const eventName = 'novo_cadastro_pendente';
+  const eventData = { message: 'Nova solicitação de cadastro recebida!' };
   io.emit('novo_cadastro_pendente', { message: 'Nova solicitação de cadastro recebida!' });
+
+  console.log(`[WebSocket] Emitindo evento "${eventName}" para todos os clientes.`);
 });
 
 appEmitter.on('avaliacao.nova', (data) => {

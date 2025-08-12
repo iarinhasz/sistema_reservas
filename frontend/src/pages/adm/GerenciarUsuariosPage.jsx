@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import tableStyles from '../../styles/Table.module.css';
 import styles from './css/GerenciarUsuariosPage.module.css';
-
+import tableStyles from '../../styles/Table.module.css';
 import { useDebounce } from '../../hooks/useDebounce';
+import { useNotificacao } from '../../hooks/useNotificacao.js';
 
 const GerenciarUsuariosPage = () => {
-    // Estados para a fila de aprovação
+    const { limparAlertaCadastro } = useNotificacao();
     const [solicitacoes, setSolicitacoes] = useState([]);
     const [loadingSolicitacoes, setLoadingSolicitacoes] = useState(true);
-    
-    // Estados para a lista de usuários gerenciáveis
     const [usuarios, setUsuarios] = useState([]);
     const [loadingUsuarios, setLoadingUsuarios] = useState(false);
-    
-    // Estado para os filtros de busca
     const [filters, setFilters] = useState({ nome: '', cpf: '', tipo: 'todos' });
     const debouncedFilters = useDebounce(filters, 500);
-
-    // Estados para feedback (modal de rejeição e mensagens de sucesso/erro)
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUserCpf, setCurrentUserCpf] = useState(null);
     const [justificativa, setJustificativa] = useState('');
-
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [adminPassword, setAdminPassword] = useState('');
     const [deleteError, setDeleteError] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Busca as solicitações pendentes (apenas uma vez, ao carregar a página)
     const fetchSolicitacoes = async () => {
         setLoadingSolicitacoes(true);
         try {
@@ -39,17 +31,16 @@ const GerenciarUsuariosPage = () => {
             setSolicitacoes(response.data.usuarios || []);
         } catch (err) {
             setError('Erro ao carregar solicitações pendentes.');
-            console.error(err);
         } finally {
             setLoadingSolicitacoes(false);
         }
     };
 
     useEffect(() => {
+        limparAlertaCadastro(); 
         fetchSolicitacoes();
     }, []);
 
-    // Busca os usuários gerenciáveis sempre que os filtros mudam
     useEffect(() => {
         const fetchUsuarios = async () => {
             setLoadingUsuarios(true);
@@ -63,7 +54,6 @@ const GerenciarUsuariosPage = () => {
                 setUsuarios(response.data || []);
             } catch (err) {
                 setError('Erro ao buscar usuários.');
-                console.error(err);
             } finally {
                 setLoadingUsuarios(false);
             }
@@ -76,21 +66,19 @@ const GerenciarUsuariosPage = () => {
         setFilters(prev => ({ ...prev, [name]: value }));
     };
     
-    // --- FUNÇÕES DE AÇÃO PARA A FILA (AGORA COMPLETAS) ---
     const handleAction = async (action, cpf, body = {}) => {
         try {
             await api.post(`/usuarios/${cpf}/${action}`, body);
             setSolicitacoes(prev => prev.filter(s => s.cpf !== cpf));
         } catch (err) {
             setError(`Erro ao ${action}r solicitação.`);
-            console.error(err);
         }
     };
 
     const handleApprove = async (cpf) => {
         await handleAction('aprovar', cpf);
         setSuccessMessage('Usuário aprovado com sucesso!');
-        setTimeout(() => setSuccessMessage(''), 3000); // Mensagem some após 3 segundos
+        setTimeout(() => setSuccessMessage(''), 3000);
     };
 
     const handleConfirmReject = async () => {
@@ -141,7 +129,7 @@ const GerenciarUsuariosPage = () => {
         } catch (err) {
             setDeleteError(err.response?.data?.message || 'Erro ao deletar usuário.');
         } finally {
-            setLoadingUsuarios(false);
+            setIsDeleting(false);
         }
     };
 
@@ -189,7 +177,7 @@ const GerenciarUsuariosPage = () => {
                 </div>
                 <div className={styles.tableContainer}>
                     <table className={tableStyles.table}>
-                        <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Nome</th><th>CPF</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
                         <tbody>
                             {loadingUsuarios ? (
                                 <tr><td colSpan="6">Buscando...</td></tr>
@@ -198,7 +186,7 @@ const GerenciarUsuariosPage = () => {
                             ) : (
                                 usuarios.map(user => (
                                     <tr key={user.cpf}>
-                                        <td>{user.nome}</td><td>{user.email}</td><td>{user.tipo}</td>
+                                        <td>{user.nome}</td><td>{user.cpf}</td><td>{user.email}</td><td>{user.tipo}</td>
                                         <td><span className={`${styles.status} ${styles[user.status]}`}>{user.status}</span></td>
                                         <td><button onClick={() => openDeleteModal(user)} className={styles.deleteActionBtn}>Deletar</button></td>
                                     </tr>

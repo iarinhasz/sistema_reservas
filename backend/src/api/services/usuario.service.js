@@ -1,47 +1,30 @@
 import bcrypt from 'bcrypt';
 
 export default class UsuarioService {
-    constructor(usuarioModel, emailService) {
+    constructor(usuarioModel, emailService, appEmitter) {
         this.usuarioModel = usuarioModel;
         this.emailService = emailService;
+        this.appEmitter = appEmitter;
     }
 
-    /**
-     * Processa a lógica de negócio para a solicitação de cadastro.
-     * @param {object} dados - Dados vindos do controller (req.body).
-     * @returns {Promise<object>} O usuário recém-criado.
-     */
     async solicitarCadastro(dados) {
         const { cpf, nome, email, senha, tipo } = dados;
 
-        // 1. Validação de dados essenciais
-        if (!cpf || cpf.trim() === '' ||
-            !nome || nome.trim() === '' ||
-            !email || email.trim() === '' ||
-            !senha || senha.trim() === '' || // Senha também não pode ser só espaços
-            !tipo) {
-            throw new Error("CPF, nome, email, senha e tipo são obrigatórios e não podem ser vazios.");
+        if (!cpf || !nome || !email || !senha || !tipo) {
+            throw new Error("Todos os campos são obrigatórios.");
         }
-
+        
         const cpfApenasNumeros = cpf.replace(/\D/g, '');
-        if (cpfApenasNumeros.length !== 11) {
-            throw new Error("O CPF informado é inválido.");
-        }
-
-        // 2. Validação de regras de negócio (evitar duplicidade)
         if (await this.usuarioModel.findByCpf(cpfApenasNumeros)) {
             throw new Error("Este CPF já está cadastrado.");
         }
-        
         if (await this.usuarioModel.findByEmail(email)) {
             throw new Error("Este email já está em uso.");
         }
 
-        // 3. Lógica de segurança: Criar o hash da senha
         const saltRounds = 10;
         const senhaHash = await bcrypt.hash(senha, saltRounds);
 
-        // 4. Delega a criação para a camada de dados
         const novoUsuario = await this.usuarioModel.create({
             cpf: cpfApenasNumeros,
             nome,
@@ -50,10 +33,16 @@ export default class UsuarioService {
             tipo
         });
 
+        // Garante que o evento é emitido
+        if (this.appEmitter) {
+            this.appEmitter.emit('usuario.solicitado', { usuario: novoUsuario });
+            console.log(`[Event Emitter] Evento 'usuario.solicitado' emitido para ${novoUsuario.email}`);
+        }
+
         return novoUsuario;
     }
 
-    //Aprova um cadastro pendente.
+    // ... O resto da sua classe (aprovarCadastro, rejeitarCadastro, etc.)
     async aprovarCadastro(cpf) {
         const usuarioAprovado = await this.usuarioModel.updateStatus(cpf, 'ativo');
         if (!usuarioAprovado) {
@@ -64,7 +53,6 @@ export default class UsuarioService {
     }
 
     async rejeitarCadastro(cpf, justificativa) {
-        // Regra de negócio: "Tentativa de rejeitar um cadastro sem informar a justificativa"
         if (!justificativa || justificativa.trim() === '') {
             throw new Error("O motivo da rejeição é obrigatório.");
         }
@@ -78,8 +66,8 @@ export default class UsuarioService {
         
         return usuario;
     }
-    async listarPendentes() {
-        return this.usuarioModel.findPending();
+    async listarPendentes(options) {
+        return this.usuarioModel.findPending(options);
     }
 
     async listarTodos(filters = {}) {
@@ -98,7 +86,7 @@ export default class UsuarioService {
         
         if (!isPasswordValid) {
             const error = new Error("Senha do administrador incorreta. Ação não autorizada.");
-            error.statusCode = 403; // Forbidden
+            error.statusCode = 403;
             throw error;
         }
 
@@ -112,4 +100,3 @@ export default class UsuarioService {
         return deletedUser;
     }
 }
-

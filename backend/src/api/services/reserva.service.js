@@ -56,7 +56,6 @@ export default class ReservaService {
     async solicitar(dadosSolicitacao, dadosUsuario) {
         const novaReserva = await this.reservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
 
-        // Agora this.appEmitter não será undefined
         this.appEmitter.emit('reserva.solicitada', novaReserva);
 
         const solicitante = await this.usuarioModel.findByCpf(dadosUsuario.cpf);

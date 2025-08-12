@@ -9,6 +9,7 @@ import Button from '../../components/shared/Button.jsx';
 import EquipamentosList from '../../components/shared/EquipamentoList.jsx';
 import ReservarModal from '../../components/shared/ReservarModal.jsx';
 import { useAuth } from '../../context/AuthContext';
+import { useNotificacao } from '../../hooks/useNotificacao.js';
 import api from '../../services/api';
 import list from '../../styles/List.module.css';
 import styles from '../../components/layout/UserLayout.module.css';
@@ -16,6 +17,7 @@ import styles from '../../components/layout/UserLayout.module.css';
 const AmbienteDetalhesPage = () => {
     const { id } = useParams();
     const { user } = useAuth();
+    const { limparAlertaReserva } = useNotificacao(); 
     const [ambiente, setAmbiente] = useState(null);
     const [equipamentos, setEquipamentos] = useState([]);
     const [solicitacoesReserva, setSolicitacoesReserva] = useState([]);
@@ -30,6 +32,9 @@ const AmbienteDetalhesPage = () => {
     const navigate = useNavigate(); 
 
     useEffect(() => {
+
+        limparAlertaReserva(parseInt(id, 10));
+
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -44,7 +49,6 @@ const AmbienteDetalhesPage = () => {
                 setError('');
             } catch (err) {
                 setError('Falha ao carregar dados. Verifique se o ambiente existe.');
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -59,7 +63,6 @@ const AmbienteDetalhesPage = () => {
             setRefreshKey(prevKey => prevKey + 1); 
         } catch (err) {
             alert(`Erro ao ${action}r reserva.`);
-            console.error(err);
         }
     };
     
