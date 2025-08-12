@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../../services/api';
-
-import layoutStyles from '../../styles/Layout.module.css';
-import tableStyles from '../../styles/Table.module.css';
-import Button from '../../components/shared/Button';
+import api from '@/services/api';
+import layoutStyles from '@/styles/Layout.module.css';
+import tableStyles from '@/styles/Table.module.css';
+import Button from '@/components/shared/Button.jsx';
 
 const HistoricoReservasPage = () => {
-    const { id } = useParams(); // Pega o ID do ambiente da URL
+    const { id } = useParams();
     const [reservas, setReservas] = useState([]);
     const [ambiente, setAmbiente] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -17,7 +16,6 @@ const HistoricoReservasPage = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Busca os dados do ambiente e o histórico de reservas em paralelo
                 const [ambienteRes, historicoRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/reservas/historico/ambiente/${id}`)
@@ -38,10 +36,10 @@ const HistoricoReservasPage = () => {
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
-        <div className={layoutStyles.container}>
+        <>
             <div className={layoutStyles.pageHeader}>
                 <h1>Histórico de Reservas: {ambiente?.identificacao}</h1>
-                <Button as={Link} to={`/ambientes/${id}`} variant="cancel">
+                <Button as={Link} to={`/admin/ambientes/${id}`} variant="cancel">
                     Voltar ao Ambiente
                 </Button>
             </div>
@@ -80,7 +78,7 @@ const HistoricoReservasPage = () => {
                     </tbody>
                 </table>
             )}
-        </div>
+        </>
     );
 };
 

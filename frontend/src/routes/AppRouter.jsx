@@ -10,6 +10,7 @@ import HomePage from '../pages/public/HomePage.jsx';
 import LoginPage from '../pages/public/Login.jsx';
 import PublicAmbienteDetalhesPage from '../pages/public/PublicAmbienteDetalhesPage.jsx';
 import RequestAccessPage from '../pages/public/RequestAccessPage';
+import HistoricoReservasPage from '../pages/public/HistoricoReservasPage.jsx';
 
 // Páginas de Admin
 import VisualizarReviewsPage from '../components/adm/VisualizarReviewsPage.jsx';
@@ -17,6 +18,7 @@ import AdmHomePage from '../pages/adm/admHomePage.jsx';
 import AmbienteDetalhesPage from '../pages/adm/AmbienteDetalhesPage.jsx';
 import CadastrarAmbientePage from '../pages/adm/cadAmbiente.jsx';
 import GerenciarUsuariosPage from '../pages/adm/GerenciarUsuariosPage.jsx';
+import AvaliacoesPorAmbientePage from '../pages/adm/AvaliacoesPorAmbientePage.jsx'; // ADICIONE ESTA LINHA
 
 // Páginas de Usuário
 import AlunoHomePage from '../pages/user/aluno/alunoHomePage.jsx';
@@ -48,11 +50,11 @@ const AppRouter = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/ambientes/:id" element={<PublicAmbienteDetalhesPage />} />
+          <Route path="/ambientes/:id/historico" element={<HistoricoReservasPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/solicitar-cadastro" element={<RequestAccessPage />} />
         
-
         {/* Rotas de Admin */}
         <Route 
           path="/admin" 
@@ -62,6 +64,8 @@ const AppRouter = () => {
           <Route path="cadastrar-ambiente" element={<CadastrarAmbientePage />} />
           <Route path="solicitacoes-cadastro" element={<GerenciarUsuariosPage />} />
           <Route path="ambientes/:id" element={<AmbienteDetalhesPage />} />
+          <Route path="ambientes/:id/avaliacoes" element={<AvaliacoesPorAmbientePage />} />
+          <Route path="ambientes/:id/historico" element={<HistoricoReservasPage />} />
           <Route path="perfil" element={<UserProfilePage />} />
           <Route path="reviews" element={<VisualizarReviewsPage />} />
         </Route>
