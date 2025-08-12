@@ -5,18 +5,12 @@ const { createEsbuildPlugin } = require("@badeball/cypress-cucumber-preprocessor
 
 module.exports = defineConfig({
   e2e: {
-    // A linha que diz ao Cypress para encontrar os arquivos .feature
+    baseUrl: 'http://localhost:3000/api',
+
     specPattern: "cypress/e2e/**/*.feature",
-    
+
     async setupNodeEvents(on, config) {
-      // Passamos a configuração de onde encontrar os steps DIRETAMENTE AQUI
-      await addCucumberPreprocessorPlugin(on, config, {
-        stepDefinitions: [
-          "cypress/e2e/common/*.{js,ts}",
-          "cypress/e2e/[filepath]/*.{js,ts}",
-          "cypress/e2e/[filepath].{js,ts}",
-        ],
-      });
+      await addCucumberPreprocessorPlugin(on, config);
 
       on(
         "file:preprocessor",
@@ -24,8 +18,10 @@ module.exports = defineConfig({
           plugins: [createEsbuildPlugin(config)],
         })
       );
-      
+
       return config;
     },
+
+    stepDefinitions: "cypress/e2e/**/*.js"
   },
 });

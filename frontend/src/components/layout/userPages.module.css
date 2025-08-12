@@ -1,0 +1,122 @@
+.userPage {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+
+.actionPanel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.actionButton {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff; /* Azul */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.actionButton:hover {
+    background-color: #0056b3;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 60px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.headerTitle {
+    font-weight: bold;
+    color: #333;
+}
+.layoutContainer {
+    display: flex;
+}
+
+.hamburgerButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburgerButton span {
+    width: 24px;
+    height: 2px;
+    background: #333; /* Cor das barrinhas */
+    border-radius: 10px;
+}
+.profileButton {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+}
+
+.sidePanel {
+    position: fixed; /* Fica fixo na tela */
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    background-color: #2c3e50; /* Azul escuro */
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.2);
+    transform: translateX(-100%); /* Começa escondido à esquerda */
+    transition: transform 0.3s ease-in-out; /* Efeito suave de deslizar */
+    z-index: 1000; /* Garante que fique por cima de tudo */
+}
+.sidePanel.open {
+    transform: translateX(0);
+}
+.panelHeader, .panelFooter {
+    padding: 1rem;
+    text-align: center;
+}
+.panelHeader { border-bottom: 1px solid #34495e; }
+.nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; flex-grow: 1; }
+.nav a { color: #ecf0f1; text-decoration: none; padding: 0.75rem 1rem; border-radius: 5px; transition: background-color 0.2s; }
+.nav a:hover { background-color: #34495e; }
+.logoutButton { width: 100%; padding: 0.75rem; border: none; border-radius: 5px; background-color: #e74c3c; color: white; cursor: pointer; }
+.logoutButton:hover { background-color: #c0392b; }
+
+.mainContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Fica abaixo do painel, mas acima do conteúdo */
+}

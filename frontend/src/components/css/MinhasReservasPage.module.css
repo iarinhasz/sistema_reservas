@@ -1,0 +1,25 @@
+.filterContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Um pouco menos de espaço entre os botões */
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.filterContainer span {
+    font-weight: 600;
+    margin-right: 0.5rem; /* Espaço depois do texto "Filtrar por:" */
+}
+
+/* Tema roxo: bordas/cores do filtro */
+:global(.darkTheme) .filterContainer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+:global(.darkTheme) .filterContainer span {
+  color: #fff;
+  opacity: 0.9;
+}

@@ -1,0 +1,153 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.3rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    
+    /* A base do efeito Glassmorphism */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.primary {
+    background: rgba(67, 56, 202, 0.6);
+    color: white;
+}
+.primary:hover {
+    background: rgba(67, 56, 202, 0.8);
+}
+
+.secondary {
+    background: rgba(22, 163, 74, 0.6);
+    color: white;
+}
+.secondary:hover {
+    background: rgba(22, 163, 74, 0.8);
+}
+
+.danger {
+    background: rgba(220, 38, 38, 0.6);
+    color: white;
+}
+.danger:hover {
+    background: rgba(220, 38, 38, 0.8);
+}
+
+.cancel {
+    background: rgba(107, 114, 128, 0.4);
+    color: #f0f0f0;
+}
+.cancel:hover {
+    background: rgba(107, 114, 128, 0.6);
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+} 
+.signIn {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.9rem;
+    border-radius: 10px;
+    width: 100%;
+    position: relative; /* Para o loader */
+}
+.signIn:hover {
+    transform: scale(1.02);
+}
+
+.social {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 0.7rem;
+}
+.social:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dangerOutline {
+    background: rgba(220, 38, 38, 0.6);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.dangerOutline:hover {
+    background: rgba(220, 38, 38, 0.8);
+}
+
+.dangerOutline::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -150%;
+    width: 200%; height: 300%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(-45deg);
+    animation: scanline 2.5s linear infinite;
+}
+
+@keyframes scanline {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.alertaAmbiente {
+    background-color: #ffc107; /* Laranja/Amarelo */
+    color: #212529; /* Texto escuro para melhor contraste */
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+}
+
+.alertaAmbiente:hover {
+    background-color: #e0a800;
+}
+
+/* Animação de varredura com brilho branco */
+.alertaAmbiente::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 300%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(-45deg);
+    animation: scanline 2.5s linear infinite;
+}
+
+@keyframes scanline {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}

@@ -1,0 +1,92 @@
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 500px;
+
+    color: #333; 
+
+}
+
+.modalContent h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #2c3e50; /* Um tom de cinza/azul escuro */
+}
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    margin: -2rem -2rem 1.5rem -2rem; /* Faz o header ocupar a largura toda */
+    padding: 1rem 2rem;
+}
+.modalHeader h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    color: #888;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+.modalButton {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.cancelButton {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+}
+.cancelButton:hover {
+    background-color: #5a6268;
+}
+.confirm {
+    background-color: #28a745;
+    color: white;
+}
+.confirm:hover {
+    background-color: #218838;
+}
+.disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.timeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}

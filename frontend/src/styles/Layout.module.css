@@ -1,0 +1,89 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    text-align: left;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.pageHeader h1, .pageHeader h2 {
+    margin: 0;
+    font-size: 2.2rem;
+    color: #2c3e50;
+}
+
+.pageHeaderActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.section {
+    margin-top: 2.5rem;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sectionHeader h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #34495e;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-left: 0;
+    margin-right: auto;
+    color: white; /* Garante que o texto seja visível no tema escuro */
+}
+
+.detailsGrid p {
+    margin: 0;
+}
+
+.actionsBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1.5rem;
+}

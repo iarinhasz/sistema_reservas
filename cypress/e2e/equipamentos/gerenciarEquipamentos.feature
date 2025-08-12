@@ -4,7 +4,7 @@ Feature: API para Gerenciar Equipamentos
     dentro de um ambiente específico.
 
     Background:
-        Given eu estou autenticado como um administrador
+        Given eu estou autenticado como "admin"
         And um ambiente com o identificador "Lab-Central" é criado
 
     Scenario: Adicionar um novo equipamento a um ambiente com sucesso
@@ -54,6 +54,12 @@ Feature: API para Gerenciar Equipamentos
 
     Scenario: Falha ao tentar remover um equipamento com uma reserva futura
         Given um equipamento com uma reserva futura é criado
+        When eu envio uma requisição DELETE para remover o equipamento de teste
+        Then a resposta da requisição deve ter o status 409
+        And o corpo da resposta deve conter a mensagem "Não é possível excluir o equipamento pois ele possui reservas futuras"
+    
+    Scenario: Admin falha ao tentar remover um equipamento com uma reserva futura feita por um aluno
+        Given um equipamento é reservado por um "aluno" e aprovado por um "admin"
         When eu envio uma requisição DELETE para remover o equipamento de teste
         Then a resposta da requisição deve ter o status 409
         And o corpo da resposta deve conter a mensagem "Não é possível excluir o equipamento pois ele possui reservas futuras"

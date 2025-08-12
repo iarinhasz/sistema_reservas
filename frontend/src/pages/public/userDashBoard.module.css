@@ -1,0 +1,30 @@
+.adminPage h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    /* A cor já é herdada do layout (branca), então não precisa ser definida aqui */
+}
+
+.actionPanel {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.listSectionHeader {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 1.5rem; 
+}
+
+.listSectionHeader h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}

@@ -1,0 +1,172 @@
+/* frontend/src/pages/admin/css/AmbienteDetalhesPage.module.css */
+
+.container {
+    padding: 1rem 2rem;
+    font-family: sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.header h1 {
+    margin: 0;
+    color: #333;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.actionButton,
+.reserveButton,
+.addButton {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.actionButton {
+    background-color: #007bff; /* Azul */
+}
+
+.reserveButton {
+    background-color: #ffc107; /* Amarelo */
+    color: #333;
+}
+
+.addButton {
+    background-color: #28a745; /* Verde */
+}
+
+.actionButton:hover,
+.reserveButton:hover,
+.addButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+}
+
+.detailsGrid p {
+    margin: 0;
+}
+
+.equipamentosSection {
+    margin-top: 2rem;
+}
+
+.equipamentosHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.equipamentosHeader h2 {
+    margin: 0;
+}
+
+/* --- ESTILOS DA TABELA DE EQUIPAMENTOS --- */
+.equipamentosTable {
+    width: 100%;
+    border-collapse: collapse; /* Essencial para unir as bordas */
+    margin-top: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.equipamentosTable th,
+.equipamentosTable td {
+    border: 1px solid #ddd; /* Adiciona bordas em todos os lados */
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.equipamentosTable th {
+    background-color: #f8f9fa; /* Fundo cinza claro para o cabeçalho */
+    font-weight: bold;
+}
+
+/* Deixa a tabela com listras para melhor legibilidade */
+.equipamentosTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.error {
+    color: #d9534f; /* Vermelho */
+}
+
+.solicitacoesSection {
+    margin-bottom: 2rem;
+}
+
+.solicitacoesList {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.solicitacaoItem {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #ffc107; /* Borda amarela para indicar pendência */
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reservaInfo {
+    line-height: 1.5;
+}
+
+.reservaInfo strong {
+    font-size: 1.1em;
+}
+
+.reservaInfo small {
+    color: #6c757d;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionButtons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.approveButton { background-color: #28a745; }
+.rejectButton { background-color: #dc3545; }
+
+.actionButtons button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

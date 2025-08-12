@@ -1,0 +1,62 @@
+.reviewsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.reviewCard {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reviewCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.userName {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.starRating {
+    font-size: 1.1rem;
+}
+
+.starFilled {
+    color: #ffc107;
+}
+
+.starEmpty {
+    color: #e0e0e0;
+}
+
+.comment {
+    font-style: italic;
+    color: #555;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.cardFooter {
+    text-align: right;
+    color: #888;
+    font-size: 0.9rem;
+}

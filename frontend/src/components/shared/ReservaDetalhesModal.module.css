@@ -1,0 +1,15 @@
+.modalOverlay { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); display: flex;
+    justify-content: center; align-items: center; z-index: 1000; color:black;
+}
+.modalContent { background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; }
+.modalHeader { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2d7d7; margin-bottom: 1rem; padding-bottom: 1rem;}
+.modalHeader h2 { margin: 0; }
+.closeButton { background: none; border: none; font-size: 2rem; cursor: pointer; }
+.details p { margin: 0.5rem 0; }
+.divider { margin: 1rem 0; border: none; border-top: 1px solid #eee; }
+.status { padding: 0.25rem 0.75rem; border-radius: 12px; color: white; font-size: 0.9rem; text-transform: capitalize; }
+.status.aprovada { background-color: #28a745; }
+.status.pendente { background-color: #ffc107; color: #333; }
+.status.rejeitada { background-color: #dc3545; }
