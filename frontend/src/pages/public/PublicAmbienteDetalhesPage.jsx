@@ -69,14 +69,6 @@ const PublicAmbienteDetalhesPage = () => {
                     <p>Veja a agenda de horários e solicite sua reserva.</p>
                 </div>
                 <div className={styles.headerActions}> 
-                    <Button as={Link} to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
-                        Minhas Reservas
-                    </Button>
-                        {user.tipo === 'professor' && (
-                    <Button onClick={handleOpenReserveModal} variant="secondary">
-                        + Fazer Nova Reserva
-                    </Button>
-                        )}
                     <Button as={Link} to={homePath} variant="cancel">Voltar para Início</Button>
                 </div>
             </div>

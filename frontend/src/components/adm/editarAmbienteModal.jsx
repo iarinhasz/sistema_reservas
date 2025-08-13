@@ -7,7 +7,7 @@ import modalStyles from '../../styles/modal.module.css';
 import { SaveIcon, DeleteIcon } from '../icons/index';
 import Button from '../shared/Button';
 
-const EditarAmbienteModal = ({ ambiente, onClose, onSuccess }) => {
+const EditarAmbienteModal = ({ ambiente, onClose, onSuccess, onDelete }) => {
     // O estado do formulário já começa com os dados do ambiente a ser editado
     const [formData, setFormData] = useState({
         identificacao: ambiente.identificacao || '',

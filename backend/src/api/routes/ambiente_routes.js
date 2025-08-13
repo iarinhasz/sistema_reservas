@@ -14,15 +14,15 @@ router.post(
     authMiddleware,
     adminMiddleware,
     // --- CADEIA DE VALIDAÇÃO ---
-    body('identificacao')
-        .trim()
-        .notEmpty().withMessage('O identificador é obrigatório.')
-        .isLength({ min: 3 }).withMessage('O identificador deve ter no mínimo 3 caracteres.')
-        .matches(/^[a-zA-Z0-9\s-áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]+$/)
-        .withMessage('O identificador pode conter apenas letras, números, espaços e hífens.'),
-
+    [body('identificacao')
+    .trim()
+    .notEmpty().withMessage('O identificador é obrigatório.')
+    .isLength({ min: 3 }).withMessage('O identificador deve ter no mínimo 3 caracteres.')
+    .matches(/^[\p{L}0-9\s-]+$/u)
+    .withMessage('O identificador pode conter apenas letras, números, espaços e hífens.')],
     (req, res) => ambienteController.create(req, res)
-);router.patch('/:id', authMiddleware, adminMiddleware, ambienteController.update); 
+);
+router.patch('/:id', authMiddleware, adminMiddleware, ambienteController.update); 
 router.delete('/:id', authMiddleware, adminMiddleware, ambienteController.delete);
 
 //rotas livres

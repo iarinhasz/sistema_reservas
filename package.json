@@ -1,20 +1,16 @@
 {
-  "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^20.0.5",
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.1",
-    "cypress": "^13.17.0",
-    "jest": "^30.0.5"
-  },
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "googleapis": "^150.0.1",
-    "nodemailer": "^7.0.5"
-  },
   "name": "sistema_reservas",
   "version": "1.0.0",
+  "description": "",
   "main": "cypress.config.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start:backend": "node src/server.js",
+    "start:backend:test": "cross-env NODE_ENV=test node src/server.js",
+    "test:e2e:up": "docker compose -f docker-compose.yml -f docker-compose.test.yml up --build -d",
+    "test:e2e:down": "docker compose -f docker-compose.yml -f docker-compose.test.yml down",
+    "cy:open": "cypress open"
+  
   },
   "repository": {
     "type": "git",
@@ -27,5 +23,16 @@
     "url": "https://github.com/lipmanoel/sistema_reservas/issues"
   },
   "homepage": "https://github.com/lipmanoel/sistema_reservas#readme",
-  "description": ""
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "googleapis": "^150.0.1",
+    "nodemailer": "^7.0.5"
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^20.0.5",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.1",
+    "cross-env": "^7.0.3",
+    "cypress": "^13.17.0",
+    "jest": "^30.0.5"
+  }
 }

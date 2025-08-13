@@ -9,6 +9,7 @@ import authRoutes from './src/api/routes/auth.routes.js';
 import equipamentoRoutes from './src/api/routes/equipamento.routes.js';
 import notificacaoRoutes from './src/api/routes/notificacao.routes.js';
 import reservaRoutes from './src/api/routes/reserva.routes.js';
+import testingRoutes from './src/api/routes/testing.routes.js';
 import usuarioRoutes from './src/api/routes/usuario.routes.js';
 import appEmitter from './src/events/appEmitter.js';
 
@@ -37,13 +38,10 @@ app.use('/api/reservas', reservaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/notificacoes', notificacaoRoutes);
 
-if (process.env.NODE_ENV !== 'production') {
-    import('./src/api/routes/testing.routes.js').then((testingRoutes) => {
-        app.use('/api/testing', testingRoutes.default);
-        console.log('Rotas de teste carregadas.');
-    }).catch(err => {
-        console.error("Não foi possível carregar as rotas de teste:", err);
-    });
+console.log('Modo de ambiente atual (NODE_ENV):', process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'test') {
+    app.use('/api/testing', testingRoutes);
+    console.log('Rotas de teste carregadas.');
 }
 
 

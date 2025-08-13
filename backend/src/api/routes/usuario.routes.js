@@ -38,6 +38,12 @@ router.post(
     usuarioController.rejeitarCadastro
 );
 
+router.patch(
+    '/:cpf/senha',
+    authMiddleware,
+    usuarioController.alterarSenha
+);
+
 router.delete(
     '/:cpf',
     authMiddleware,

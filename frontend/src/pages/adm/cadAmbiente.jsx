@@ -40,6 +40,7 @@ const CadastrarAmbientePage = () => {
             }, 2000);  
 
         } catch (error) {
+
             const res = error.response;
             // Verifica se é um erro de validação do express-validator (status 400)
             if (res && res.status === 400 && res.data.errors) {

@@ -1,12 +1,19 @@
 Cypress.Commands.add('login', (email, senha) => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:3000/api/auth/login',
+        url: `${Cypress.env('apiUrl')}/api/auth/login`, // Usa a variável do cypress.config.js
         body: { email, senha },
     }).then((response) => {
-        // Verifica se o login foi bem-sucedido
+        // Confirma que o login na API foi bem-sucedido
         expect(response.status).to.eq(200);
-        // Salva o token retornado pela API em uma variável de ambiente do Cypress
-        Cypress.env('authToken', response.body.token);
+        
+        // Pega o token da resposta e o salva no localStorage do navegador
+        const token = response.body.token;
+        cy.window().then((win) => {
+        win.localStorage.setItem('authToken', token); // Use a chave correta que sua aplicação usa
+        });
+
+        // Também salva no ambiente do Cypress para outras chamadas de API
+        Cypress.env('authToken', token);
     });
 });

@@ -99,4 +99,42 @@ export default class UsuarioService {
 
         return deletedUser;
     }
+    async alterarSenha(cpfUsuario, senhaAtual, novaSenha, usuarioLogado) {
+        // Garante que apenas o próprio usuário ou um admin possa alterar a senha
+        if (usuarioLogado.cpf !== cpfUsuario && usuarioLogado.tipo !== 'admin') {
+            const error = new Error("Você não tem permissão para alterar a senha de outro usuário.");
+            error.statusCode = 403;
+            throw error;
+        }
+
+        if (!senhaAtual || !novaSenha) {
+            const error = new Error("A senha atual e a nova senha são obrigatórias.");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        const usuario = await this.usuarioModel.findByCpf(cpfUsuario);
+        if (!usuario) {
+            const error = new Error("Usuário não encontrado.");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        // Compara a senha enviada com a senha hash no banco de dados
+        const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+        if (!senhaValida) {
+            const error = new Error("A senha atual está incorreta.");
+            error.statusCode = 403; // Forbidden é mais apropriado que 401 (Unauthorized) aqui
+            throw error;
+        }
+
+        // Criptografa a nova senha
+        const saltRounds = 10;
+        const novaSenhaHash = await bcrypt.hash(novaSenha, saltRounds);
+
+        const usuarioAtualizado = await this.usuarioModel.update(cpfUsuario, { senha: novaSenhaHash });
+        
+        return usuarioAtualizado;
+    }
+
 }

@@ -96,6 +96,21 @@ export default class UsuarioController {
             res.status(500).json({ message: "Erro interno do servidor." });
         }
     };
+    
+    alterarSenha = async (req, res) => {
+        try {
+            const { cpf } = req.params;
+            const { senhaAtual, novaSenha } = req.body;
+            
+            await this.usuarioService.alterarSenha(cpf, senhaAtual, novaSenha, req.user);
+
+            res.status(200).json({ message: "Senha alterada com sucesso!" });
+
+        } catch (error) {
+            console.error("Erro ao alterar senha:", error);
+            res.status(error.statusCode || 500).json({ message: error.message || "Erro interno do servidor." });
+        }
+    };
 
     delete = async (req, res) => {
         try {

@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    env_file:
+      - ./.env.test # Aponta para o arquivo de ambiente de teste
+
+  db:
+    env_file:
+      - ./.env.test

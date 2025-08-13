@@ -73,7 +73,7 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
         const agora = new Date();
         const dataFim = new Date(reserva.data_fim);
 
-        if (user?.tipo === 'admin') {
+        if (user?.tipo === 'admin' || user?.tipo === 'professor') {
             setReservaSelecionada(reserva);
             setModalAdminAberto(true);
             return;

@@ -16,6 +16,8 @@ import AuthController from './api/controllers/auth.controller.js';
 import EquipamentoController from './api/controllers/equipamento.controller.js';
 import ReservaController from './api/controllers/reserva.controller.js';
 import UsuarioController from './api/controllers/usuario.controller.js';
+//para executar os testes
+import TestingController from './api/controllers/testing.controller.js';
 
 import pool from './config/database.js';
 
@@ -36,8 +38,9 @@ const ambienteController = new AmbienteController(ambienteService);
 const reservaController = new ReservaController(reservaService);
 const equipamentoController = new EquipamentoController(equipamentoService);
 const authController = new AuthController(authService);
+const testingController = new TestingController();
 
 export {
     ambienteController, authController, equipamentoController, reservaController,
-    usuarioController
+    usuarioController, testingController
 };

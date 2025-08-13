@@ -20,13 +20,17 @@ class AmbienteController{
     create = async (req, res)=>{
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log('CONTROLLER: Erros de validação encontrados! Retornando 400.'); // Log importante
             return res.status(400).json({ message: "Erro de validação", errors: errors.array() });
         }
 
         try {
+            console.log('CONTROLLER: NENHUM erro de validação. Entrando no TRY.'); // Log importante
             const novoAmbiente = await this.ambienteService.create(req.body);
             res.status(201).json({ message: "Ambiente criado com sucesso!", ambiente: novoAmbiente });
         } catch (error) {
+            console.log('CONTROLLER: Erro pego no CATCH!', error.message); // Log importante
+
             if (error.message === "Identificador já cadastrado") {
                 return res.status(409).json({ message: error.message });
             }
@@ -73,6 +77,8 @@ class AmbienteController{
         try {
             const { id } = req.params;
             const ambienteDeletado = await this.ambienteService.delete(parseInt(id, 10));
+
+            console.log('ambiente deletado: ', ambienteDeletado);
             res.status(200).json({
                 message: 'Ambiente deletado com sucesso!',
                 ambienteDeletado: ambienteDeletado
