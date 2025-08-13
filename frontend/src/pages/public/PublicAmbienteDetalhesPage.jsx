@@ -7,6 +7,7 @@ import ReservarModal from '../../components/shared/ReservarModal';
 import styles from '../../components/layout/UserLayout.module.css'; 
 import EquipamentosList from '../../components/shared/EquipamentoList'; 
 import Button from '../../components/shared/Button'; 
+import FormularioReservaEquipamento from '../../components/shared/FormularioReservaEquipamento.jsx';
 
 const PublicAmbienteDetalhesPage = () => {
     const { id } = useParams();
@@ -14,6 +15,7 @@ const PublicAmbienteDetalhesPage = () => {
     const navigate = useNavigate();
 
     const [ambiente, setAmbiente] = useState(null);
+    const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,28 +24,23 @@ const PublicAmbienteDetalhesPage = () => {
     const homePath = user ? `/${user.tipo}` : '/';
 
     useEffect(() => {
-        const fetchAmbienteData = async () => {
+        const fetchPageData = async () => {
             setLoading(true);
             try {
-                const ambienteRes = await api.get(`/ambientes/${id}`);
+                const [ambienteRes, equipamentosRes] = await Promise.all([
+                    api.get(`/ambientes/${id}`),
+                    api.get(`/equipamentos?ambienteId=${id}`)
+                ]);
                 setAmbiente(ambienteRes.data);
+                setEquipamentos(equipamentosRes.data || []);
             } catch (err) {
-                setError('Falha ao carregar dados do ambiente.');
-                console.error("Erro detalhado:", err);
+                setError('Falha ao carregar dados da página.');
             } finally {
                 setLoading(false);
             }
         };
-        fetchAmbienteData();
+        fetchPageData();
     }, [id]);
-
-    const handleOpenReserveModal = () => {
-        if (!user) {
-            navigate('/login');
-        } else {
-            setIsModalOpen(true);
-        }
-    };
 
     const handleReservationSuccess = () => {
         alert('Sua solicitação de reserva foi enviada com sucesso!');
@@ -51,7 +48,7 @@ const PublicAmbienteDetalhesPage = () => {
         setRefreshAgendaKey(prevKey => prevKey + 1);
     };
 
-    if (loading) return <p>Carregando...</p>;
+    if (loading) return <p>A carregar...</p>;
     if (error) return <p style={{color: 'red'}}>{error}</p>;
     if (!ambiente) return <p>Ambiente não encontrado.</p>;
 
@@ -66,7 +63,6 @@ const PublicAmbienteDetalhesPage = () => {
                 />
             )}
 
-            {/* O div .container é removido, pois o UserLayout já fornece o espaçamento */}
             <div className={styles.pageHeader}>
                 <div>
                     <h1>{ambiente.identificacao}</h1>
@@ -85,24 +81,22 @@ const PublicAmbienteDetalhesPage = () => {
                 </div>
             </div>
             
+            {/* A barra de ações agora inclui a lógica para o aluno */}
             {user && (
                 <div className={styles.actionsBar}>
-                    
+                    <Button as={Link} to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
+                        Minhas Reservas
+                    </Button>
+
+                    {/* Botão para o professor */}
+                    {user.tipo === 'professor' && (
+                        <Button onClick={() => setIsModalOpen(true)} variant="secondary">
+                            + Fazer Nova Reserva
+                        </Button>
+                    )}
                 </div>
             )}
 
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Detalhes do Ambiente</h2>
-                </div>
-                {/* Aplicamos o estilo de card do UserLayout */}
-                <div className={`${styles.card} ${styles.detailsGrid}`}>
-                    <p><strong>Tipo:</strong></p> <p>{ambiente.tipo}</p>
-                    <p><strong>Status:</strong></p> <p>{ambiente.status}</p>
-                    <p><strong>Descrição:</strong></p> <p>{ambiente.descricao || 'N/A'}</p>
-                </div>
-            </div>
-                            
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <h2>Equipamentos neste Ambiente</h2>
@@ -114,12 +108,24 @@ const PublicAmbienteDetalhesPage = () => {
             
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
-                    <h2>Agenda de Reservas</h2>
+                    <h2>Agenda de Reservas do Ambiente</h2>
                 </div>
                 <div className={styles.card}>
                     <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} userRole={user?.tipo} />
                 </div>
             </div>
+
+            {user?.tipo === 'aluno' && equipamentos.length > 0 && (
+                <div className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                        <h2>Solicitar Reserva de Equipamento</h2>
+                    </div>
+                    <FormularioReservaEquipamento 
+                        equipamentos={equipamentos} 
+                        onSuccess={handleReservationSuccess} 
+                    />
+                </div>
+            )}
         </>
     );
 };

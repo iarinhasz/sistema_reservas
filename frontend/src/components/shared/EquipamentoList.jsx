@@ -92,25 +92,12 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
             );
 
         case 'aluno':
-            return (
-                <ul className={listStyles.list}>
-                    {equipamentos.map((equipamento) => (
-                        <li key={equipamento.id} className={listStyles.listItem}>
-                            <span>{equipamento.nome}</span>
-                            <Link to={`/aluno/reservar-equipamento/${equipamento.id}`}>
-                                <Button variant="secondary">Reservar</Button>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            );
-        
-        default: // Visitantes não logados
+        default:
             return (
                 <ul className={listStyles.simpleList}>
                     {equipamentos.map((equipamento) => (
                         <li key={equipamento.id} className={listStyles.simpleListItem}>
-                            {equipamento.nome}
+                            {equipamento.nome} - (Quantidade Total: {equipamento.quantidade_total})
                         </li>
                     ))}
                 </ul>
