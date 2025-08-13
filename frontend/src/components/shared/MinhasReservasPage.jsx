@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
-import axios from 'axios';
 import api from '../../services/api';
 import Button from '../shared/Button.jsx';
 import ReviewModal from './reviewModal.jsx';
 
-import styles from '../css/MinhasReservasPage.module.css';
-import table from '../../styles/Table.module.css';
+import layoutStyles from '../layout/UserLayout.module.css';
+import tableStyles from '../../styles/Table.module.css';
+
 
 const MinhasReservasPage = () => {
     const { user, loading: authLoading } = useAuth();
@@ -128,12 +128,14 @@ const MinhasReservasPage = () => {
                     />
                 )}
 
-            <div className={styles.container}>
-                <h1>
-                    {recursoId ? `Meu Histórico para ${recursoTipo}` : 'Minhas Reservas'}
-                </h1>
+            <div className={layoutStyles.container}>
+                <div className={layoutStyles.pageHeader}>
+                    <h1>
+                        {recursoId ? `Meu Histórico para ${recursoTipo}` : 'Minhas Reservas'}
+                    </h1>
+                </div>
 
-                <div className={styles.filterContainer}>
+                <div className={layoutStyles.filterContainer}>
                     <span>Filtrar por:</span>
                         <Button variant={filtroStatus === 'todos' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('todos')}>Todos</Button>
                         <Button variant={filtroStatus === 'pendente' ? 'primary' : 'cancel'} onClick={() => setFiltroStatus('pendente')}>Pendentes</Button>
@@ -146,14 +148,14 @@ const MinhasReservasPage = () => {
                 {sortedAndFilteredReservas.length === 0 ? (
                     <p>Você não tem nenhuma reserva para o filtro selecionado.</p>
                 ) : (
-                    <div className={table.tableWrapper}>
-                        <table className={`${table.table} ${table.reservasTable}`}>
+                    <div className={layoutStyles.card}> 
+                        <table className={tableStyles.table}>
                             <thead>
                                 <tr>
                                     <th>Recurso</th>
                                     <th>Data</th>
-                                    <th className={table.statusColumn} >Status</th>
-                                    <th>Ações</th>
+                                    <th className={tableStyles.statusColumn}>Status</th>
+                                    <th className={tableStyles.actionsCell}>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,37 +168,38 @@ const MinhasReservasPage = () => {
                                         <tr key={reserva.id}>
                                             <td>{reserva.recurso_nome || reserva.titulo}</td>
                                             <td>{new Date(reserva.data_inicio).toLocaleDateString()}</td>
-                                            <td className={table.statusColumn}>
+                                            <td className={tableStyles.statusColumn}>
                                                 <span 
-                                                    className={`${table.status} ${table[statusCalculado]} ${isClickable ? table.statusClickable : ''}`}
+                                                    className={`${tableStyles.status} ${tableStyles[statusCalculado]} ${isClickable ? tableStyles.statusClickable : ''}`}
                                                     onClick={() => isClickable && handleShowRejectionReason(motivo_rejeicao)}
                                                     title={isClickable ? 'Clique para ver o motivo' : ''}
                                                 >
                                                     {statusCalculado}
                                                 </span>
+                                                    
                                             </td>
-                                            <td className={styles.actionsCell}>
+                                            <td className={tableStyles.actionsCell}>
                                                 {canCancel && (
                                                     <Button variant="danger" onClick={() => handleCancelReserva(reserva.id)}>
                                                         Cancelar
                                                     </Button>
                                                 )}
-                                            {statusCalculado === 'concluida' && !reserva.nota && (
-                                                <Button variant="secondary" onClick={() => handleOpenReviewModal(reserva)}>
-                                                    Fazer Review
-                                                </Button>
-                                            )}
-                                            {reserva.nota && statusCalculado === 'concluida' && (
-                                                <span className={styles.reviewedMessage}>Já Avaliado ({reserva.nota} ★)</span>
-                                            )}
+                                                {statusCalculado === 'concluida' && !reserva.nota && (
+                                                    <Button variant="secondary" onClick={() => handleOpenReviewModal(reserva)}>
+                                                        Fazer Review
+                                                    </Button>
+                                                )}
+                                                {reserva.nota && statusCalculado === 'concluida' && (
+                                                    <span className={tableStyles.reviewedMessage}>Já Avaliado ({reserva.nota} ★)</span>
+                                                )}
                                             </td>
                                         </tr>
                                     );
                                 })}
                             </tbody>
                         </table>
-                    </div>
-                )}
+                        </div>
+                    )}
             </div>
         </>
     );

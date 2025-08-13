@@ -153,3 +153,6 @@
     color: white;
     font-weight: 600;
 }
+.filterContainer {
+    margin-bottom: 2rem; 
+}
