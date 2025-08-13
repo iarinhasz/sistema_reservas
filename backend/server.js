@@ -1,16 +1,16 @@
+import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 
-import appEmitter from './src/events/appEmitter.js';
 import ambientesRoutes from './src/api/routes/ambiente_routes.js';
 import authRoutes from './src/api/routes/auth.routes.js';
 import equipamentoRoutes from './src/api/routes/equipamento.routes.js';
+import notificacaoRoutes from './src/api/routes/notificacao.routes.js';
 import reservaRoutes from './src/api/routes/reserva.routes.js';
 import usuarioRoutes from './src/api/routes/usuario.routes.js';
-import notificacaoRoutes from './src/api/routes/notificacao.routes.js';
+import appEmitter from './src/events/appEmitter.js';
 
 const app = express();
 const httpServer = http.createServer(app);

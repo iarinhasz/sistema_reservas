@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import styles from '../css/reviewModal.module.css';
+import { useState } from 'react';
+import styles from '../../styles/modal.module.css';
 import Button from './Button';
+import StarRating from './StarRating';
+
 
 const ReviewModal = ({ reserva, onClose, onSubmit }) => {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
+    const [error, setError] = useState('');
 
     if (!reserva) return null;
 
@@ -15,49 +18,48 @@ const ReviewModal = ({ reserva, onClose, onSubmit }) => {
             return;
         }
         onSubmit({
-            rating,
-            comment,
+            nota: rating,
+            comentario: comment,
             reservaId: reserva.id
         });
     };
     
     return (
-        <div className={styles.modalOverlay} onClick={onClose}>
+        <div className={styles.modalBackdrop} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <button className={styles.closeButton} onClick={onClose}>&times;</button>
-                <h2>Avaliar Reserva</h2>
+                <div className={styles.modalHeader}>
+                    <h2>Avaliar Reserva</h2>
+                    <button className={styles.closeButton} onClick={onClose}>&times;</button>
+                </div>
+                
                 <p>Recurso: <strong>{reserva.recurso_nome || reserva.titulo}</strong></p>
 
                 <form onSubmit={handleSubmit}>
-                    <div className={styles.starRating}>
+                    <div className={styles.formGroup}>
                         <label>Sua avaliação:</label>
-                        <div className={styles.stars}>
-                            {[1, 2, 3, 4, 5].map(star => (
-                                <span
-                                    key={star}
-                                    className={rating >= star ? styles.on : styles.off}
-                                    onClick={() => setRating(star)}
-                                >
-                                    &#9733;
-                                </span>
-                            ))}
-                        </div>
+                        <StarRating rating={rating} setRating={setRating} />
                     </div>
                     
-                    <div className={styles.commentSection}>
+                    <div className={styles.formGroup}>
                         <label htmlFor="comment">Comentário (opcional):</label>
                         <textarea
                             id="comment"
+                            className={styles.textarea}
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows="4"
                             placeholder="Descreva sua experiência..."
                         />
                     </div>
-
+                    {error && <p className={styles.error}>{error}</p>}
+                    
                     <div className={styles.modalActions}>
-                        <Button type="button" variant="secondary" onClick={onClose}>Cancelar</Button>
-                        <Button type="submit" variant="primary">Enviar Avaliação</Button>
+                        <Button type="button" variant="cancel" onClick={onClose}>
+                            Cancelar
+                        </Button>
+                        <Button type="submit" variant="primary">
+                            Enviar Avaliação
+                        </Button>
                     </div>
                 </form>
             </div>

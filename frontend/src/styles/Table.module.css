@@ -23,15 +23,21 @@
     font-weight: 600;
 }
 
-/* Remove a borda da última linha para um visual mais limpo */
-.table tbody tr:last-child td {
-    border-bottom: none;
+.table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+.reservasTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.95rem;
 }
 
-/* CORREÇÃO: Remove o efeito zebra e define um fundo padrão para todas as linhas */
-.table tbody tr {
-    background-color: transparent; /* Fundo padrão "roxo" (transparente sobre o fundo do layout) */
-    transition: background-color 0.2s, color 0.2s;
+.reservasTable td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.8rem 1rem;
+    text-align: left;
+    vertical-align: middle;
 }
 
 /* CORREÇÃO: Novo efeito de hover */
@@ -45,22 +51,34 @@
 }
 
 .actionsCell {
-    vertical-align: middle;
-    padding-left: 10px; 
+    width: 160px; 
+    text-align: center;
+    justify-content: center; /* Centraliza o botão horizontalmente */
+    align-items: center;     /* Centraliza o botão verticalmente (bom para consistência) */
+    text-align: center; 
+}
+.actionsCell button,
+.actionsCell .reviewedMessage {
+    min-width: 120px; 
+    box-sizing: border-box; 
+}
+.reviewedMessage {
+    display: inline-block;
+    text-align: center;
 }
 .statusColumn {
-    text-align: center;
+    width: 160px; 
+    text-align: center; /* Centraliza o conteúdo da célula */
 }
 
 .status {
     padding: 0.25rem 0.75rem;
-    border-radius: 12px;
+    border-radius: 99px;
     font-weight: bold;
-    text-transform: capitalize;
     font-size: 0.8rem;
     display: inline-block;
     min-width: 110px;
-    text-align: center; 
+    text-align: center;
 }
 .statusClickable {
     cursor: pointer;
@@ -82,5 +100,71 @@
     font-style: italic;
     color: #adb5bd;
     font-size: 0.9rem;
-    white-space: nowrap;
+    white-space: nowrap; /* Impede que o texto quebre a linha */
 }
+/* --- TEMA ESCURO / GLASSMORPHISM --- */
+/* Estes estilos só serão aplicados se a tabela estiver dentro de um elemento com a classe .darkTheme */
+
+:global(.darkTheme) .table {
+    border-collapse: separate; 
+    border-spacing: 0 0.5rem;
+    border: none;
+    box-shadow: none;
+    background-color: transparent; /* A tabela em si fica transparente */
+}
+/* Remove a borda da última linha */
+:global(.darkTheme) .table tbody tr:last-child td {
+    border-bottom: none;
+}
+:global(.darkTheme) .table td {
+    border-bottom: none;
+}
+:global(.darkTheme) .table th {
+    color: white;
+    font-weight: 600;
+    background-color: transparent; /* Cabeçalho transparente */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+:global(.darkTheme) .table tbody tr {
+    background-color: rgba(255, 255, 255, 0.1); /* 1. FUNDO ÚNICO PARA TODAS AS LINHAS */
+    transition: background-color 0.2s;
+}
+:global(.darkTheme) .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro */
+}
+:global(.darkTheme) .table td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+:global(.darkTheme) .table td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Cabeçalho fixo ao rolar */
+.reservasTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Tema roxo (darkTheme): cabeçalho legível */
+:global(.darkTheme) .reservasTable thead th {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Tema roxo: linhas e hover mais suaves */
+:global(.darkTheme) .reservasTable tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+:global(.darkTheme) .reservasTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+
+/* Larguras sugeridas para melhor alinhamento */
+.statusColumn { width: 160px; }
+

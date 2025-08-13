@@ -4,7 +4,7 @@ import api from '../../services/api';
 import AgendaAmbiente from '../../components/shared/AgendaAmbiente';
 import { useAuth} from '../../context/AuthContext';
 import ReservarModal from '../../components/shared/ReservarModal';
-import styles from '../../components/layout/UserLayout.module.css';
+import styles from '../../components/layout/UserLayout.module.css'; 
 import EquipamentosList from '../../components/shared/EquipamentoList'; 
 import Button from '../../components/shared/Button'; 
 import FormularioReservaEquipamento from '../../components/shared/FormularioReservaEquipamento.jsx';
@@ -64,8 +64,21 @@ const PublicAmbienteDetalhesPage = () => {
             )}
 
             <div className={styles.pageHeader}>
-                <h1>{ambiente.identificacao}</h1>
-                <Button as={Link} to={homePath} variant="cancel">Voltar para Início</Button>
+                <div>
+                    <h1>{ambiente.identificacao}</h1>
+                    <p>Veja a agenda de horários e solicite sua reserva.</p>
+                </div>
+                <div className={styles.headerActions}> 
+                    <Button as={Link} to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
+                        Minhas Reservas
+                    </Button>
+                        {user.tipo === 'professor' && (
+                    <Button onClick={handleOpenReserveModal} variant="secondary">
+                        + Fazer Nova Reserva
+                    </Button>
+                        )}
+                    <Button as={Link} to={homePath} variant="cancel">Voltar para Início</Button>
+                </div>
             </div>
             
             {/* A barra de ações agora inclui a lógica para o aluno */}

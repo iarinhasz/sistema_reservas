@@ -90,3 +90,24 @@
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 1rem;
 }
+
+
+.formGroup {
+    display: flex;
+    flex-direction: column; /* Coloca os itens em coluna (label em cima, input embaixo) */
+    gap: 0.5rem; /* Adiciona um pequeno espaço entre a label e o input */
+    margin-bottom: 1.5rem; /* Espaçamento entre os grupos de formulário */
+    align-items: center;
+}
+
+/* Garante que o textarea ocupe toda a largura disponível */
+.textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit; /* Usa a mesma fonte do resto do modal */
+    font-size: 1rem;
+    resize: vertical; /* Permite que o usuário redimensione apenas na vertical */
+    box-sizing: border-box; /* Garante que padding não afete a largura total */
+}
