@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import socket from '../services/socket.js';
 
 export const NotificacaoContext = createContext();
@@ -34,13 +34,16 @@ export const NotificacaoProvider = ({ children }) => {
 
     const limparAlertaCadastro = () => setTemNovoCadastro(false);
     
-    const limparAlertaReserva = (ambienteId) => {
+    const limparAlertaReserva = useCallback((ambienteId) => {
         setAlertasReserva(prevAlertas => {
             const novosAlertas = new Set(prevAlertas);
-            novosAlertas.delete(ambienteId);
-            return novosAlertas;
+            if (novosAlertas.has(ambienteId)) {
+                novosAlertas.delete(ambienteId);
+                return novosAlertas;
+            }
+            return prevAlertas; // Retorna o estado anterior se não houver mudança
         });
-    };
+    }, []);
 
     const value = {
         temNovoCadastro,

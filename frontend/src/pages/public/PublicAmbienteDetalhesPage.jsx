@@ -12,10 +12,9 @@ import FormularioReservaEquipamento from '../../components/shared/FormularioRese
 const PublicAmbienteDetalhesPage = () => {
     const { id } = useParams();
     const { user } = useAuth();
-    const navigate = useNavigate();
 
     const [ambiente, setAmbiente] = useState(null);
-    const [equipamentos, setEquipamentos] = useState([]);
+    const [equipamentos, setEquipamentos] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,14 +24,13 @@ const PublicAmbienteDetalhesPage = () => {
 
     useEffect(() => {
         const fetchPageData = async () => {
-            setLoading(true);
             try {
                 const [ambienteRes, equipamentosRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`)
                 ]);
                 setAmbiente(ambienteRes.data);
-                setEquipamentos(equipamentosRes.data || []);
+                setEquipamentos(equipamentosRes.data|| []);
             } catch (err) {
                 setError('Falha ao carregar dados da página.');
             } finally {
@@ -69,7 +67,6 @@ const PublicAmbienteDetalhesPage = () => {
                     <p>Veja a agenda de horários e solicite sua reserva.</p>
                 </div>
                 
-                {/* Container unificado para todos os botões */}
                 <div className={styles.headerActions}> 
                     {user && (
                         <>
@@ -93,19 +90,21 @@ const PublicAmbienteDetalhesPage = () => {
                     <h2>Equipamentos neste Ambiente</h2>
                 </div>
                 <div className={styles.card}>
-                    <EquipamentosList ambienteId={id} userRole={user?.tipo} />
+                    <EquipamentosList equipamentos={equipamentos} userRole={user?.tipo} />
                 </div>
             </div>
-            
-            {user?.tipo === 'aluno' && equipamentos.length > 0 && (
+
+            {user?.tipo === 'aluno' && equipamentos && equipamentos.length > 0 && (
                 <div className={styles.section}>
                     <div className={styles.sectionHeader}>
                         <h2>Solicitar Reserva de Equipamento</h2>
                     </div>
-                    <FormularioReservaEquipamento 
-                        equipamentos={equipamentos} 
-                        onSuccess={handleReservationSuccess} 
-                    />
+                    <div className={styles.card}>
+                        <FormularioReservaEquipamento 
+                            equipamentos={equipamentos} 
+                            onSuccess={handleReservationSuccess} 
+                        />
+                    </div>
                 </div>
             )}
             <div className={styles.section}>

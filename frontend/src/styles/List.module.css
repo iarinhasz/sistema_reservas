@@ -25,7 +25,9 @@
 }
 
 .listItemInfo {
-    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .listItemInfo strong {
@@ -64,4 +66,22 @@
     font-size: 0.85rem; /* Fonte um pouco menor */
     color: #6c757d;    /* Um cinza mais sutil */
     margin-top: 0.25rem; /* Pequeno espaço entre as linhas */
+}
+
+.recursoTipo {
+  font-size: 0.8rem;  /* Tamanho menor */
+  color: #6c757d;     /* Cor sutil */
+  text-transform: capitalize; /* Deixa a primeira letra maiúscula (ex: Ambiente) */
+  margin-bottom: 4px; /* Pequeno espaço abaixo */
+}
+.reservaTitulo {
+  font-size: 1.1rem;  /* Tamanho maior */
+  font-weight: bold;  /* Negrito */
+  color: #343a40;     /* Cor escura principal */
+}
+
+.solicitanteNome {
+  font-size: 0.9rem;  /* Tamanho médio */
+  color: #495057;     /* Cor secundária */
+  margin-top: 4px;   /* Pequeno espaço acima */
 }

@@ -31,21 +31,37 @@ const AmbienteDetalhesPage = () => {
     const [isReservarOpen, setReservarOpen] = useState(false);
     const navigate = useNavigate(); 
 
+    
     useEffect(() => {
-
         limparAlertaReserva(parseInt(id, 10));
 
         const fetchData = async () => {
             setLoading(true);
             try {
+                // Chamada de API unificada para todas as solicitações pendentes
                 const [ambienteRes, equipamentosRes, solicitacoesRes] = await Promise.all([
                     api.get(`/ambientes/${id}`),
                     api.get(`/equipamentos?ambienteId=${id}`),
-                    api.get(`/reservas?recurso_id=${id}&recurso_tipo=ambiente&status=pendente`),
+                    api.get(`/reservas/pendentes/ambiente/${id}`), 
                 ]);
-                setAmbiente(ambienteRes.data);
-                setEquipamentos(equipamentosRes.data);
-                setSolicitacoesReserva(solicitacoesRes.data.data || []);
+                
+                const ambienteData = ambienteRes.data;
+                const equipamentosData = equipamentosRes.data || [];
+                const solicitacoesData = solicitacoesRes.data.data || [];
+
+                setAmbiente(ambienteData);
+                // A lista de solicitações agora contém tanto as do ambiente quanto as dos equipamentos
+                setSolicitacoesReserva(solicitacoesData);
+                
+                // Lógica para marcar equipamentos com pendências
+                const equipamentosComPendencia = equipamentosData.map(eq => ({
+                    ...eq,
+                    temSolicitacaoPendente: solicitacoesData.some(sol => 
+                        sol.recurso_tipo === 'equipamento' && sol.recurso_id === eq.id
+                    )
+                }));
+                setEquipamentos(equipamentosComPendencia);
+
                 setError('');
             } catch (err) {
                 setError('Falha ao carregar dados. Verifique se o ambiente existe.');
@@ -54,7 +70,7 @@ const AmbienteDetalhesPage = () => {
             }
         };
         fetchData();
-    }, [id, refreshKey]);
+    }, [id, refreshKey, limparAlertaReserva]);
 
     const handleReservaAction = async (action, reservaId) => {
         try {
@@ -109,7 +125,12 @@ const AmbienteDetalhesPage = () => {
                     </Button>
                 </div>
                 <div className={styles.card}>
-                    <EquipamentosList ambienteId={id} userRole="admin" onEditEquipamento={handleOpenEditModal} />
+                    <EquipamentosList 
+                        equipamentos={equipamentos} 
+                        ambienteId={id} 
+                        userRole="admin" 
+                        onEditEquipamento={handleOpenEditModal} 
+                    />
                 </div>
             </div>
             
@@ -123,14 +144,25 @@ const AmbienteDetalhesPage = () => {
                             {solicitacoesReserva.map((reserva, index) => (
                                 <li key={reserva.id} className={`${list.listItem} ${list['listItem--pending']}`}>
                                     <div className={list.listItemInfo}>
-                                        <strong>{reserva.titulo}</strong>
-                                        <small> por: {reserva.usuario_nome}</small>
+                                        {/* Adiciona o tipo de recurso (ambiente ou equipamento) */}
+                                        <span className={list.recursoTipo}>
+                                            Reserva de {reserva.recurso_tipo}
+                                        </span>
+                                        {/* Título da reserva */}
+                                        <span className={list.reservaTitulo}>
+                                            {reserva.titulo}
+                                        </span>
+                                        {/* Nome do solicitante */}
+                                        <span className={list.solicitanteNome}>
+                                            por: {reserva.usuario_nome}
+                                        </span>
                                     </div>
                                     <div className={list.listItemActions}>
-                                        <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)} disabled={index !== 0}>Aprovar</Button>
-                                        <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)} disabled={index !== 0}>Rejeitar</Button>
+                                        <Button variant="secondary" onClick={() => handleReservaAction('aprovar', reserva.id)}>Aprovar</Button>
+                                        <Button variant="danger" onClick={() => handleReservaAction('rejeitar', reserva.id)}>Rejeitar</Button>
                                     </div>
                                 </li>
+
                             ))}
                         </ul>
                     </div>

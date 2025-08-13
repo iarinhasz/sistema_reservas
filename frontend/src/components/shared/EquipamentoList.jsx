@@ -7,29 +7,8 @@ import Button from './Button';
 import tableStyles from '../../styles/Table.module.css';
 import listStyles from '../../styles/List.module.css';
 
-// O componente agora recebe o ID do ambiente e a "função" do usuário
-const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
-    const [equipamentos, setEquipamentos] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!ambienteId) return;
-        const fetchEquipamentos = async () => {
-            setLoading(true);
-            try {
-                // A URL no backend deve ser /equipamentos?ambienteId=...
-                const response = await api.get(`/equipamentos?ambienteId=${ambienteId}`);
-                setEquipamentos(response.data|| []);
-            } catch (error) {
-                console.error("Erro ao buscar equipamentos:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchEquipamentos();
-    }, [ambienteId]);
-
-    if (loading) {
+const EquipamentosList = ({ equipamentos, userRole, onEditEquipamento }) => {
+    if (equipamentos === null) {
         return <p>Carregando equipamentos...</p>;
     }
 
@@ -46,6 +25,7 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                             <th>Nome</th>
                             <th>Marca</th>
                             <th>Modelo</th>
+                            <th>Quantidade</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -55,10 +35,12 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                                 <td>{eq.nome}</td>
                                 <td>{eq.marca || 'N/A'}</td>
                                 <td>{eq.modelo || 'N/A'}</td>
+                                <td>{eq.quantidade_total || 'N/A'}</td>
                                 <td>
                                     <Button 
-                                        variant="primary" 
+                                        variant={eq.temSolicitacaoPendente ? 'alerta' : 'primary'} 
                                         onClick={() => onEditEquipamento(eq)}
+                                        title={eq.temSolicitacaoPendente ? 'Este equipamento tem solicitações pendentes!' : 'Editar Equipamento'}
                                     >
                                         <EditIcon />
                                     </Button>
@@ -77,6 +59,7 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                             <th>Nome</th>
                             <th>Marca</th>
                             <th>Modelo</th>
+                            <th>Disponibilidade</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,6 +68,7 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                                 <td>{eq.nome}</td>
                                 <td>{eq.marca || 'N/A'}</td>
                                 <td>{eq.modelo || 'N/A'}</td>
+                                <td>{eq.quantidade_total - (eq.quantidade_reservada || 0)} de {eq.quantidade_total} disponíveis</td>
                             </tr>
                         ))}
                     </tbody>
@@ -98,7 +82,7 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                     {equipamentos.map((equipamento) => (
                         <li key={equipamento.id} className={listStyles.simpleListItem}>
                             <div className={listStyles.itemMainLine}>
-                                {equipamento.nome} - (Quantidade: {equipamento.quantidade_total})
+                                {equipamento.nome} - (Quantidade Total: {equipamento.quantidade_total})
                             </div>
                             <div className={listStyles.itemSubLine}>
                                 {equipamento.marca || 'N/A'} - {equipamento.modelo || 'N/A'}
