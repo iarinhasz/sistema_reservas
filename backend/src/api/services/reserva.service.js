@@ -1,12 +1,12 @@
 import appEmitter from "../../events/appEmitter.js";
 
 export default class ReservaService {
-    // Adicione o appEmitter ao construtor
-    constructor(reservaModel, usuarioModel, emailService, appEmitter) {
+    constructor(reservaModel, usuarioModel, emailService, appEmitter, equipamentoModel) {
         this.reservaModel = reservaModel;
         this.usuarioModel = usuarioModel;
         this.emailService = emailService;
-        this.appEmitter = appEmitter; // Armazene a instância do emitter
+        this.appEmitter = appEmitter;
+        this.equipamentoModel = equipamentoModel;
     }
 
     async aprovar(reservaId) {
@@ -54,9 +54,44 @@ export default class ReservaService {
     }
 
     async solicitar(dadosSolicitacao, dadosUsuario) {
+        const { recurso_id, recurso_tipo, data_inicio, data_fim } = dadosSolicitacao;
+
+        if (recurso_tipo === 'equipamento') {
+            const equipamento = await this.equipamentoModel.findById(recurso_id);
+            if (!equipamento) {
+                throw new Error("Equipamento não encontrado.");
+            }
+
+            const ambienteReservadoCount = await this.reservaModel.countApprovedOverlappingReservations({
+                recurso_id: equipamento.ambiente_id,
+                recurso_tipo: 'ambiente',
+                data_inicio,
+                data_fim
+            });
+
+            if (ambienteReservadoCount > 0) {
+                throw new Error("Não é possível reservar o equipamento, pois o ambiente estará em uso neste horário.");
+            }
+
+            const equipamentosJaReservados = await this.reservaModel.countApprovedOverlappingReservations({
+                recurso_id,
+                recurso_tipo,
+                data_inicio,
+                data_fim
+            });
+            
+            const equipamentosDisponiveis = equipamento.quantidade_total - equipamentosJaReservados;
+
+            if (equipamentosDisponiveis <= 0) {
+                throw new Error("Não há unidades deste equipamento disponíveis para o horário selecionado.");
+            }
+        }
+
         const novaReserva = await this.reservaModel.create({ ...dadosSolicitacao, usuario_cpf: dadosUsuario.cpf });
 
-        this.appEmitter.emit('reserva.solicitada', novaReserva);
+        if (this.appEmitter) {
+            this.appEmitter.emit('reserva.solicitada', novaReserva);
+        }
 
         const solicitante = await this.usuarioModel.findByCpf(dadosUsuario.cpf);
         if (solicitante) {
@@ -96,8 +131,7 @@ export default class ReservaService {
             throw new Error("Conflito. Esta reserva já foi avaliada.");
         }
         const reservaAtualizada = await this.reservaModel.addReview(reservaId, nota, comentario);
-        
-        // Lógica de notificação para review
+
         let ambienteIdParaNotificar = null;
         if (reservaAtualizada.recurso_tipo === 'ambiente') {
             ambienteIdParaNotificar = reservaAtualizada.recurso_id;

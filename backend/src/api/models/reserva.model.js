@@ -178,7 +178,6 @@ class ReservaModel{
         }
     }
     async findAllWithReviews() {
-    // SUBSTITUA A QUERY ANTIGA POR ESTA
     const query = `
         SELECT
             r.id,
@@ -203,10 +202,10 @@ class ReservaModel{
             r.nota IS NOT NULL AND r.comentario IS NOT NULL
         ORDER BY
             r.data_fim DESC;
-    `;
-    const { rows } = await this.pool.query(query);
-    return rows;
-}
+        `;
+        const { rows } = await this.pool.query(query);
+        return rows;
+    }
 
 
     async findReviewsByRecurso(recurso_id, recurso_tipo) {
@@ -257,7 +256,22 @@ class ReservaModel{
         const { rows } = await this.pool.query(query, [ambiente_id]);
         return rows;
     }
-
+    
+    async countApprovedOverlappingReservations({ recurso_id, recurso_tipo, data_inicio, data_fim }) {
+        const query = `
+            SELECT COUNT(*)
+            FROM reservas
+            WHERE
+                recurso_id = $1 AND
+                recurso_tipo = $2 AND
+                status = 'aprovada' AND
+                -- A função OVERLAPS verifica se dois períodos de tempo se cruzam
+                (data_inicio, data_fim) OVERLAPS ($3, $4);
+        `;
+        const values = [recurso_id, recurso_tipo, data_inicio, data_fim];
+        const { rows } = await this.pool.query(query, values);
+        return parseInt(rows[0].count, 10);
+    }
 }
 
 export default ReservaModel;
