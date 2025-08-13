@@ -7,7 +7,7 @@ import {
     AiOutlineMail,
     AiOutlineEye,
     AiOutlineEyeInvisible,
-    AiOutlinePlus
+    AiOutlinePlus,
 } from 'react-icons/ai';
 
 import { 
