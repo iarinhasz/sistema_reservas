@@ -98,9 +98,9 @@ const UserProfilePage = () => {
             <label>CPF</label>
             <input type="text" value={user?.cpf} disabled />
           </div>
-          <button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} variant="primary">
             {loading ? 'Salvando...' : 'Salvar Alterações'}
-          </button>
+          </Button>
         </form>
 
         <form onSubmit={handlePasswordUpdate} className={styles.profileForm}>
@@ -117,9 +117,9 @@ const UserProfilePage = () => {
             <label htmlFor="confirmarNovaSenha">Confirmar Nova Senha</label>
             <input id="confirmarNovaSenha" type="password" value={confirmarNovaSenha} onChange={(e) => setConfirmarNovaSenha(e.target.value)} required />
           </div>
-          <button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} variant="primary">
             {loading ? 'Alterando...' : 'Alterar Senha'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -102,14 +102,27 @@ const MinhasReservasPage = () => {
         setSelectedReserva(reserva);
         setReviewModalOpen(true);
     };
-    const handleReviewSubmit = async ({ rating, comment, reservaId }) => {
-        //console.log('FRONTEND: Dados recebidos do modal:', rating, comment, reservaId); 
-
+    const handleReviewSubmit = async ({ nota, comentario, reservaId }) => {
         try {
-            await api.post(`/reservas/${reservaId}/review`, { nota: rating, comentario: comment }); // Corrigido para enviar nota e comentario
+            await api.post(`/reservas/${reservaId}/review`, { nota: nota, comentario: comentario });
+            
             alert('Obrigado pelo seu feedback!');
+
+            setReservas(currentReservas => {
+                const newReservas = [...currentReservas];
+                const indexToUpdate = newReservas.findIndex(r => String(r.id) === String(reservaId));
+
+                if (indexToUpdate !== -1) {
+                    newReservas[indexToUpdate] = {
+                        ...newReservas[indexToUpdate],
+                        nota: nota // Atualiza a nota no estado local
+                    };
+                }
+                return newReservas;
+            });
+
             setReviewModalOpen(false);
-            fetchMinhasReservas();
+
         } catch (err) {
             alert(err.response?.data?.message || 'Erro ao enviar a avaliação.');
         }
