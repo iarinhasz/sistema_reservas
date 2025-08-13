@@ -38,4 +38,8 @@ router.get('/:recurso_tipo/:recurso_id/reviews', authMiddleware, adminMiddleware
 router.get('/ambiente/:id/reviews-completos', authMiddleware, adminMiddleware,
     reservaController.getReviewsByAmbienteCompleto
 );
+
+// Rota para buscar todas as solicitações pendentes de um ambiente e seus equipamentos
+router.get('/pendentes/ambiente/:id', authMiddleware, adminMiddleware, reservaController.getSolicitacoesPendentesPorAmbiente);
+
 export default router;

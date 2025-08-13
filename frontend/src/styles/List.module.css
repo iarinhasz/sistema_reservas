@@ -52,4 +52,16 @@
     border-radius: 6px;
     margin-bottom: 0.5rem;
     border: 1px solid #e9ecef;
+    text-align: left; /* Alinha o texto à esquerda */
+    padding-left: 1rem;
+}
+.itemMainLine {
+    font-weight: 600; /* Deixa o nome um pouco mais forte */
+    font-size: 1rem;
+    color: #384259; /* Cor principal do texto */
+}
+.itemSubLine {
+    font-size: 0.85rem; /* Fonte um pouco menor */
+    color: #6c757d;    /* Um cinza mais sutil */
+    margin-top: 0.25rem; /* Pequeno espaço entre as linhas */
 }

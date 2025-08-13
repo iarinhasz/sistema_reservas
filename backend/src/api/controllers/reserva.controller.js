@@ -120,4 +120,15 @@ export default class ReservaController {
             next(error);
         }
     }
+    
+    getSolicitacoesPendentesPorAmbiente = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const solicitacoes = await this.reservaService.getSolicitacoesPendentesPorAmbiente(id);
+            res.status(200).json({ data: solicitacoes });
+        } catch (error) {
+            console.error("Erro no controller ao buscar solicitações pendentes por ambiente:", error);
+            res.status(500).json({ message: "Erro interno do servidor." });
+        }
+    }
 }

@@ -272,6 +272,28 @@ class ReservaModel{
         const { rows } = await this.pool.query(query, values);
         return parseInt(rows[0].count, 10);
     }
+     async findPendingByAmbienteId(ambienteId) {
+        const query = `
+            SELECT
+                r.*,
+                COALESCE(a.identificacao, eq.nome) as recurso_nome,
+                u.nome as usuario_nome
+            FROM reservas r
+            JOIN usuarios u ON r.usuario_cpf = u.cpf
+            LEFT JOIN ambientes a ON r.recurso_id = a.id AND r.recurso_tipo = 'ambiente'
+            LEFT JOIN equipamentos eq ON r.recurso_id = eq.id AND r.recurso_tipo = 'equipamento'
+            WHERE
+                r.status = 'pendente'
+                AND (
+                    (r.recurso_tipo = 'ambiente' AND r.recurso_id = $1)
+                    OR
+                    (r.recurso_tipo = 'equipamento' AND eq.ambiente_id = $1)
+                )
+            ORDER BY r.data_criacao ASC;
+        `;
+        const { rows } = await this.pool.query(query, [ambienteId]);
+        return rows;
+    }
 }
 
 export default ReservaModel;

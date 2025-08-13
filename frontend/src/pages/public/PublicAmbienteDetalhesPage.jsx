@@ -68,26 +68,25 @@ const PublicAmbienteDetalhesPage = () => {
                     <h1>{ambiente.identificacao}</h1>
                     <p>Veja a agenda de horários e solicite sua reserva.</p>
                 </div>
+                
+                {/* Container unificado para todos os botões */}
                 <div className={styles.headerActions}> 
+                    {user && (
+                        <>
+                            <Button as={Link} to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
+                                Minhas Reservas
+                            </Button>
+
+                            {user.tipo === 'professor' && (
+                                <Button onClick={() => setIsModalOpen(true)} variant="secondary">
+                                    + Fazer Nova Reserva
+                                </Button>
+                            )}
+                        </>
+                    )}
                     <Button as={Link} to={homePath} variant="cancel">Voltar para Início</Button>
                 </div>
             </div>
-            
-            {/* A barra de ações agora inclui a lógica para o aluno */}
-            {user && (
-                <div className={styles.actionsBar}>
-                    <Button as={Link} to={`/${user.tipo}/minhas-reservas?recursoId=${id}&recursoTipo=ambiente`} variant="primary">
-                        Minhas Reservas
-                    </Button>
-
-                    {/* Botão para o professor */}
-                    {user.tipo === 'professor' && (
-                        <Button onClick={() => setIsModalOpen(true)} variant="secondary">
-                            + Fazer Nova Reserva
-                        </Button>
-                    )}
-                </div>
-            )}
 
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
@@ -98,15 +97,6 @@ const PublicAmbienteDetalhesPage = () => {
                 </div>
             </div>
             
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2>Agenda de Reservas do Ambiente</h2>
-                </div>
-                <div className={styles.card}>
-                    <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} userRole={user?.tipo} />
-                </div>
-            </div>
-
             {user?.tipo === 'aluno' && equipamentos.length > 0 && (
                 <div className={styles.section}>
                     <div className={styles.sectionHeader}>
@@ -118,6 +108,16 @@ const PublicAmbienteDetalhesPage = () => {
                     />
                 </div>
             )}
+            <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <h2>Agenda de Reservas do Ambiente</h2>
+                </div>
+                <div className={styles.card}>
+                    <AgendaAmbiente ambienteId={id} refreshKey={refreshAgendaKey} userRole={user?.tipo} />
+                </div>
+            </div>
+
+            
         </>
     );
 };

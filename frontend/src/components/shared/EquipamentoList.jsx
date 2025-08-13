@@ -19,7 +19,7 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
             try {
                 // A URL no backend deve ser /equipamentos?ambienteId=...
                 const response = await api.get(`/equipamentos?ambienteId=${ambienteId}`);
-                setEquipamentos(response.data || []);
+                setEquipamentos(response.data|| []);
             } catch (error) {
                 console.error("Erro ao buscar equipamentos:", error);
             } finally {
@@ -97,7 +97,12 @@ const EquipamentosList = ({ ambienteId, userRole, onEditEquipamento }) => {
                 <ul className={listStyles.simpleList}>
                     {equipamentos.map((equipamento) => (
                         <li key={equipamento.id} className={listStyles.simpleListItem}>
-                            {equipamento.nome} - (Quantidade Total: {equipamento.quantidade_total})
+                            <div className={listStyles.itemMainLine}>
+                                {equipamento.nome} - (Quantidade: {equipamento.quantidade_total})
+                            </div>
+                            <div className={listStyles.itemSubLine}>
+                                {equipamento.marca || 'N/A'} - {equipamento.modelo || 'N/A'}
+                            </div>
                         </li>
                     ))}
                 </ul>

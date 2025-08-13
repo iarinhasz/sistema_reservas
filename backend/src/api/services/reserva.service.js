@@ -171,4 +171,8 @@ export default class ReservaService {
     async findReviewsByAmbienteCompleto(ambiente_id) {
         return this.reservaModel.findReviewsByAmbienteCompleto(ambiente_id);
     }
+    
+    async getSolicitacoesPendentesPorAmbiente(ambienteId) {
+        return this.reservaModel.findPendingByAmbienteId(ambienteId);
+    }
 }
