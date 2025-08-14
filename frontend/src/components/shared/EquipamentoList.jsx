@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Importar o Link para a navegação
-import api from '../../services/api';
 import { EditIcon } from '../icons';
 import Button from './Button';
 
-import tableStyles from '../../styles/Table.module.css';
 import listStyles from '../../styles/List.module.css';
+import tableStyles from '../../styles/Table.module.css';
 
 const EquipamentosList = ({ equipamentos, userRole, onEditEquipamento }) => {
     if (equipamentos === null) {
@@ -53,6 +50,24 @@ const EquipamentosList = ({ equipamentos, userRole, onEditEquipamento }) => {
 
         case 'professor':
             return (
+                <ul className={listStyles.simpleList}>
+                    {equipamentos.map((equipamento) => (
+                        <li key={equipamento.id} className={listStyles.simpleListItem}>
+                            <div className={listStyles.itemMainLine}>
+                                {equipamento.nome} - (Quantidade Total: {equipamento.quantidade_total})
+                            </div>
+                            <div className={listStyles.itemSubLine}>
+                                {equipamento.marca || 'N/A'} - {equipamento.modelo || 'N/A'}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            );
+        
+        // ALTERADO: Aluno agora vê a tabela com a disponibilidade
+        case 'aluno':
+        default:
+            return (
                 <table className={tableStyles.table}>
                     <thead>
                         <tr>
@@ -73,23 +88,6 @@ const EquipamentosList = ({ equipamentos, userRole, onEditEquipamento }) => {
                         ))}
                     </tbody>
                 </table>
-            );
-
-        case 'aluno':
-        default:
-            return (
-                <ul className={listStyles.simpleList}>
-                    {equipamentos.map((equipamento) => (
-                        <li key={equipamento.id} className={listStyles.simpleListItem}>
-                            <div className={listStyles.itemMainLine}>
-                                {equipamento.nome} - (Quantidade Total: {equipamento.quantidade_total})
-                            </div>
-                            <div className={listStyles.itemSubLine}>
-                                {equipamento.marca || 'N/A'} - {equipamento.modelo || 'N/A'}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
             );
     }
 };
