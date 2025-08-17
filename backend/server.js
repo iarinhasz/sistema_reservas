@@ -39,10 +39,8 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/notificacoes', notificacaoRoutes);
 
 console.log('Modo de ambiente atual (NODE_ENV):', process.env.NODE_ENV);
-if (process.env.NODE_ENV === 'test') {
-    app.use('/api/testing', testingRoutes);
-    console.log('Rotas de teste carregadas.');
-}
+    // app.use('/api/testing', testingRoutes);
+    // console.log('Rotas de teste carregadas.');
 
 
 

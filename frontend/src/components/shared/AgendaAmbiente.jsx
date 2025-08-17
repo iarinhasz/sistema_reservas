@@ -44,7 +44,7 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
         if (!ambienteId) return;
         setLoading(true);
         try {
-            const response = await api.get(`/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente`);
+            const response = await api.get(`/reservas?recurso_id=${ambienteId}&recurso_tipo=ambiente&status=aprovada,pendente`);
             setReservas(response.data.data || []);
         } catch (err) {
             setError('Não foi possível carregar a agenda.');
@@ -91,27 +91,31 @@ const AgendaAmbiente = ({ ambienteId, refreshKey }) => {
 
     const eventPropGetter = useCallback((evento) => {
         const reserva = evento.resource;
-        const agora = new Date();
-        const dataFim = new Date(reserva.data_fim);
-        
-        if (user?.tipo === 'admin') {
-            return {};
+        let className = '';
+
+        // Lógica de Status (Pendente vs. Aprovada)
+        if (reserva.status === 'pendente') {
+            className = 'evento-pendente';
+        } else { // Se não for pendente, é aprovada
+            className = 'evento-aprovado';
         }
 
+        // Lógica do Dono da Reserva (sobrescreve o status se necessário)
         const isMinhaReserva = reserva.usuario_cpf === user?.cpf;
-        
         if (isMinhaReserva) {
+            className = 'minha-reserva'; // Damos prioridade para a cor de "minha reserva"
+
+            const agora = new Date();
+            const dataFim = new Date(reserva.data_fim);
             const jaTerminou = agora > dataFim;
             const naoFoiAvaliada = reserva.nota === null;
 
             if (jaTerminou && naoFoiAvaliada) {
-                return { className: 'evento-avaliar' };
+                className = 'evento-avaliar'; // A cor de "avaliar" é a mais importante
             }
-            return { className: 'minha-reserva' };
         }
         
-        return { className: 'reserva-outros' };
-
+        return { className };
     }, [user]);
 
     const eventosDoCalendario = Array.isArray(reservas) ? reservas.map(reserva => ({

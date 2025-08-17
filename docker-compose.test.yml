@@ -1,10 +1,9 @@
-version: '3.8'
-
 services:
   app:
-    env_file:
-      - ./.env.test # Aponta para o arquivo de ambiente de teste
 
-  db:
-    env_file:
-      - ./.env.test
+    environment:
+      - NODE_ENV=test
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=reservas_db
+      - JWT_SECRET="iaraehmtlinda"

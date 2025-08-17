@@ -43,7 +43,19 @@
     border-color: #0056b3;
     color: white; /* Texto branco na reserva */
 }
+.calendarWrapper :global(.rbc-event.evento-pendente) {
+    background-color: #ffc107; /* Amarelo/Laranja */
+    border: 1px dashed #343a40; /* Borda tracejada para indicar incerteza */
+    color: #343a40; /* Texto escuro para contraste */
+    opacity: 0.8;
+}
 
+/* Estilo para eventos APROVADOS (que não são do próprio usuário) */
+.calendarWrapper :global(.rbc-event.evento-aprovado) {
+    background-color: #6c757d; /* Cinza, como o 'reserva-outros' */
+    opacity: 0.7;
+    border-color: #5a6268;
+}
 .calendarWrapper :global(.rbc-event.evento-avaliar) {
     background-color: #28a745; /* Verde */
     cursor: pointer;

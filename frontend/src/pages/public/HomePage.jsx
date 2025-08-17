@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Para os botões de navegação
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from '../public/HomePage.module.css';
-import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
     // Estados para armazenar os dados, o status de carregamento e possíveis erros

@@ -38,8 +38,9 @@ class ReservaModel{
             values.push(filters.recurso_id, filters.recurso_tipo);
         }
         if (filters.status) {
-            whereClauses.push(`r.status = $${values.length + 1}`);
-            values.push(filters.status);
+            const statusList = filters.status.split(',');
+            whereClauses.push(`r.status = ANY($${values.length + 1}::text[])`);
+            values.push(statusList);
         }
         if (filters.data) {
             whereClauses.push(`r.data_inicio::date = $${values.length + 1}`);
