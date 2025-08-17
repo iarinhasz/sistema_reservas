@@ -1,15 +1,15 @@
 .list {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: var(--spacing-md);
 }
 
 .listItem {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    padding: 1rem 1.2rem;
-    margin-bottom: 0.75rem;
-    border-radius: 8px;
+    background-color: var(--color-white);
+    border: 1px solid var(--border-color-light);
+    padding: var(--spacing-md) var(--spacing-xl-plus);
+    margin-bottom: var(--spacing-sm);
+    border-radius: var(--border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,10 +18,10 @@
 
 
 .listItem:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(var(--color-black-rgb), 0.08);
 }
 .listItem--pending {
-    border-left: 5px solid #ffc107; /* Amarelo */
+    border-left: 5px solid var(--color-warning); /* Amarelo */
 }
 
 .listItemInfo {
@@ -29,17 +29,17 @@
 }
 
 .listItemInfo strong {
-    font-size: 1.1em;
-    color: #333;
+    font-size: var(--font-size-lg);
+    color: var(--color-dark-text);
 }
 
 .listItemInfo small {
-    color: #6c757d;
+    color: var(--color-secondary);
 }
 
 .listItemActions {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--spacing-sm);
 }
 .simpleList {
     list-style: none;
@@ -47,9 +47,9 @@
 }
 
 .simpleListItem {
-    background-color: #f8f9fa;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    border: 1px solid #e9ecef;
+    background-color: var(--color-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-xs);
+    border: 1px solid var(--border-color-light);
 }

@@ -3,110 +3,110 @@
 .profileContainer {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--spacing-xl);
 }
 
 .pageHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Adequado para o tema escuro */
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(var(--color-white-rgb), 0.2); /* Adequado para o tema escuro */
 }
 
 .pageHeader h1 {
     margin: 0;
-    color: white; /* Garante que o texto seja visível no tema escuro */
+    color: var(--color-white); /* Garante que o texto seja visível no tema escuro */
 }
 
 .formWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: var(--spacing-xl);
 }
 
 .profileForm {
     /* Usando o estilo de card do layout para consistência */
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(var(--color-white-rgb), 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-    color: white;
+    border: 1px solid rgba(var(--color-white-rgb), 0.2);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-xl);
+    color: var(--color-white);
 }
 
 .profileForm h2 {
     margin-top: 0;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 0.5rem;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid rgba(var(--color-white-rgb), 0.2);
+    padding-bottom: var(--spacing-xs);
 }
 
 .formGroup {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .formGroup label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-xs);
     font-weight: bold;
 }
 
 .formGroup input {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    font-size: 1rem;
+    padding: var(--spacing-sm);
+    border: 1px solid rgba(var(--color-white-rgb), 0.3);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
+    background-color: rgba(var(--color-white-rgb), 0.15);
+    color: var(--color-white);
 }
 
 .formGroup input:disabled {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(var(--color-black-rgb), 0.2);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
 .profileForm button {
     width: 100%;
-    padding: 0.8rem;
+    padding: var(--spacing-sm);
     border: none;
-    border-radius: 5px;
-    background-color: #17a2b8;
-    color: white;
-    font-size: 1.1rem;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-info);
+    color: var(--color-white);
+    font-size: var(--font-size-lg);
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .profileForm button:hover {
-    background-color: #138496;
+    background-color: var(--color-info-dark);
 }
 
 .profileForm button:disabled {
-    background-color: #6c757d;
+    background-color: var(--color-secondary);
     cursor: not-allowed;
 }
 
 .success, .error {
-    padding: 1rem;
-    border-radius: 5px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .success {
-    color: #d4edda;
-    background-color: rgba(21, 87, 36, 0.5);
+    color: var(--color-success-light-text);
+    background-color: rgba(var(--color-success-dark-rgb), 0.5);
 }
 
 .error {
-    color: #f8d7da;
-    background-color: rgba(114, 28, 36, 0.5);
+    color: var(--color-danger-light-text);
+    background-color: rgba(var(--color-danger-dark-rgb), 0.5);
 }
 
 @media (max-width: 768px) {

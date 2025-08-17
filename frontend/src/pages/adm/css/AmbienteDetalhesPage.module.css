@@ -1,67 +1,67 @@
 /* frontend/src/pages/admin/css/AmbienteDetalhesPage.module.css */
 
 .container {
-    padding: 1rem 2rem;
-    font-family: sans-serif;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-family: var(--font-family-sans-serif);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color-light);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .header h1 {
     margin: 0;
-    color: #333;
+    color: var(--color-dark-text);
 }
 
 .actions {
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .actionButton,
 .reserveButton,
 .addButton {
-    padding: 0.6rem 1.2rem;
+    padding: var(--spacing-sm) var(--spacing-xl-plus);
     border: none;
-    border-radius: 5px;
-    color: white;
+    border-radius: var(--border-radius-sm);
+    color: var(--color-white);
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.2s;
 }
 
 .actionButton {
-    background-color: #007bff; /* Azul */
+    background-color: var(--color-primary); /* Azul */
 }
 
 .reserveButton {
-    background-color: #ffc107; /* Amarelo */
-    color: #333;
+    background-color: var(--color-warning); /* Amarelo */
+    color: var(--color-dark-text);
 }
 
 .addButton {
-    background-color: #28a745; /* Verde */
+    background-color: var(--color-success); /* Verde */
 }
 
 .actionButton:hover,
 .reserveButton:hover,
 .addButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(var(--color-black-rgb), 0.1);
 }
 
 .detailsGrid {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem 1.5rem;
+    gap: var(--spacing-xs) var(--spacing-lg);
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
     max-width: 400px;
 }
 
@@ -70,14 +70,14 @@
 }
 
 .equipamentosSection {
-    margin-top: 2rem;
+    margin-top: var(--spacing-xl);
 }
 
 .equipamentosHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .equipamentosHeader h2 {
@@ -88,48 +88,48 @@
 .equipamentosTable {
     width: 100%;
     border-collapse: collapse; /* Essencial para unir as bordas */
-    margin-top: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-top: var(--spacing-md);
+    box-shadow: 0 2px 4px rgba(var(--color-black-rgb), 0.05);
 }
 
 .equipamentosTable th,
 .equipamentosTable td {
-    border: 1px solid #ddd; /* Adiciona bordas em todos os lados */
-    padding: 0.8rem;
+    border: 1px solid var(--border-color-default); /* Adiciona bordas em todos os lados */
+    padding: var(--spacing-sm);
     text-align: left;
 }
 
 .equipamentosTable th {
-    background-color: #f8f9fa; /* Fundo cinza claro para o cabeçalho */
+    background-color: var(--color-light); /* Fundo cinza claro para o cabeçalho */
     font-weight: bold;
 }
 
 /* Deixa a tabela com listras para melhor legibilidade */
 .equipamentosTable tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
+    background-color: var(--color-light);
 }
 
 .error {
-    color: #d9534f; /* Vermelho */
+    color: var(--color-danger-alt); /* Vermelho */
 }
 
 .solicitacoesSection {
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-xl);
 }
 
 .solicitacoesList {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: var(--spacing-md);
 }
 
 .solicitacaoItem {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-left: 5px solid #ffc107; /* Borda amarela para indicar pendência */
-    padding: 1rem 1.5rem;
-    margin-bottom: 0.75rem;
-    border-radius: 5px;
+    background-color: var(--color-light);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--color-warning); /* Borda amarela para indicar pendência */
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -140,33 +140,33 @@
 }
 
 .reservaInfo strong {
-    font-size: 1.1em;
+    font-size: var(--font-size-lg);
 }
 
 .reservaInfo small {
-    color: #6c757d;
+    color: var(--color-secondary);
 }
 
 .actionButtons {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .actionButtons button {
-    padding: 0.5rem 1rem;
+    padding: var(--spacing-xs) var(--spacing-md);
     border: none;
-    border-radius: 5px;
-    color: white;
+    border-radius: var(--border-radius-sm);
+    color: var(--color-white);
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.approveButton { background-color: #28a745; }
-.rejectButton { background-color: #dc3545; }
+.approveButton { background-color: var(--color-success); }
+.rejectButton { background-color: var(--color-danger); }
 
 .actionButtons button:disabled {
-    background-color: #6c757d;
+    background-color: var(--color-secondary);
     cursor: not-allowed;
     opacity: 0.7;
 }

@@ -1,46 +1,46 @@
 .userPage {
-    padding: 2rem;
+    padding: var(--spacing-xl);
     max-width: 1200px;
     margin: 0 auto;
-    font-family: sans-serif;
+    font-family: var(--font-family-sans-serif);
 }
 
 .actionPanel {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
 }
 
 .actionButton {
     text-decoration: none;
-    color: white;
-    background-color: #007bff; /* Azul */
-    padding: 10px 20px;
-    border-radius: 5px;
+    color: var(--color-white);
+    background-color: var(--color-primary); /* Azul */
+    padding: var(--spacing-sm) var(--spacing-xl-plus);
+    border-radius: var(--border-radius-sm);
     font-weight: bold;
     text-align: center;
     transition: background-color 0.2s;
 }
 
 .actionButton:hover {
-    background-color: #0056b3;
+    background-color: var(--color-primary-dark-alt);
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.5rem;
-    height: 60px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 0 var(--spacing-lg);
+    height: var(--header-height);
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--border-color-light-alt);
+    box-shadow: 0 2px 4px rgba(var(--color-black-rgb), 0.05);
 }
 
 .headerTitle {
     font-weight: bold;
-    color: #333;
+    color: var(--color-dark-text);
 }
 .layoutContainer {
     display: flex;
@@ -50,8 +50,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 24px;
-    height: 24px;
+    width: var(--size-xs);
+    height: var(--size-xs);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -59,14 +59,14 @@
 }
 
 .hamburgerButton span {
-    width: 24px;
+    width: var(--size-xs);
     height: 2px;
-    background: #333; /* Cor das barrinhas */
-    border-radius: 10px;
+    background: var(--color-dark-text); /* Cor das barrinhas */
+    border-radius: var(--border-radius-md);
 }
 .profileButton {
     text-decoration: none;
-    color: #007bff;
+    color: var(--color-primary);
     font-weight: 500;
 }
 
@@ -74,14 +74,14 @@
     position: fixed; /* Fica fixo na tela */
     top: 0;
     left: 0;
-    width: 280px;
+    width: var(--sidebar-width);
     height: 100%;
-    background-color: #2c3e50; /* Azul escuro */
-    color: #ecf0f1;
+    background-color: var(--color-modal-dark-bg); /* Azul escuro */
+    color: var(--color-light-text-alt);
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    box-shadow: 3px 0 15px rgba(0,0,0,0.2);
+    padding: var(--spacing-md);
+    box-shadow: 3px 0 15px rgba(var(--color-black-rgb), 0.2);
     transform: translateX(-100%); /* Começa escondido à esquerda */
     transition: transform 0.3s ease-in-out; /* Efeito suave de deslizar */
     z-index: 1000; /* Garante que fique por cima de tudo */
@@ -90,15 +90,15 @@
     transform: translateX(0);
 }
 .panelHeader, .panelFooter {
-    padding: 1rem;
+    padding: var(--spacing-md);
     text-align: center;
 }
-.panelHeader { border-bottom: 1px solid #34495e; }
-.nav { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; flex-grow: 1; }
-.nav a { color: #ecf0f1; text-decoration: none; padding: 0.75rem 1rem; border-radius: 5px; transition: background-color 0.2s; }
-.nav a:hover { background-color: #34495e; }
-.logoutButton { width: 100%; padding: 0.75rem; border: none; border-radius: 5px; background-color: #e74c3c; color: white; cursor: pointer; }
-.logoutButton:hover { background-color: #c0392b; }
+.panelHeader { border-bottom: 1px solid var(--color-dark-text-alt); }
+.nav { display: flex; flex-direction: column; gap: var(--spacing-xs); margin-top: var(--spacing-md); flex-grow: 1; }
+.nav a { color: var(--color-light-text-alt); text-decoration: none; padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--border-radius-sm); transition: background-color 0.2s; }
+.nav a:hover { background-color: var(--color-dark-text-alt); }
+.logoutButton { width: 100%; padding: var(--spacing-sm); border: none; border-radius: var(--border-radius-sm); background-color: var(--color-danger-primary); color: var(--color-white); cursor: pointer; }
+.logoutButton:hover { background-color: var(--color-danger-primary-dark); }
 
 .mainContent {
     flex-grow: 1;
@@ -107,7 +107,7 @@
 }
 
 .content {
-    padding: 2rem;
+    padding: var(--spacing-xl);
     flex-grow: 1;
 }
 
@@ -117,6 +117,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(var(--color-black-rgb), 0.5);
     z-index: 999; /* Fica abaixo do painel, mas acima do conteúdo */
 }

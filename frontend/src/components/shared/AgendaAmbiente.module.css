@@ -1,85 +1,85 @@
 .calendarWrapper {
     height: 70vh; /* Mantém a altura que já tínhamos */
-    color: #333; /* Define a cor do texto padrão para escuro */
-    background-color: #f7faff; /* Um fundo de fallback muito claro */
-    padding: 1rem;
-    border-radius: 8px;
+    color: var(--color-dark-text); /* Define a cor do texto padrão para escuro */
+    background-color: var(--color-background-light-alt); /* Um fundo de fallback muito claro */
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
 }
 
 /* --- SOBRESCREVENDO OS ESTILOS DA BIBLIOTECA --- */
 
 /* Fundo principal da grade da agenda */
 .calendarWrapper :global(.rbc-time-content) {
-    background-color: #f0f8ff; /* AliceBlue - um azul muito claro, similar ao da imagem */
+    background-color: var(--color-background-light); /* AliceBlue - um azul muito claro, similar ao da imagem */
 }
 
 /* Coluna do "dia de hoje" - a deixamos um pouco mais escura para ainda ter destaque */
 .calendarWrapper :global(.rbc-today) {
-    background-color: #e6f2ff;
+    background-color: var(--color-background-light-active);
 }
 
 /* Fundo do cabeçalho dos dias */
 .calendarWrapper :global(.rbc-time-header-content) {
-    background-color: #f0f8ff;
+    background-color: var(--color-background-light);
     border-left: none;
 }
 
 /* Cor dos textos dos dias e horas */
 .calendarWrapper :global(.rbc-header),
 .calendarWrapper :global(.rbc-time-gutter) {
-    color: #34495e;
+    color: var(--color-dark-text-alt);
 }
 
 /* Cor das linhas da grade */
 .calendarWrapper :global(.rbc-time-content > * > * > .rbc-time-slot),
 .calendarWrapper :global(.rbc-time-header-content > .rbc-row > .rbc-header),
 .calendarWrapper :global(.rbc-time-content > .rbc-time-gutter) {
-    border-color: #d6eaff;
+    border-color: var(--border-color-calendar);
 }
 
 /* --- ESTILO DAS RESERVAS (EVENTOS) --- */
 .calendarWrapper :global(.rbc-event) {
-    background-color: #007bff; /* Azul forte para as reservas */
-    border-color: #0056b3;
-    color: white; /* Texto branco na reserva */
+    background-color: var(--color-primary); /* Azul forte para as reservas */
+    border-color: var(--color-primary-dark-alt);
+    color: var(--color-white); /* Texto branco na reserva */
 }
 
 .calendarWrapper :global(.rbc-event.evento-avaliar) {
-    background-color: #28a745; /* Verde */
+    background-color: var(--color-success); /* Verde */
     cursor: pointer;
-    border-color: #1c7430;
+    border-color: var(--border-color-success-dark);
 }
 
 .calendarWrapper :global(.rbc-event.minha-reserva) {
-    background-color: #17a2b8; /* Ciano */
-    border-color: #10707f;
+    background-color: var(--color-info); /* Ciano */
+    border-color: var(--border-color-info-dark);
 }
 
 .calendarWrapper :global(.rbc-event.evento-avaliar) {
-    background-color: #28a745; /* Verde para "ação necessária" */
+    background-color: var(--color-success); /* Verde para "ação necessária" */
     cursor: pointer;
-    border-color: #1c7430;
+    border-color: var(--border-color-success-dark);
 }
 .calendarWrapper :global(.rbc-event.evento-avaliar:hover) {
-    background-color: #218838; /* Verde mais escuro no hover */
+    background-color: var(--color-success-dark); /* Verde mais escuro no hover */
 }
 
 /* AZUL: Estilo para as reservas que pertencem ao usuário, mas não podem ser avaliadas */
 .calendarWrapper :global(.rbc-event.minha-reserva) {
-    background-color: #17a2b8; /* Ciano/Azul para "é meu" */
-    border-color: #10707f;
+    background-color: var(--color-info); /* Ciano/Azul para "é meu" */
+    border-color: var(--border-color-info-dark);
 }
 
 /* CINZA: Estilo para reservas de outras pessoas, não interativas */
 .calendarWrapper :global(.rbc-event.reserva-outros) {
-    background-color: #6c757d; /* Cinza para "é de outro" */
+    background-color: var(--color-secondary); /* Cinza para "é de outro" */
     opacity: 0.7; /* Um pouco transparente para dar menos destaque */
-    border-color: #5a6268;
+    border-color: var(--color-secondary-dark);
 }
 
 .eventoPersonalizado {
-    padding: 2px 5px; /* Adiciona um pequeno espaçamento interno */
-    font-size: 0.8em; /* Reduz um pouco o tamanho da fonte para caber melhor */
+    padding: var(--spacing-xxxs) var(--spacing-xxs); /* Adiciona um pequeno espaçamento interno */
+    font-size: var(--font-size-xs-em); /* Reduz um pouco o tamanho da fonte para caber melhor */
     height: 100%;
     overflow: hidden; /* Esconde qualquer texto que transborde */
     display: flex;
@@ -96,6 +96,6 @@
 
 .eventoPersonalizado p {
     margin: 0;
-    font-size: 0.9em; /* Tamanho da fonte para o horário */
+    font-size: var(--font-size-sm-em); /* Tamanho da fonte para o horário */
     white-space: nowrap; /* Impede que o horário quebre a linha */
 }

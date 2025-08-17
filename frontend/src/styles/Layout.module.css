@@ -2,7 +2,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: var(--spacing-md) var(--spacing-xl);
     text-align: left;
 }
 
@@ -10,69 +10,69 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 1rem;
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid var(--border-color-light);
+    padding-bottom: var(--spacing-md);
 }
 
 .header h1 {
     margin: 0;
-    font-size: 2.5rem;
-    color: #333;
+    font-size: var(--font-size-xxxl);
+    color: var(--color-dark-text);
 }
 
 .pageHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color-light-alt);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
 }
 
 .pageHeader h1, .pageHeader h2 {
     margin: 0;
-    font-size: 2.2rem;
-    color: #2c3e50;
+    font-size: var(--font-size-xxl-plus);
+    color: var(--color-primary-dark);
 }
 
 .pageHeaderActions {
     display: flex;
-    gap: 1rem;
+    gap: var(--spacing-md);
 }
 
 .section {
-    margin-top: 2.5rem;
+    margin-top: var(--spacing-xxl-minus);
 }
 
 .sectionHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .sectionHeader h2 {
     margin: 0;
-    font-size: 1.6rem;
-    color: #34495e;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    font-size: var(--font-size-xxl-minus);
+    color: var(--color-dark-text-alt);
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
 }
 
 .detailsGrid {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem 1.5rem;
+    gap: var(--spacing-xs) var(--spacing-lg);
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
     max-width: 400px;
-    padding: 1rem;
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
     margin-left: 0;
     margin-right: auto;
-    color: white; /* Garante que o texto seja visível no tema escuro */
+    color: var(--color-white); /* Garante que o texto seja visível no tema escuro */
 }
 
 .detailsGrid p {
@@ -82,8 +82,8 @@
 .actionsBar {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 1.5rem;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color-light-alt);
+    padding-bottom: var(--spacing-lg);
 }

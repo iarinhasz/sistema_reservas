@@ -1,20 +1,20 @@
 .modalOverlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(var(--color-black-rgb), 0.6);
     display: flex; justify-content: center; align-items: center;
     z-index: 1000;
 }
 .modalContent {
-    background: white; padding: 2rem; border-radius: 8px;
+    background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--border-radius);
     width: 90%; max-width: 500px; position: relative;
 }
 .closeButton {
-    position: absolute; top: 1rem; right: 1rem;
-    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+    position: absolute; top: var(--spacing-md); right: var(--spacing-md);
+    background: none; border: none; font-size: var(--font-size-lg-plus); cursor: pointer;
 }
-.starRating .stars { display: flex; gap: 0.25rem; cursor: pointer; font-size: 2rem; }
-.starRating .on { color: #f39c12; }
-.starRating .off { color: #ccc; }
-.commentSection { margin-top: 1rem; }
-.commentSection textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
-.modalActions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
+.starRating .stars { display: flex; gap: var(--spacing-xxs); cursor: pointer; font-size: var(--font-size-xxl); }
+.starRating .on { color: var(--color-star-on); }
+.starRating .off { color: var(--border-color-medium); }
+.commentSection { margin-top: var(--spacing-md); }
+.commentSection textarea { width: 100%; padding: var(--spacing-xs); border: 1px solid var(--border-color-medium); border-radius: var(--border-radius-xs); }
+.modalActions { margin-top: var(--spacing-lg); display: flex; justify-content: flex-end; gap: var(--spacing-md); }

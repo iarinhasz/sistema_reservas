@@ -1,53 +1,53 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    margin-top: var(--spacing-md);
+    box-shadow: 0 2px 8px rgba(var(--color-black-rgb), 0.05);
+    border: 1px solid rgba(var(--color-white-rgb), 0.2);
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
-    font-size: 0.95rem;
+    font-size: var(--font-size-base);
 }
 
 .table th,
 .table td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(var(--color-white-rgb), 0.2);
+    padding: var(--spacing-sm) var(--spacing-md);
     text-align: left;
     vertical-align: middle;
-    color: white;
+    color: var(--color-white);
 }
 
 .table th {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(var(--color-white-rgb), 0.15);
     font-weight: 600;
 }
 
 .table tbody tr:hover {
-    background-color: #f1f3f5;
+    background-color: var(--color-light-alt);
 }
 .reservasTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 2rem;
-    font-size: 0.95rem;
+    margin-top: var(--spacing-xl);
+    font-size: var(--font-size-base);
 }
 
 .reservasTable td {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-color-light-alt);
+    padding: var(--spacing-sm) var(--spacing-md);
     text-align: left;
     vertical-align: middle;
 }
 
 /* CORREÇÃO: Novo efeito de hover */
 .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco ao passar o mouse */
+    background-color: rgba(var(--color-white-rgb), 0.9); /* Fundo branco ao passar o mouse */
 }
 
 /* O texto dentro da linha precisa ficar escuro no hover para ser legível */
 .table tbody tr:hover td {
-    color: #2c3e50;
+    color: var(--color-primary-dark);
 }
 
 .actionsCell {
@@ -72,10 +72,10 @@
 }
 
 .status {
-    padding: 0.25rem 0.75rem;
+    padding: var(--spacing-xxs) var(--spacing-sm);
     border-radius: 99px;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: var(--font-size-sm);
     display: inline-block;
     min-width: 110px;
     text-align: center;
@@ -89,17 +89,17 @@
 }
 
 /* CORREÇÃO: Cores dos Status restauradas e adicionado o 'ativo' */
-.ativo { background-color: #28a745; color: white; }
-.aprovada { background-color: #28a745; color: white; }
-.pendente { background-color: #ffc107; color: #333; }
-.rejeitada { background-color: #dc3545; color: white; }
-.cancelada { background-color: #6c757d; color: white; }
-.concluida { background-color: #0d6efd; color: white; }
+.ativo { background-color: var(--color-success); color: var(--color-white); }
+.aprovada { background-color: var(--color-success); color: var(--color-white); }
+.pendente { background-color: var(--color-warning); color: var(--color-dark-text); }
+.rejeitada { background-color: var(--color-danger); color: var(--color-white); }
+.cancelada { background-color: var(--color-secondary); color: var(--color-white); }
+.concluida { background-color: var(--color-status-blue); color: var(--color-white); }
 
 .reviewedMessage {
     font-style: italic;
-    color: #adb5bd;
-    font-size: 0.9rem;
+    color: var(--color-disabled);
+    font-size: var(--font-size-sm);
     white-space: nowrap; /* Impede que o texto quebre a linha */
 }
 /* --- TEMA ESCURO / GLASSMORPHISM --- */
@@ -120,27 +120,27 @@
     border-bottom: none;
 }
 :global(.darkTheme) .table th {
-    color: white;
+    color: var(--color-white);
     font-weight: 600;
     background-color: transparent; /* Cabeçalho transparente */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(var(--color-white-rgb), 0.2);
 }
 
 
 :global(.darkTheme) .table tbody tr {
-    background-color: rgba(255, 255, 255, 0.1); /* 1. FUNDO ÚNICO PARA TODAS AS LINHAS */
+    background-color: rgba(var(--color-white-rgb), 0.1); /* 1. FUNDO ÚNICO PARA TODAS AS LINHAS */
     transition: background-color 0.2s;
 }
 :global(.darkTheme) .table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Fundo um pouco mais claro */
+    background-color: rgba(var(--color-white-rgb), 0.2); /* Fundo um pouco mais claro */
 }
-:global(.darkTheme) .table td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-:global(.darkTheme) .table td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+:global(.darkTheme) .table td:first-child { border-top-left-radius: var(--border-radius); border-bottom-left-radius: var(--border-radius); }
+:global(.darkTheme) .table td:last-child { border-top-right-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
 
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 /* Cabeçalho fixo ao rolar */
@@ -152,17 +152,17 @@
 
 /* Tema roxo (darkTheme): cabeçalho legível */
 :global(.darkTheme) .reservasTable thead th {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(var(--color-white-rgb), 0.15);
+  color: var(--color-white);
+  border-bottom: 1px solid rgba(var(--color-white-rgb), 0.25);
 }
 
 /* Tema roxo: linhas e hover mais suaves */
 :global(.darkTheme) .reservasTable tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(var(--color-white-rgb), 0.15);
 }
 :global(.darkTheme) .reservasTable tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.10);
+  background-color: rgba(var(--color-white-rgb), 0.10);
 }
 
 /* Larguras sugeridas para melhor alinhamento */

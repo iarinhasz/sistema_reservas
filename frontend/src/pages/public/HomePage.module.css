@@ -1,49 +1,49 @@
 /* Estilos que pertencem apenas à HomePage */
 .homeContainer {
-    padding: 2rem;
+    padding: var(--spacing-xl);
     min-height: 100vh;
 }
 .ambientesGrid {
     display: flex;
-    gap: 2rem;
+    gap: var(--spacing-xl);
     align-items: flex-start;
 }
 
 .ambienteColuna {
     flex: 1;
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: var(--color-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(var(--color-black-rgb), 0.1);
 }
 
 .ambienteColuna h2 {
     margin-top: 0;
-    color: #444;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
+    color: var(--color-gray-400);
+    border-bottom: 2px solid var(--border-color-light);
+    padding-bottom: var(--spacing-xs);
     text-transform: capitalize;
 }
 
 .botoesContainer {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--spacing-sm);
 }
 
 .ambienteBotao {
     width: 100%;
-    padding: 1rem;
-    font-size: 1rem;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-base);
     text-align: left;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+    background-color: var(--color-light-alt);
+    border: 1px solid var(--border-color-medium-alt);
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
 }
 
 .ambienteBotao:hover {
-    background-color: #dde1e5;
-    border-color: #adb5bd;
+    background-color: var(--color-light-dark);
+    border-color: var(--color-disabled);
 }

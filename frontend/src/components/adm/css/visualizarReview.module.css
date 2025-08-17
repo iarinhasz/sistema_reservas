@@ -1,15 +1,15 @@
 .reviewsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
 }
 
 .reviewCard {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    background-color: var(--color-white);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: 0 4px 8px rgba(var(--color-black-rgb), 0.05);
     display: flex;
     flex-direction: column;
 }
@@ -18,40 +18,40 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color-light-alt);
+    padding-bottom: var(--spacing-md);
 }
 
 .recursoNome {
     font-weight: 600;
-    font-size: 1.1rem;
-    color: #050b20;
+    font-size: var(--font-size-lg);
+    color: var(--color-dark-text-very-dark);
 }
 
 .starRating {
-    color: #ffc107; /* Cor das estrelas */
+    color: var(--color-star-on); /* Cor das estrelas */
 }
 
 .starFilled {
-    color: #ffc107;
+    color: var(--color-star-on);
 }
 
 .starEmpty {
-    color: #e0e0e0;
+    color: var(--border-color-light-alt);
 }
 
 .comentario {
     font-style: italic;
-    color: #555;
+    color: var(--color-gray-500);
     flex-grow: 1; /* Faz o comentário ocupar o espaço disponível */
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .cardFooter {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #888;
-    font-size: 0.9rem;
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-sm);
 }

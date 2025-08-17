@@ -1,4 +1,6 @@
+@import "./styles/variables.module.css";
+
 body {
     margin: 0;
-    font-family: sans-serif; /* Define a cor padrão do texto para branco */
+    font-family: var(--font-family-sans-serif); /* Define a cor padrão do texto para branco */
 }

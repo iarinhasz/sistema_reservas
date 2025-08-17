@@ -1,0 +1,136 @@
+/* frontend/src/styles/variables.module.css */
+
+:root {
+  /* Cores */
+  --color-primary: #007bff; /* Azul padrão */
+  --color-secondary: #6c757d; /* Cinza */
+  --color-success: #28a745; /* Verde */
+  --color-danger: #dc3545; /* Vermelho */
+  --color-warning: #ffc107; /* Amarelo */
+  --color-info: #17a2b8; /* Azul claro */
+  --color-info-dark: #138496; /* Nova variável para hover do info */
+  --color-light: #f8f9fa; /* Cinza claro */
+  --color-dark: #343a40; /* Cinza escuro */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-black-rgb: 0, 0, 0;
+  --color-white-rgb: 255, 255, 255; /* Nova variável para RGB branco */
+  --color-light-alt: #f1f3f5; /* Cinza claro alternativo */
+  --color-status-blue: #0d6efd; /* Azul para status concluída */
+  --color-dark-text: #333;
+  --color-primary-dark: #2c3e50;
+  --color-secondary-text: #888;
+  --color-secondary-dark: #5a6268;
+  --color-success-dark: #218838;
+  --color-disabled: #adb5bd;
+  --color-dark-text-alt: #34495e; /* Nova variável para cinza azulado escuro */
+  --color-gray-500: #555; /* Nova variável para cinza médio */
+  --color-primary-rgb: 0, 123, 255; /* Nova variável para RGB primário */
+  --color-gray-600: #666; /* Nova variável para cinza um pouco mais escuro */
+  --color-primary-dark-alt: #0056b3; /* Nova variável para hover do primário */
+  --color-success-dark-text: #155724; /* Nova variável para texto de sucesso escuro */
+  --color-success-light: #d4edda; /* Nova variável para background de sucesso claro */
+  --border-color-success: #c3e6cb; /* Nova variável para borda de sucesso */
+  --color-success-light-text: #d4edda; /* Nova variável para texto de sucesso claro */
+  --color-success-dark-rgb: 21, 87, 36; /* Nova variável para RGB do sucesso escuro */
+  --color-danger-dark-text: #721c24; /* Nova variável para texto de perigo escuro */
+  --color-danger-light: #f8d7da; /* Nova variável para background de perigo claro */
+  --border-color-danger: #f5c6cb; /* Nova variável para borda de perigo */
+  --color-danger-alt: #c82333; /* Nova variável para vermelho alternativo de erro */
+  --color-danger-light-text: #f8d7da; /* Nova variável para texto de perigo claro */
+  --color-danger-dark-rgb: 114, 28, 36; /* Nova variável para RGB do perigo escuro */
+  --color-success-rgb-alt: 22, 163, 74; /* Nova variável para RGB de sucesso alternativo */
+  --color-modal-dark-bg: #2c3e50; /* Nova variável para background de modal escuro */
+  --color-primary-rgb-alt: 67, 56, 202; /* Nova variável para RGB primário alternativo */
+  --color-gray-rgb: 107, 114, 128; /* Nova variável para RGB de cinza */
+  --color-dark-text-alt-2: #212529; /* Nova variável para cinza escuro de texto */
+  --color-warning-dark: #e0a800; /* Nova variável para hover do warning */
+  --color-ambiente-item-bg: #124b85; /* Nova variável para background de item de ambiente */
+  --color-alerta-ambiente-bg: #d16923; /* Nova variável para background de alerta de ambiente */
+  --color-alerta-ambiente-hover: #e66903; /* Nova variável para hover de alerta de ambiente */
+  --color-warning-rgb: 255, 193, 7; /* Nova variável para RGB do warning */
+  --color-light-text-alt: #ecf0f1; /* Nova variável para texto claro alternativo */
+  --color-danger-primary: #e74c3c; /* Nova variável para um vermelho mais forte */
+  --color-danger-primary-dark: #c0392b; /* Nova variável para hover do vermelho mais forte */
+  --header-height-alt: 50px; /* Nova variável para altura alternativa do header */
+  --color-light-rgb: 248, 249, 250; /* RGB para light */
+  --color-dark-text-very-dark: #050b20; /* Nova variável para texto muito escuro */
+  --color-background-light-alt: #f7faff; /* Fundo de fallback muito claro */
+  --color-background-light: #f0f8ff; /* AliceBlue - um azul muito claro, similar ao da imagem */
+  --color-background-light-active: #e6f2ff; /* Azul mais escuro para o dia de hoje */
+  --border-color-calendar: #d6eaff; /* Cor das linhas da grade do calendário */
+  --border-color-success-dark: #1c7430; /* Borda de sucesso escura */
+  --border-color-info-dark: #10707f; /* Borda de info escura */
+
+  --color-star-on: #f39c12; /* Laranja/Amarelo para estrela ligada */
+  --color-gray-400: #444; /* Nova variável para cinza um pouco mais escuro */
+  --border-color-medium-alt: #ced4da; /* Nova variável para cinza de borda alternativo */
+  --color-light-dark: #dde1e5; /* Nova variável para cinza um pouco mais escuro para hover */
+
+  --gradient-start-color: #667eea; /* Cor inicial do gradiente */
+  --gradient-end-color: #764ba2; /* Cor final do gradiente */
+  --color-white-80: rgba(255, 255, 255, 0.8); /* Branco com 80% de opacidade */
+  --color-white-70: rgba(255, 255, 255, 0.7); /* Branco com 70% de opacidade */
+  --box-shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Sombra de glassmorphism */
+  --color-focus-background: #715bbf; /* Cor de fundo para label em foco */
+  --color-white-90: rgba(255, 255, 255, 0.9); /* Branco com 90% de opacidade */
+  --color-accent-blue: #4facfe; /* Azul de destaque */
+  --color-error-text: #ff8a8a; /* Cor de texto de erro */
+  --color-danger-rgb: 255, 0, 0; /* RGB para vermelho de perigo */
+  --gradient-back-button-end: #00f2fe; /* Cor final do gradiente do botão de voltar */
+  --color-white-60: rgba(255, 255, 255, 0.6); /* Branco com 60% de opacidade */
+  --color-checkbox-checked: #06b6d4; /* Cor para checkbox marcado */
+
+  --spacing-xs-plus: 12px; /* Nova variável para 0.75rem */
+  --spacing-lg-plus: 28px; /* Nova variável para 1.75rem */
+  --spacing-xxxl: 80px; /* Nova variável para 5rem */
+  --font-size-lg-plus: 24px; /* Nova variável para 1.5rem */
+  --font-size-xs-em: 0.8em; /* Nova variável para 0.8em de fonte */
+  --font-size-sm-em: 0.9em; /* Nova variável para 0.9em de fonte */
+  --header-height: 60px; /* Nova variável para altura do header */
+  --size-xs: 24px; /* Nova variável para 24px de largura/altura */
+  --sidebar-width: 280px; /* Nova variável para largura do sidebar */
+
+  /* Espaçamentos */
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-xl-plus: 20px; /* Nova variável para 1.2rem */
+  --spacing-xxl-minus: 40px; /* Nova variável para 2.5rem */
+  --spacing-btn-x: 21px; /* Nova variável para padding horizontal de botão */
+  --spacing-xxxs: 2px; /* Nova variável para 2px de espaçamento */
+
+  /* Fontes */
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px; /* Nova variável para 1.25rem */
+  --font-size-xxl: 32px; /* Nova variável para 2rem */
+  --font-size-xxxl: 40px; /* Nova variável para 2.5rem */
+  --font-size-xxl-plus: 35px; /* Nova variável para 2.2rem */
+  --font-size-xxl-minus: 26px; /* Nova variável para 1.6rem */
+  --font-size-header-title: 1.2rem; /* Nova variável para 1.2rem */
+
+  /* Bordas */
+  --border-radius: 0.25rem;
+  --border-color: #dee2e6;
+  --border-color-light: #eee;
+  --border-color-medium: #ccc;
+  --border-color-light-alt: #e0e0e0; /* Nova variável para borda cinza clara */
+  --border-radius-lg: 12px; /* Nova variável para 12px de border-radius */
+  --border-radius-xl: 16px; /* Nova variável para 16px de border-radius */
+  --border-radius-sm: 5px; /* Nova variável para 5px de border-radius */
+  --border-radius-xxl: 20px; /* Nova variável para 20px de border-radius */
+  --border-radius-md: 10px; /* Nova variável para 10px de border-radius */
+  --border-radius-xs: 4px; /* Nova variável para 4px de border-radius */
+  --border-color-default: #ddd; /* Nova variável para borda padrão */
+
+  /* Sombras */
+  --box-shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+  --box-shadow-md: 0 .5rem 1rem rgba(0,0,0,.15);
+}

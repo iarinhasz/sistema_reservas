@@ -1,15 +1,15 @@
 .stars {
     display: flex;
-    gap: 0.25rem;
+    gap: var(--spacing-xxs);
     cursor: pointer;
-    font-size: 2.5rem; 
+    font-size: var(--font-size-xxxl); 
 }
 .on {
-    color: #f39c12; /* Laranja/Amarelo */
+    color: var(--color-star-on); /* Laranja/Amarelo */
     transition: color 0.2s ease-in-out;
 }
 
 .off {
-    color: #ccc;
+    color: var(--border-color-medium);
     transition: color 0.2s ease-in-out;
 }

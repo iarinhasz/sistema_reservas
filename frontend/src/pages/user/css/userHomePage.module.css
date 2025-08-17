@@ -1,43 +1,43 @@
 .userPage {
-    padding: 2rem;
+    padding: var(--spacing-xl);
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .userPage h1 {
-    color: #333; /* Cor escura para o título */
+    color: var(--color-dark-text); /* Cor escura para o título */
 }
 
 .userPage p {
-    color: #555; /* Cor cinza escura para o parágrafo */
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
+    color: var(--color-gray-500); /* Cor cinza escura para o parágrafo */
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-lg);
 }
 /* -------------------------------------------------- */
 
 .actionPanel {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e0e0e0;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color-light-alt);
 }
 
 .actionButton {
     text-decoration: none;
-    color: white;
-    background-color: #17a2b8; /* Cor do tema do usuário (ciano) */
-    padding: 12px 24px;
-    border-radius: 8px;
+    color: var(--color-white);
+    background-color: var(--color-info); /* Cor do tema do usuário (ciano) */
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius);
     font-weight: bold;
     text-align: center;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(var(--color-black-rgb), 0.1);
 }
 
 .actionButton:hover {
-    background-color: #138496;
+    background-color: var(--color-info-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(var(--color-black-rgb), 0.15);
 }
